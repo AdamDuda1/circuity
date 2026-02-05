@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, ChangeDetectionStrategy, OnDestroy, signal } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ChangeDetectionStrategy, OnDestroy, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-canvas',
@@ -12,21 +12,24 @@ import { Component, AfterViewInit, ElementRef, ViewChild, ChangeDetectionStrateg
     '(pointermove)': 'onPointerMove($event)',
     '(pointerup)': 'onPointerUp($event)',
     '(pointerleave)': 'onPointerUp($event)',
+    '[style.cursor]': 'this.isPanning() ? "grabbing" : "default"',
   },
 })
 export class Canvas implements AfterViewInit, OnDestroy {
-  @ViewChild('canvas', { static: true }) private readonly canvasRef!: ElementRef<HTMLCanvasElement>;
+  private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
-  private readonly view = signal({ x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1 });
+  protected readonly view = signal({ x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1 });
+  protected readonly isPanning = signal(false);
   private readonly targetZ = signal(1);
-  private readonly isPanning = signal(false);
   private readonly lastPointer = signal({ x: 0, y: 0 });
   private ctx!: CanvasRenderingContext2D;
   private rafId = 0;
   private resizeObserver?: ResizeObserver;
 
   ngAfterViewInit() {
-    const canvas = this.canvasRef.nativeElement;
+    // initialize canvas to canvas
+    const canvas = this.canvasRef().nativeElement;
+
     this.updateCanvasSize(canvas);
 
     this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
@@ -64,14 +67,12 @@ export class Canvas implements AfterViewInit, OnDestroy {
   }
 
   onPointerUp(event: PointerEvent) {
-    this.ctx.canvas.style.cursor = 'default';
     this.isPanning.set(false);
     (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
   }
 
   private startLoop(canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d')!;
-    if (!this.ctx) return;
 
     const tick = () => {
       const v = this.view();
@@ -120,7 +121,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
     const offsetY = ((centerY % spacing) + spacing) % spacing;
 
     ctx.strokeStyle = '#888888';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = .5;
 
     for (let gx = offsetX; gx <= w; gx += spacing) {
       ctx.beginPath();
