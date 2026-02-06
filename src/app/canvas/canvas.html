@@ -1,1 +1,13 @@
-<canvas #canvas></canvas>
+<canvas
+  #canvas
+  role="presentation"
+  (wheel)="onWheel($event)"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointerleave)="onPointerUp($event)"
+  [style.cursor]="isPanning() ? 'grabbing' : 'default'"></canvas>
+
+<footer class="absolute bottom-0.5 right-1 text-xs text-gray-500">
+  &copy;Adam Duda &sdot; <a href="https://github.com/AdamDuda1/circuity" target="_blank">GitHub</a>
+</footer>

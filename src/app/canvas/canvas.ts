@@ -6,20 +6,21 @@ import { Component, AfterViewInit, ElementRef, ChangeDetectionStrategy, OnDestro
   templateUrl: './canvas.html',
   styleUrl: './canvas.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
+  /*host: {
     '(wheel)': 'onWheel($event)',
     '(pointerdown)': 'onPointerDown($event)',
     '(pointermove)': 'onPointerMove($event)',
     '(pointerup)': 'onPointerUp($event)',
     '(pointerleave)': 'onPointerUp($event)',
     '[style.cursor]': 'this.isPanning() ? "grabbing" : "default"',
-  },
+  },*/
 })
 export class Canvas implements AfterViewInit, OnDestroy {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
   protected readonly view = signal({ x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1 });
   protected readonly isPanning = signal(false);
+  protected readonly frame = signal({ dt: 0, fps: 0 });
   private readonly targetZ = signal(1);
   private readonly lastPointer = signal({ x: 0, y: 0 });
   private ctx!: CanvasRenderingContext2D;
@@ -27,7 +28,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
   private resizeObserver?: ResizeObserver;
 
   ngAfterViewInit() {
-    // initialize canvas to canvas
     const canvas = this.canvasRef().nativeElement;
 
     this.updateCanvasSize(canvas);
@@ -43,10 +43,29 @@ export class Canvas implements AfterViewInit, OnDestroy {
     this.resizeObserver?.disconnect();
   }
 
-  onWheel(event: WheelEvent) {
+  /*onWheel(event: WheelEvent) {
     event.preventDefault();
     const factor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
     this.targetZ.update((z) => this.clamp(z * factor, 0.2, 10));
+  }*/
+
+  onWheel(event: WheelEvent) {
+    event.preventDefault();
+    const v = this.view();
+    const rawFactor = event.deltaY <0 ?1.1 :1 /1.1;
+    const nextZ = this.clamp(v.z * rawFactor,0.2,10);
+    const factor = nextZ / v.z;
+    const centerX = v.x + v.w /2;
+    const centerY = v.y + v.h /2;
+
+    //this.targetZ.set(nextZ);
+    this.targetZ.update((z) => this.clamp(z * factor, 0.2, 10));
+
+    this.view.update((prev) => ({
+      ...prev,
+      x: centerX - (centerX - prev.x) / factor,
+      y: centerY - (centerY - prev.y) / factor,
+    }));
   }
 
   onPointerDown(event: PointerEvent) {
@@ -74,7 +93,15 @@ export class Canvas implements AfterViewInit, OnDestroy {
   private startLoop(canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d')!;
 
+    let last = performance.now();
+
     const tick = () => {
+      const now = performance.now();
+      this.frame.update((v) => ({ ...v, dt: now - last }));
+      this.frame.update((v) => ({ ...v, fps: this.frame().dt > 0 ?1000 / this.frame().dt : 0 }));
+      //this.view.update((v) => ({ ...v, w: canvas.width, h: canvas.height })); TODO
+      last = now;
+
       const v = this.view();
       const nextZ = v.z + (this.targetZ() - v.z) * 0.15;
       if (Math.abs(nextZ - v.z) > 0.0001) {
@@ -109,6 +136,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     this.drawGrid(ctx);
+
+    ctx.strokeText(this.frame().fps.toFixed(3).toString(), 10, this.view().h - 12 - 14);
+    ctx.strokeText("x/y: " + this.view().x.toString() + " / " + this.view().y.toString() + " / " + this.view().z.toString(), 10, this.view().h - 12);
+
+
   }
 
   drawGrid(ctx: CanvasRenderingContext2D) {
