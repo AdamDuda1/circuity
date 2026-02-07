@@ -1,12 +1,21 @@
-import { Component } from '@angular/core';
-import {PaletteComponent} from './palette-component/palette-component';
+import { Component, signal } from '@angular/core';
+import { PaletteComponent } from './palette-component/palette-component';
+import { AND } from '../components/and';
+import { OR } from '../components/or';
 
 @Component({
   selector: 'app-palette',
   imports: [PaletteComponent],
-  templateUrl: './palette.html',
+  template: `
+    @for (component of components(); track component) {
+      <app-palette-component [component]="component" />
+    }
+  `,
   styleUrl: './palette.css',
 })
 export class Palette {
- // npx --package @angular/cli ng g c palette
+  components = signal([
+    new AND(),
+    new OR(),
+  ]);
 }

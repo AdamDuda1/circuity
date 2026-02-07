@@ -1,0 +1,14 @@
+div {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background: rgba(237, 237, 237, 0.34);
+  border-radius: 15px;
+  margin: 5px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+div:hover {
+  background: rgba(213, 213, 213, 0.34);
+}

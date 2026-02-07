@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ElementRef, ChangeDetectionStrategy, OnDestroy, signal, viewChild } from '@angular/core';
+import {drawDebug, drawGrid} from './canvas-draw-misc';
 
 @Component({
   selector: 'app-canvas',
@@ -6,25 +7,21 @@ import { Component, AfterViewInit, ElementRef, ChangeDetectionStrategy, OnDestro
   templateUrl: './canvas.html',
   styleUrl: './canvas.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  /*host: {
-    '(wheel)': 'onWheel($event)',
-    '(pointerdown)': 'onPointerDown($event)',
-    '(pointermove)': 'onPointerMove($event)',
-    '(pointerup)': 'onPointerUp($event)',
-    '(pointerleave)': 'onPointerUp($event)',
-    '[style.cursor]': 'this.isPanning() ? "grabbing" : "default"',
-  },*/
 })
 export class Canvas implements AfterViewInit, OnDestroy {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
-  protected readonly view = signal({ x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1 });
-  protected readonly isPanning = signal(false);
+  protected readonly view = signal({ x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0 });
+  protected readonly cursor = signal({ x: 0, y: 0 });
+  protected readonly world = signal({ w: 0, h: 0 });
   protected readonly frame = signal({ dt: 0, fps: 0 });
+
+  protected readonly isPanning = signal(false);
   private readonly targetZ = signal(1);
   private readonly lastPointer = signal({ x: 0, y: 0 });
+
   private ctx!: CanvasRenderingContext2D;
-  private rafId = 0;
+  private animationRef = 0;
   private resizeObserver?: ResizeObserver;
 
   ngAfterViewInit() {
@@ -33,13 +30,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
     this.updateCanvasSize(canvas);
 
     this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
-    this.resizeObserver.observe(canvas);
+    this.resizeObserver.observe(canvas.parentElement!);
 
     this.startLoop(canvas);
   }
 
   ngOnDestroy() {
-    cancelAnimationFrame(this.rafId);
+    cancelAnimationFrame(this.animationRef);
     this.resizeObserver?.disconnect();
   }
 
@@ -76,6 +73,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
   }
 
   onPointerMove(event: PointerEvent) {
+    this.cursor().x = (event.clientX - this.view().w / 2 - this.view().x) / this.view().z;
+    this.cursor().y = (event.clientY - this.view().h / 2 - this.view().y) / this.view().z;
+
     if (!this.isPanning()) return;
     // this.ctx.canvas.style.cursor = 'grabbing'; // TODO cursors
     const last = this.lastPointer();
@@ -98,8 +98,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
     const tick = () => {
       const now = performance.now();
       this.frame.update((v) => ({ ...v, dt: now - last }));
-      this.frame.update((v) => ({ ...v, fps: this.frame().dt > 0 ?1000 / this.frame().dt : 0 }));
-      //this.view.update((v) => ({ ...v, w: canvas.width, h: canvas.height })); TODO
+      this.frame.update((v) => ({ ...v, fps: this.frame().dt > 0 ? 1000 / this.frame().dt : 0 }));
       last = now;
 
       const v = this.view();
@@ -108,21 +107,25 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.view.update((prev) => ({ ...prev, z: nextZ }));
       }
       this.draw(this.ctx);
-      this.rafId = requestAnimationFrame(tick);
+      this.animationRef = requestAnimationFrame(tick);
     };
 
-    this.rafId = requestAnimationFrame(tick);
+    this.animationRef = requestAnimationFrame(tick);
   }
 
   private updateCanvasSize(canvas: HTMLCanvasElement) {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
+    const host = canvas.parentElement ?? canvas;
+    const rect = host.getBoundingClientRect();
+    if (rect.width ===0 || rect.height ===0) return;
 
+    const dpr = window.devicePixelRatio ||1;
     const width = Math.max(1, Math.floor(rect.width * dpr));
     const height = Math.max(1, Math.floor(rect.height * dpr));
 
-    if (canvas.width !== width) canvas.width = width;
-    if (canvas.height !== height) canvas.height = height;
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
 
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
@@ -135,39 +138,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    this.drawGrid(ctx);
-
-    ctx.strokeText(this.frame().fps.toFixed(3).toString(), 10, this.view().h - 12 - 14);
-    ctx.strokeText("x/y: " + this.view().x.toString() + " / " + this.view().y.toString() + " / " + this.view().z.toString(), 10, this.view().h - 12);
-
-
-  }
-
-  drawGrid(ctx: CanvasRenderingContext2D) {
-    const { w, h, x, y, z } = this.view();
-    const spacing = 20 * z;
-    const centerX = w / 2 + x;
-    const centerY = h / 2 + y;
-
-    const offsetX = ((centerX % spacing) + spacing) % spacing;
-    const offsetY = ((centerY % spacing) + spacing) % spacing;
-
-    ctx.strokeStyle = '#888888';
-    ctx.lineWidth = .5;
-
-    for (let gx = offsetX; gx <= w; gx += spacing) {
-      ctx.beginPath();
-      ctx.moveTo(gx, 0);
-      ctx.lineTo(gx, h);
-      ctx.stroke();
-    }
-
-    for (let gy = offsetY; gy <= h; gy += spacing) {
-      ctx.beginPath();
-      ctx.moveTo(0, gy);
-      ctx.lineTo(w, gy);
-      ctx.stroke();
-    }
+    drawGrid(ctx, this.view());
+    drawDebug(ctx, this.frame(), this.view(), this.cursor());
   }
 
   private clamp(value: number, min: number, max: number) {
