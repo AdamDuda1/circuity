@@ -2,5 +2,5 @@ menu {
     width: 100vw;
     height: 60px;
     background: linear-gradient(180deg, white, transparent);
-    //backdrop-filter: blur(10px);
+    /*backdrop-filter: blur(10 px);*/
 }
