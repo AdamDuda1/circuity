@@ -1,7 +1,8 @@
-import { ElectronicalComponent } from './component-type-interface';
+import { ElectricalComponent } from './component-type-interface';
+import { Globals } from '../globals';
 
-export class AND implements ElectronicalComponent {
-    constructor(_x: number, _y: number) {
+export class AND implements ElectricalComponent {
+    constructor(public globals: Globals, _x: number, _y: number) {
         this.x = _x;
         this.y = _y;
     }
@@ -15,6 +16,10 @@ export class AND implements ElectronicalComponent {
 
     x = 0;
     y = 0;
+
+    actualSize = {x1: 0, y1: 1, w: 21, h: 21};
+    ins = [];
+    outs = [];
 
     render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
         let x = (this.x + view.x) * view.z + view.w / 2;
@@ -59,5 +64,9 @@ export class AND implements ElectronicalComponent {
         ctx.stroke();
 
         ctx.restore();
+
+        if (this.globals.cursor().x >= x && this.globals.cursor().x <= x + w && this.globals.cursor().y >= y && this.globals.cursor().y <= y + h) {
+
+        }
     }
 }

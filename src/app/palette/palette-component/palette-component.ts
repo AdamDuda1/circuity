@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, input, Component, signal, viewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { ElectronicalComponent } from '../../components/component-type-interface';
+import { ElectricalComponent } from '../../components/component-type-interface';
 
 @Component({
     selector: 'app-palette-component',
@@ -10,7 +10,7 @@ import { ElectronicalComponent } from '../../components/component-type-interface
 })
 export class PaletteComponent implements AfterViewInit {
     private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
-    component = input.required<ElectronicalComponent>();
+    component = input.required<ElectricalComponent>();
 
     async ngAfterViewInit() {
         const canvas = this.canvasRef().nativeElement;

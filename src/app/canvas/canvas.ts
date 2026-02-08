@@ -13,6 +13,7 @@ import { Simulation } from '../simulation';
 import { AND } from '../components/and';
 import { OR } from '../components/or';
 import { NOT } from '../components/not';
+import { Globals } from '../globals';
 
 @Component({
     selector: 'app-canvas',
@@ -22,12 +23,9 @@ import { NOT } from '../components/not';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Canvas implements AfterViewInit, OnDestroy {
-    private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
+    constructor(public globals: Globals) {}
 
-    public readonly view = signal({x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0});
-    protected readonly cursor = signal({x: 0, y: 0});
-    protected readonly world = signal({w: 0, h: 0});
-    protected readonly frame = signal({dt: 0, fps: 0});
+    private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
     protected readonly isPanning = signal(false);
     private readonly targetZ = signal(1);
@@ -48,7 +46,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
         this.resizeObserver.observe(canvas.parentElement!);
 
-        this.simulation.circuitComponents().push(new AND(0, 0));
+        this.simulation.circuitComponents().push(new AND(this.globals, 0, 0));
         this.simulation.circuitComponents().push(new OR(0, 40));
         this.simulation.circuitComponents().push(new NOT(0, 80));
 
@@ -68,7 +66,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     onWheel(event: WheelEvent) {
         event.preventDefault();
-        const v = this.view();
+        const v = this.globals.view();
         const rawFactor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
         const nextZ = this.clamp(v.z * rawFactor, 0.2, 10);
         const factor = nextZ / v.z;
@@ -89,17 +87,17 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
         if (this.isPanning()) {
             const last = this.lastPointer();
-            const z = this.view().z;
-            this.view.update((v) => ({...v, x: v.x + (event.clientX - last.x) / z, y: v.y + (event.clientY - last.y) / z}));
+            const z = this.globals.view().z;
+            this.globals.view.update((v) => ({...v, x: v.x + (event.clientX - last.x) / z, y: v.y + (event.clientY - last.y) / z}));
             this.lastPointer.set({x: event.clientX, y: event.clientY});
         }
 
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
 
-        this.cursor.update(() => ({
-            x: (mouseX - this.view().w / 2) / this.view().z,
-            y: (mouseY - this.view().h / 2) / this.view().z
+        this.globals.cursor.update(() => ({
+            x: (-mouseX + this.globals.view().w / 2 + this.globals.view().x) / this.globals.view().z,
+            y: (-mouseY + this.globals.view().h / 2 + this.globals.view().y) / this.globals.view().z
         }));
     }
 
@@ -110,20 +108,19 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     private startLoop(canvas: HTMLCanvasElement) {
         this.ctx = canvas.getContext('2d')!;
-        this.drawer.initialize(this.ctx, this.view);
 
         let last = performance.now();
 
         const tick = () => {
             const now = performance.now();
-            this.frame.update((v) => ({...v, dt: now - last}));
-            this.frame.update((v) => ({...v, fps: this.frame().dt > 0 ? 1000 / this.frame().dt : 0}));
+            this.globals.frame.update((v) => ({...v, dt: now - last}));
+            this.globals.frame.update((v) => ({...v, fps: this.globals.frame().dt > 0 ? 1000 / this.globals.frame().dt : 0}));
             last = now;
 
-            const v = this.view();
+            const v = this.globals.view();
             const nextZ = v.z + (this.targetZ() - v.z) * 0.15;
             if (Math.abs(nextZ - v.z) > 0.0001) {
-                this.view.update((prev) => ({...prev, z: nextZ}));
+                this.globals.view.update((prev) => ({...prev, z: nextZ}));
             }
 
             this.simulation.simulate();
@@ -152,22 +149,17 @@ export class Canvas implements AfterViewInit, OnDestroy {
         canvas.style.width = `${rect.width}px`;
         canvas.style.height = `${rect.height}px`;
 
-        this.view.update((v) => ({...v, w: rect.width, h: rect.height, dpr}));
+        this.globals.view.update((v) => ({...v, w: rect.width, h: rect.height, dpr}));
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        const {w, h, dpr} = this.view();
+        const {w, h, dpr} = this.globals.view();
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, w, h);
-        this.drawer.drawGrid();
-        this.drawer.drawWorld(this.ctx, this.simulation, this.view()); // TODO tidy up the func references
-        this.drawer.drawDebug(ctx, this.frame(), this.view(), this.cursor());
-
-        this.ctx.fillStyle = 'red';
-        this.ctx.beginPath();
-        this.ctx.arc(this.drawer.world_to_canvas_x(this.cursor().x), this.drawer.world_to_canvas_y(this.cursor().y), 12, 0, Math.PI * 2);
-        this.ctx.fill();
+        this.drawer.drawGrid(ctx);
+        this.drawer.drawWorld(this.ctx, this.simulation);
+        this.drawer.drawDebug(ctx);
     }
 
     private clamp(value: number, min: number, max: number) {

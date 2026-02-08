@@ -6,6 +6,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 ## TODO:
 
+- [ ] ! remove unnecessary func references and move to globals.ts
 - [ ] Make movement on mobile
 - [ ] Add wiring
 - [ ] Add simulation controls (controlPanel) component

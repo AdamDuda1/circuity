@@ -3,6 +3,8 @@ import { PaletteComponent } from './palette-component/palette-component';
 import { AND } from '../components/and';
 import { OR } from '../components/or';
 import { NOT } from '../components/not';
+import { Globals } from '../globals';
+import { ElectricalComponent } from '../components/component-type-interface';
 
 @Component({
     selector: 'app-palette',
@@ -15,9 +17,13 @@ import { NOT } from '../components/not';
     styleUrl: './palette.css'
 })
 export class Palette {
-    components = signal([
-        new AND(-1, -1),
-        new OR(-1, -1),
-        new NOT(-1, -1)
-    ]);
+    components = signal<ElectricalComponent[]>([]);
+
+    constructor(public globals: Globals) {
+        this.components.set([
+            new AND(this.globals, -1, -1),
+            new OR(-1, -1),
+            new NOT(-1, -1)
+        ]);
+    }
 }

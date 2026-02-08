@@ -1,9 +1,9 @@
 import { Injectable, signal } from '@angular/core';
-import { ElectronicalComponent } from './components/component-type-interface';
+import { ElectricalComponent } from './components/component-type-interface';
 
 @Injectable({providedIn: 'root'})
 export class Simulation {
-    public circuitComponents = signal<ElectronicalComponent[]>([]);
+    public circuitComponents = signal<ElectricalComponent[]>([]);
 
     simulate() {
         console.log('simulate');

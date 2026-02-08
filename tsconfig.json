@@ -13,6 +13,9 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
+    "types": [
+      "angular"
+    ],
     "module": "preserve"
   },
   "angularCompilerOptions": {

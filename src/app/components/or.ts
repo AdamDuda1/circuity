@@ -1,6 +1,6 @@
-import { ElectronicalComponent } from './component-type-interface';
+import { ElectricalComponent } from './component-type-interface';
 
-export class OR implements ElectronicalComponent {
+export class OR implements ElectricalComponent {
     constructor(_x: number, _y: number) {
         this.x = _x;
         this.y = _y;
@@ -15,6 +15,10 @@ export class OR implements ElectronicalComponent {
 
     x = 0;
     y = 0;
+
+    actualSize = { x1: 0, y1: 0, w: 0, h: 0 };
+    ins = [];
+    outs = [];
 
     render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
         let x = (this.x + view.x) * view.z + view.w / 2;
