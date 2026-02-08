@@ -8,7 +8,7 @@ import {
     viewChild,
     inject
 } from '@angular/core';
-import { drawGrid, drawWorld, drawDebug } from './canvas-draw-misc';
+import { CanvasDraw } from './canvas-draw-misc';
 import { Simulation } from '../simulation';
 import { AND } from '../components/and';
 import { OR } from '../components/or';
@@ -24,7 +24,7 @@ import { NOT } from '../components/not';
 export class Canvas implements AfterViewInit, OnDestroy {
     private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
-    protected readonly view = signal({x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0});
+    public readonly view = signal({x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0});
     protected readonly cursor = signal({x: 0, y: 0});
     protected readonly world = signal({w: 0, h: 0});
     protected readonly frame = signal({dt: 0, fps: 0});
@@ -33,10 +33,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
     private readonly targetZ = signal(1);
     private readonly lastPointer = signal({x: 0, y: 0});
 
-    private ctx!: CanvasRenderingContext2D;
+    public ctx!: CanvasRenderingContext2D;
     private animationRef = 0;
     private resizeObserver?: ResizeObserver;
 
+    private drawer = inject(CanvasDraw);
     private simulation = inject(Simulation);
 
     ngAfterViewInit() {
@@ -71,17 +72,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
         const rawFactor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
         const nextZ = this.clamp(v.z * rawFactor, 0.2, 10);
         const factor = nextZ / v.z;
-        const centerX = v.x + v.w / 2;
-        const centerY = v.y + v.h / 2;
 
-        //this.targetZ.set(nextZ);
+        this.targetZ.set(nextZ);
         this.targetZ.update((z) => this.clamp(z * factor, 0.2, 10));
-
-        this.view.update((prev) => ({
-            ...prev,
-            x: centerX - (centerX - prev.x) / factor,
-            y: centerY - (centerY - prev.y) / factor
-        }));
     }
 
     onPointerDown(event: PointerEvent) {
@@ -98,8 +91,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
         if (!this.isPanning()) return;
         // this.ctx.canvas.style.cursor = 'grabbing'; // TODO cursors
         const last = this.lastPointer();
-        const dx = event.clientX - last.x;
-        const dy = event.clientY - last.y;
+        const dx = (event.clientX - last.x) / this.view().z;
+        const dy = (event.clientY - last.y) / this.view().z;
         this.lastPointer.set({x: event.clientX, y: event.clientY});
         this.view.update((v) => ({...v, x: v.x + dx, y: v.y + dy}));
     }
@@ -111,6 +104,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     private startLoop(canvas: HTMLCanvasElement) {
         this.ctx = canvas.getContext('2d')!;
+        this.drawer.initialize(this.ctx, this.view);
 
         let last = performance.now();
 
@@ -160,9 +154,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, w, h);
-        drawGrid(ctx, this.view());
-        drawWorld(this.ctx, this.simulation, this.view());
-        drawDebug(ctx, this.frame(), this.view(), this.cursor());
+        this.drawer.drawGrid();
+        this.drawer.drawWorld(this.ctx, this.simulation, this.view()); // TODO tidy up the func references
+        this.drawer.drawDebug(ctx, this.frame(), this.view(), this.cursor());
     }
 
     private clamp(value: number, min: number, max: number) {

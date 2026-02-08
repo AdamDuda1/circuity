@@ -7,6 +7,8 @@ export class OR implements ElectronicalComponent {
     }
 
     name = 'OR';
+    category = 'basic-gates';
+
     type = '';
 
     color = 'red';
@@ -14,9 +16,9 @@ export class OR implements ElectronicalComponent {
     x = 0;
     y = 0;
 
-    render(ctx: CanvasRenderingContext2D, view: { x: number; y: number; z: number }, w?: number, h?: number) {
-        let x = (this.x + view.x) * view.z;
-        let y = (this.y + view.y) * view.z;
+    render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
+        let x = (this.x + view.x) * view.z + view.w / 2;
+        let y = (this.y + view.y) * view.z + view.h / 2;
         w = w ?? 20 * view.z;
         h = h ?? 20 * view.z;
 
