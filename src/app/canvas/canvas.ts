@@ -85,16 +85,22 @@ export class Canvas implements AfterViewInit, OnDestroy {
     }
 
     onPointerMove(event: PointerEvent) {
-        this.cursor().x = (event.clientX - this.view().w / 2 - this.view().x) / this.view().z;
-        this.cursor().y = (event.clientY - this.view().h / 2 - this.view().y) / this.view().z;
+        const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 
-        if (!this.isPanning()) return;
-        // this.ctx.canvas.style.cursor = 'grabbing'; // TODO cursors
-        const last = this.lastPointer();
-        const dx = (event.clientX - last.x) / this.view().z;
-        const dy = (event.clientY - last.y) / this.view().z;
-        this.lastPointer.set({x: event.clientX, y: event.clientY});
-        this.view.update((v) => ({...v, x: v.x + dx, y: v.y + dy}));
+        if (this.isPanning()) {
+            const last = this.lastPointer();
+            const z = this.view().z;
+            this.view.update((v) => ({...v, x: v.x + (event.clientX - last.x) / z, y: v.y + (event.clientY - last.y) / z}));
+            this.lastPointer.set({x: event.clientX, y: event.clientY});
+        }
+
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        this.cursor.update(() => ({
+            x: (mouseX - this.view().w / 2) / this.view().z,
+            y: (mouseY - this.view().h / 2) / this.view().z
+        }));
     }
 
     onPointerUp(event: PointerEvent) {
@@ -157,6 +163,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.drawer.drawGrid();
         this.drawer.drawWorld(this.ctx, this.simulation, this.view()); // TODO tidy up the func references
         this.drawer.drawDebug(ctx, this.frame(), this.view(), this.cursor());
+
+        this.ctx.fillStyle = 'red';
+        this.ctx.beginPath();
+        this.ctx.arc(this.drawer.world_to_canvas_x(this.cursor().x), this.drawer.world_to_canvas_y(this.cursor().y), 12, 0, Math.PI * 2);
+        this.ctx.fill();
     }
 
     private clamp(value: number, min: number, max: number) {
