@@ -65,8 +65,14 @@ export class AND implements ElectricalComponent {
 
         ctx.restore();
 
-        if (this.globals.cursor().x >= x && this.globals.cursor().x <= x + w && this.globals.cursor().y >= y && this.globals.cursor().y <= y + h) {
 
+        console.log(this.globals.cursor().x, x - view.w / 2, this.globals.cursor().x, x + w - view.w / 2,
+            this.globals.cursor().y, y - view.h / 2, this.globals.cursor().y, y + h - view.h / 2);
+
+        if (this.globals.cursor().x >= x - view.w / 2 && this.globals.cursor().x <= x + w - view.w / 2
+            && this.globals.cursor().y >= y - view.h / 2 && this.globals.cursor().y <= y + h - view.h / 2) {
+            this.globals.canvasCursorCandidate = 'pointer';
+            console.log('Asdsafd');
         }
     }
 }

@@ -123,8 +123,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 this.globals.view.update((prev) => ({...prev, z: nextZ}));
             }
 
+            this.globals.canvasCursorCandidate = 'default';
             this.simulation.simulate();
             this.draw(this.ctx);
+            this.globals.canvasCursor = this.globals.canvasCursorCandidate;
 
             this.animationRef = requestAnimationFrame(tick);
         };

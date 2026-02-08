@@ -20,6 +20,13 @@ export class CanvasDraw {
 
         for (let x = xMin; x <= xMax; x += step) {
             const cx = (x + this.globals.view().x) * this.globals.view().z + this.globals.view().w / 2;
+            if (x === 0) {
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(94,94,94,0.2)';
+            } else {
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'rgba(135,135,135,0.2)';
+            }
             ctx.beginPath();
             ctx.moveTo(cx, 0);
             ctx.lineTo(cx, this.globals.view().h);
@@ -28,11 +35,37 @@ export class CanvasDraw {
 
         for (let y = yMin; y <= yMax; y += step) {
             const cy = (y + this.globals.view().y) * this.globals.view().z + this.globals.view().h / 2;
+            if (y === 0) {
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(94,94,94,0.2)';
+            } else {
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'rgba(135,135,135,0.2)';
+            }
             ctx.beginPath();
             ctx.moveTo(0, cy);
             ctx.lineTo(this.globals.view().w, cy);
             ctx.stroke();
         }
+
+
+        ctx.lineWidth = 3;
+        ctx.fillStyle = 'rgba(135,135,135,0.5)';
+        ctx.beginPath();
+        ctx.moveTo(this.globals.view().w - 10, (this.globals.view().y) * this.globals.view().z + this.globals.view().h / 2 - 10 / 2);
+        ctx.lineTo(this.globals.view().w, (this.globals.view().y) * this.globals.view().z + this.globals.view().h / 2);
+        ctx.lineTo(this.globals.view().w - 10, (this.globals.view().y) * this.globals.view().z + this.globals.view().h / 2 + 10 / 2);
+        ctx.stroke();
+        // ctx.closePath();
+        // ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo((this.globals.view().x) * this.globals.view().z + this.globals.view().w / 2 - 10 / 2, 10);
+        ctx.lineTo((this.globals.view().x) * this.globals.view().z + this.globals.view().w / 2, 0);
+        ctx.lineTo((this.globals.view().x) * this.globals.view().z + this.globals.view().w / 2 + 10 / 2, 10);
+        ctx.stroke();
+        // ctx.closePath();
+        // ctx.fill();
     }
 
     drawWorld(ctx: CanvasRenderingContext2D, simulation: Simulation) {

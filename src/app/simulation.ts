@@ -6,6 +6,6 @@ export class Simulation {
     public circuitComponents = signal<ElectricalComponent[]>([]);
 
     simulate() {
-        console.log('simulate');
+        //console.log('simulate');
     }
 }
