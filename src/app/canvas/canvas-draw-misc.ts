@@ -23,33 +23,30 @@ export class CanvasDraw {
 
         const ctx = this.ctx;
 
-        const step =1;
-        const xMin = Math.floor(-this.view().w /2 / this.view().z - this.view().x);
-        const xMax = Math.ceil(this.view().w /2 / this.view().z - this.view().x);
-        const yMin = Math.floor(-this.view().h /2 / this.view().z - this.view().y);
-        const yMax = Math.ceil(this.view().h /2 / this.view().z - this.view().y);
+        const step = Math.pow(5, Math.floor(Math.log10(500 / this.view().z)));
+        const xMin = Math.floor((-this.view().w / 2 / this.view().z + this.view().x) / step) * step;
+        const xMax = Math.ceil((this.view().w / 2 / this.view().z + this.view().x) / step) * step;
+        const yMin = Math.floor((-this.view().h / 2 / this.view().z + this.view().y) / step) * step;
+        const yMax = Math.ceil((this.view().h / 2 / this.view().z + this.view().y) / step) * step;
 
         ctx.strokeStyle = 'rgba(135,135,135,0.2)';
-        ctx.lineWidth =1;
+        ctx.lineWidth = 1;
 
         for (let x = xMin; x <= xMax; x += step) {
-            const cx = (x + this.view().x) * this.view().z + this.view().w /2;
+            const cx = (x - this.view().x) * this.view().z + this.view().w / 2;
             ctx.beginPath();
-            ctx.moveTo(cx,0);
+            ctx.moveTo(cx, 0);
             ctx.lineTo(cx, this.view().h);
             ctx.stroke();
         }
 
         for (let y = yMin; y <= yMax; y += step) {
-            const cy = (y + this.view().y) * this.view().z + this.view().h /2;
+            const cy = (y - this.view().y) * this.view().z + this.view().h / 2;
             ctx.beginPath();
             ctx.moveTo(0, cy);
             ctx.lineTo(this.view().w, cy);
             ctx.stroke();
         }
-
-
-
     }
 
     drawWorld(ctx: CanvasRenderingContext2D, simulation: Simulation, view: { x: number, y: number, z: number, w: number, h: number }) {
@@ -70,12 +67,12 @@ export class CanvasDraw {
         ctx.strokeText('x/y: ' + view.x.toFixed(2).toString() + ' / ' + view.y.toFixed(2).toString() + ' / ' + view.z.toFixed(2).toString(), 10, view.h - 12 - 14);
         ctx.strokeText('crs: ' + cursor.x.toFixed(2).toString() + ' / ' + cursor.y.toFixed(2).toString(), 10, view.h - 12);
 
-        this.ctx.fillStyle = 'red';
-        this.ctx.beginPath();
-        this.ctx.arc(this.world_to_canvas_x(0), this.world_to_canvas_y(0), 5, 0, Math.PI * 2);
-        this.ctx.fill();
+        /*this.ctx.fillStyle = 'red';
+         this.ctx.beginPath();
+         this.ctx.arc(this.world_to_canvas_x(0), this.world_to_canvas_y(0), 5, 0, Math.PI * 2);
+         this.ctx.fill();*/
 
-        this.ctx.fillStyle = 'red';
+        /*this.ctx.fillStyle = 'red';
         this.ctx.beginPath();
         this.ctx.arc(0, 0, 5, 0, Math.PI * 2);
         this.ctx.fill();
@@ -87,6 +84,6 @@ export class CanvasDraw {
         this.ctx.fill();
         this.ctx.beginPath();
         this.ctx.arc(this.view().w, this.view().h, 5, 0, Math.PI * 2);
-        this.ctx.fill();
+        this.ctx.fill();*/
     }
 }
