@@ -2,12 +2,13 @@ import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
 export class NOT extends ElectricalComponent {
-    constructor(public override globals: Globals, _x: number, _y: number) {
+    constructor(public override globals: Globals, giveID: boolean, _x: number, _y: number) {
         super(globals);
         this.x = _x;
         this.y = _y;
         this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
-        this.id = this.globals.simulation.circuitComponents.length;
+        if (giveID) this.id = this.globals.getNextID();
+        else this.id = -1;
     }
 
     id;
@@ -32,6 +33,9 @@ export class NOT extends ElectricalComponent {
         const screenY = (-this.y + view.y) * view.z + view.h / 2;
         w = w ?? this.w * view.z;
         h = h ?? this.h * view.z;
+
+        if (this.globals.selected == this.id) this.color = 'blue';
+        else this.color = 'red';
 
         const x = screenX;
         const y = screenY - h;
@@ -75,6 +79,12 @@ export class NOT extends ElectricalComponent {
         ctx.moveTo(x + w * .95, y + h / 2);
         ctx.lineTo(x + w + 3 * view.z, y + h / 2);
         ctx.stroke();
+
+        ctx.strokeStyle = 'black';
+        ctx.font = `${8 * view.z}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.strokeText(String(this.id), x + w /2, y + h /2);
 
         ctx.restore();
     }

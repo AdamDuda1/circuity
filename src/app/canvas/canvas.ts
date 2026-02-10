@@ -9,7 +9,6 @@ import {
     inject
 } from '@angular/core';
 import { CanvasDraw } from './canvas-draw-misc';
-import { Simulation } from '../simulation';
 import { AND } from '../components/and';
 import { OR } from '../components/or';
 import { NOT } from '../components/not';
@@ -31,6 +30,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
     private readonly targetZ = signal(1);
     private readonly lastPointer = signal({x: 0, y: 0});
 
+    private moved_amt = 0;
     public ctx!: CanvasRenderingContext2D;
     private animationRef = 0;
     private resizeObserver?: ResizeObserver;
@@ -45,9 +45,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
         this.resizeObserver.observe(canvas.parentElement!);
 
-        this.globals.simulation.circuitComponents().push(new AND(this.globals, 0, 0));
-        this.globals.simulation.circuitComponents().push(new OR(this.globals, 0, 40));
-        this.globals.simulation.circuitComponents().push(new NOT(this.globals, 0, 80));
+        this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, 0));
+        this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, 40));
+        this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 80));
 
         this.startLoop(canvas);
     }
@@ -79,24 +79,36 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.isPanning.set(true);
         this.lastPointer.set({x: event.clientX, y: event.clientY});
         (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
+
+        if (this.globals.selected != -1) this.globals.selected = -1;
+        else for (const component of this.globals.simulation.circuitComponents()) {
+            if (component.mouseOverComponent()) {
+                this.globals.selected = component.id;
+                break;
+            }
+        }
     }
 
     onPointerMove(event: PointerEvent) {
         const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 
         if (this.isPanning()) {
-            if (this.globals.selected != -1) {
+            this.moved_amt++;
+            const last = this.lastPointer();
+            const z = this.globals.view().z;
 
+            if (this.globals.selected != -1) {
+                this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z)
+                console.log(this.globals.simulation.circuitComponents());
             } else {
-                const last = this.lastPointer();
-                const z = this.globals.view().z;
                 this.globals.view.update((v) => ({
                     ...v,
                     x: v.x + (event.clientX - last.x) / z,
                     y: v.y + (event.clientY - last.y) / z
                 }));
-                this.lastPointer.set({x: event.clientX, y: event.clientY});
             }
+
+            this.lastPointer.set({x: event.clientX, y: event.clientY});
         }
 
         const mouseX = event.clientX - rect.left;
@@ -122,6 +134,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
     onPointerUp(event: PointerEvent) {
         this.isPanning.set(false);
         (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
+        if (this.moved_amt > 5) this.globals.selected = -1;
+        this.moved_amt = 0;
     }
 
     private startLoop(canvas: HTMLCanvasElement) {
@@ -141,7 +155,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 this.globals.view.update((prev) => ({...prev, z: nextZ}));
             }
 
-            //this.globals.canvasCursorCandidate = 'default';
             this.globals.simulation.simulate();
             this.draw(this.ctx);
             this.globals.canvasCursor = this.globals.canvasCursorCandidate;
@@ -182,7 +195,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.drawer.drawDebug(ctx);
     }
 
-    private clamp(value: number, min: number, max: number) {
+    private clamp(value: number, min: number, max: number) { // c++ :)
         return Math.min(max, Math.max(min, value));
     }
 }

@@ -17,6 +17,12 @@ export abstract class ElectricalComponent {
     abstract ins: { x: number, y: number } [];
     abstract outs: { x: number, y: number } [];
 
+    updatePos(x: number, y: number) {
+        this.x += x;
+        this.y += y;
+        this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
+    }
+
     abstract render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number,
         properties?: any): void;
 

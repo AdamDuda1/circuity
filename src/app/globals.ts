@@ -12,4 +12,7 @@ export class Globals {
     public canvasCursorCandidate = 'default';
     public selected = -1;
     public simulation = new Simulation();
+
+    private nextID = 0;
+    public getNextID() { return this.nextID++; }
 }
