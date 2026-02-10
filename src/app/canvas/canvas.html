@@ -6,9 +6,9 @@
     (pointermove)="onPointerMove($event)"
     (pointerup)="onPointerUp($event)"
     (pointerleave)="onPointerUp($event)"
-    [style.cursor]="isPanning() ? 'grabbing' : globals.canvasCursor"></canvas>
+    [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
 <!--    (pointerout)=""-->
 
 <footer class="absolute bottom-0.5 right-1 text-xs text-gray-500">
-    &copy;Adam Duda &sdot; <a href="https://github.com/AdamDuda1/circuity" target="_blank">GitHub</a>
+    &copy;Adam Duda &sdot; <a href="https://github.com/AdamDuda1/circuity" class="hover:underline" target="_blank">GitHub</a>
 </footer>

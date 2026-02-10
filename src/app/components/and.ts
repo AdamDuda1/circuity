@@ -22,10 +22,14 @@ export class AND implements ElectricalComponent {
     outs = [];
 
     render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
-        let x = (this.x + view.x) * view.z + view.w / 2;
-        let y = (this.y + view.y) * view.z + view.h / 2;
+        const screenX = (this.x + view.x) * view.z + view.w / 2;
+        const screenY = (-this.y + view.y) * view.z + view.h / 2;
         w = w ?? 20 * view.z;
         h = h ?? 20 * view.z;
+
+        // Render with component origin at bottom-left (Y goes up in world)
+        const x = screenX;
+        const y = screenY - h; // Shift up by height so bottom edge is at screenY
 
         ctx.save();
         ctx.strokeStyle = this.color;
@@ -65,14 +69,14 @@ export class AND implements ElectricalComponent {
 
         ctx.restore();
 
+        // Hit detection in world coordinates (Y goes up)
+        const worldW = 20;
+        const worldH = 20;
+        const cursor = this.globals.cursor();
 
-        console.log(this.globals.cursor().x, x - view.w / 2, this.globals.cursor().x, x + w - view.w / 2,
-            this.globals.cursor().y, y - view.h / 2, this.globals.cursor().y, y + h - view.h / 2);
-
-        if (this.globals.cursor().x >= x - view.w / 2 && this.globals.cursor().x <= x + w - view.w / 2
-            && this.globals.cursor().y >= y - view.h / 2 && this.globals.cursor().y <= y + h - view.h / 2) {
+        if (cursor.x >= this.x && cursor.x <= this.x + worldW &&
+            cursor.y >= this.y && cursor.y <= this.y + worldH) {
             this.globals.canvasCursorCandidate = 'pointer';
-            console.log('Asdsafd');
         }
     }
 }

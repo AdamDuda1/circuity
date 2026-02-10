@@ -88,7 +88,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
         if (this.isPanning()) {
             const last = this.lastPointer();
             const z = this.globals.view().z;
-            this.globals.view.update((v) => ({...v, x: v.x + (event.clientX - last.x) / z, y: v.y + (event.clientY - last.y) / z}));
+            this.globals.view.update((v) => ({
+                ...v,
+                x: v.x + (event.clientX - last.x) / z,
+                y: v.y + (event.clientY - last.y) / z
+            }));
             this.lastPointer.set({x: event.clientX, y: event.clientY});
         }
 
@@ -96,8 +100,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
         const mouseY = event.clientY - rect.top;
 
         this.globals.cursor.update(() => ({
-            x: (-mouseX + this.globals.view().w / 2 + this.globals.view().x) / this.globals.view().z,
-            y: (-mouseY + this.globals.view().h / 2 + this.globals.view().y) / this.globals.view().z
+            x: (mouseX - this.globals.view().w / 2) / this.globals.view().z - this.globals.view().x,
+            y: -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y
         }));
     }
 
