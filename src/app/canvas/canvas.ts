@@ -29,6 +29,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
     protected readonly isPanning = signal(false);
     private readonly targetZ = signal(1);
     private readonly lastPointer = signal({x: 0, y: 0});
+    private lastPinchDist = 0;
 
     private moved_amt = 0;
     public ctx!: CanvasRenderingContext2D;
@@ -57,11 +58,45 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver?.disconnect();
     }
 
-    /*onWheel(event: WheelEvent) {
-     event.preventDefault();
-     const factor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
-     this.targetZ.update((z) => this.clamp(z * factor, 0.2, 10));
-     }*/
+    private startLoop(canvas: HTMLCanvasElement) {
+        this.ctx = canvas.getContext('2d')!;
+
+        let last = performance.now();
+
+        const tick = () => {
+            const now = performance.now();
+            this.globals.frame.update((v) => ({...v, dt: now - last}));
+            this.globals.frame.update((v) => ({...v, fps: this.globals.frame().dt > 0 ? 1000 / this.globals.frame().dt : 0}));
+            last = now;
+
+            const v = this.globals.view();
+            const nextZ = v.z + (this.targetZ() - v.z) * 0.15;
+            if (Math.abs(nextZ - v.z) > 0.0001) {
+                this.globals.view.update((prev) => ({...prev, z: nextZ}));
+            }
+
+            this.globals.simulation.simulate();
+            this.draw(this.ctx);
+            this.globals.canvasCursor = this.globals.canvasCursorCandidate;
+
+            this.animationRef = requestAnimationFrame(tick);
+        };
+
+        this.animationRef = requestAnimationFrame(tick);
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        const {w, h, dpr} = this.globals.view();
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        this.drawer.drawGrid(ctx);
+        this.drawer.drawWorld(this.ctx, this.globals.simulation);
+        this.drawer.drawDebug(ctx);
+    }
+
+
+    // MOVEMENT AND ZOOM (DESKTOP)
 
     onWheel(event: WheelEvent) {
         event.preventDefault();
@@ -76,6 +111,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     onPointerDown(event: PointerEvent) {
         if (event.button !== 0) return;
+        if (event.pointerType === 'touch' && this.isPanning()) return; // ignore second touch for panning
+
         this.isPanning.set(true);
         this.lastPointer.set({x: event.clientX, y: event.clientY});
         (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
@@ -89,6 +126,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
         }
     }
 
+    onPointerUp(event: PointerEvent) {
+        this.isPanning.set(false);
+        (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
+        if (this.moved_amt > 5) this.globals.selected = -1;
+        this.moved_amt = 0;
+    }
+
     onPointerMove(event: PointerEvent) {
         const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 
@@ -98,7 +142,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
             const z = this.globals.view().z;
 
             if (this.globals.selected != -1) {
-                this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z)
+                this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
                 console.log(this.globals.simulation.circuitComponents());
             } else {
                 this.globals.view.update((v) => ({
@@ -131,39 +175,39 @@ export class Canvas implements AfterViewInit, OnDestroy {
         if (this.globals.canvasCursorCandidate != candidate) this.globals.canvasCursorCandidate = candidate;
     }
 
-    onPointerUp(event: PointerEvent) {
-        this.isPanning.set(false);
-        (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
-        if (this.moved_amt > 5) this.globals.selected = -1;
-        this.moved_amt = 0;
+
+    // TOUCH EVENTS FOR MOBILE MOVEMENT
+
+    onTouchStart(event: TouchEvent) {
+        if (event.touches.length === 2) {
+            event.preventDefault();
+            this.lastPinchDist = this.getPinchDistance(event.touches);
+        }
     }
 
-    private startLoop(canvas: HTMLCanvasElement) {
-        this.ctx = canvas.getContext('2d')!;
-
-        let last = performance.now();
-
-        const tick = () => {
-            const now = performance.now();
-            this.globals.frame.update((v) => ({...v, dt: now - last}));
-            this.globals.frame.update((v) => ({...v, fps: this.globals.frame().dt > 0 ? 1000 / this.globals.frame().dt : 0}));
-            last = now;
-
-            const v = this.globals.view();
-            const nextZ = v.z + (this.targetZ() - v.z) * 0.15;
-            if (Math.abs(nextZ - v.z) > 0.0001) {
+    onTouchMove(event: TouchEvent) {
+        if (event.touches.length === 2) {
+            event.preventDefault();
+            const dist = this.getPinchDistance(event.touches);
+            if (this.lastPinchDist > 0) {
+                const factor = dist / this.lastPinchDist;
+                const v = this.globals.view();
+                const nextZ = this.clamp(v.z * factor, 0.2, 10);
+                this.targetZ.set(nextZ);
                 this.globals.view.update((prev) => ({...prev, z: nextZ}));
             }
-
-            this.globals.simulation.simulate();
-            this.draw(this.ctx);
-            this.globals.canvasCursor = this.globals.canvasCursorCandidate;
-
-            this.animationRef = requestAnimationFrame(tick);
-        };
-
-        this.animationRef = requestAnimationFrame(tick);
+            this.lastPinchDist = dist;
+        }
     }
+
+    onTouchEnd(event: TouchEvent) {
+        if (event.touches.length < 2) {
+            this.lastPinchDist = 0;
+        }
+    }
+
+
+    // MISC AND HELPERS
 
     private updateCanvasSize(canvas: HTMLCanvasElement) {
         const host = canvas.parentElement ?? canvas;
@@ -185,14 +229,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.globals.view.update((v) => ({...v, w: rect.width, h: rect.height, dpr}));
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
-        const {w, h, dpr} = this.globals.view();
-
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-        this.drawer.drawGrid(ctx);
-        this.drawer.drawWorld(this.ctx, this.globals.simulation);
-        this.drawer.drawDebug(ctx);
+    private getPinchDistance(touches: TouchList): number {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     private clamp(value: number, min: number, max: number) { // c++ :)

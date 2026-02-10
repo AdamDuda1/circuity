@@ -6,6 +6,9 @@
     (pointermove)="onPointerMove($event)"
     (pointerup)="onPointerUp($event)"
     (pointerleave)="onPointerUp($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchmove)="onTouchMove($event)"
+    (touchend)="onTouchEnd($event)"
     [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
 <!--    (pointerout)=""-->
 
