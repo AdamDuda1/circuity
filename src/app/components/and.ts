@@ -1,12 +1,16 @@
 import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
-export class AND implements ElectricalComponent {
-    constructor(public globals: Globals, _x: number, _y: number) {
+export class AND extends ElectricalComponent {
+    constructor(public override globals: Globals, _x: number, _y: number) {
+        super(globals);
         this.x = _x;
         this.y = _y;
+        this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
+        this.id = this.globals.simulation.circuitComponents.length;
     }
 
+    id;
     name = 'AND';
     category = 'basic-gates';
 
@@ -16,20 +20,21 @@ export class AND implements ElectricalComponent {
 
     x = 0;
     y = 0;
+    h = 20;
+    w = 20;
 
-    actualSize = {x1: 0, y1: 1, w: 21, h: 21};
+    actualSize;
     ins = [];
     outs = [];
 
     render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
         const screenX = (this.x + view.x) * view.z + view.w / 2;
         const screenY = (-this.y + view.y) * view.z + view.h / 2;
-        w = w ?? 20 * view.z;
-        h = h ?? 20 * view.z;
+        w = w ?? this.w * view.z;
+        h = h ?? this.h * view.z;
 
-        // Render with component origin at bottom-left (Y goes up in world)
         const x = screenX;
-        const y = screenY - h; // Shift up by height so bottom edge is at screenY
+        const y = screenY - h;
 
         ctx.save();
         ctx.strokeStyle = this.color;
@@ -67,16 +72,11 @@ export class AND implements ElectricalComponent {
         ctx.lineTo(x - 3 * view.z, y + h / 5 * 4);
         ctx.stroke();
 
+        ctx.font = `${8 * view.z}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(this.id), x + w /2, y + h /2);
+
         ctx.restore();
-
-        // Hit detection in world coordinates (Y goes up)
-        const worldW = 20;
-        const worldH = 20;
-        const cursor = this.globals.cursor();
-
-        if (cursor.x >= this.x && cursor.x <= this.x + worldW &&
-            cursor.y >= this.y && cursor.y <= this.y + worldH) {
-            this.globals.canvasCursorCandidate = 'pointer';
-        }
     }
 }

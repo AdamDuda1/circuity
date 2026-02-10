@@ -36,7 +36,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
     private resizeObserver?: ResizeObserver;
 
     private drawer = inject(CanvasDraw);
-    private simulation = inject(Simulation);
 
     ngAfterViewInit() {
         const canvas = this.canvasRef().nativeElement;
@@ -46,9 +45,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
         this.resizeObserver.observe(canvas.parentElement!);
 
-        this.simulation.circuitComponents().push(new AND(this.globals, 0, 0));
-        this.simulation.circuitComponents().push(new OR(0, 40));
-        this.simulation.circuitComponents().push(new NOT(0, 80));
+        this.globals.simulation.circuitComponents().push(new AND(this.globals, 0, 0));
+        this.globals.simulation.circuitComponents().push(new OR(this.globals, 0, 40));
+        this.globals.simulation.circuitComponents().push(new NOT(this.globals, 0, 80));
 
         this.startLoop(canvas);
     }
@@ -86,14 +85,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
         const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 
         if (this.isPanning()) {
-            const last = this.lastPointer();
-            const z = this.globals.view().z;
-            this.globals.view.update((v) => ({
-                ...v,
-                x: v.x + (event.clientX - last.x) / z,
-                y: v.y + (event.clientY - last.y) / z
-            }));
-            this.lastPointer.set({x: event.clientX, y: event.clientY});
+            if (this.globals.selected != -1) {
+
+            } else {
+                const last = this.lastPointer();
+                const z = this.globals.view().z;
+                this.globals.view.update((v) => ({
+                    ...v,
+                    x: v.x + (event.clientX - last.x) / z,
+                    y: v.y + (event.clientY - last.y) / z
+                }));
+                this.lastPointer.set({x: event.clientX, y: event.clientY});
+            }
         }
 
         const mouseX = event.clientX - rect.left;
@@ -103,6 +106,17 @@ export class Canvas implements AfterViewInit, OnDestroy {
             x: (mouseX - this.globals.view().w / 2) / this.globals.view().z - this.globals.view().x,
             y: -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y
         }));
+
+        // SETTING CURSOR
+        let candidate = 'default';
+        for (const component of this.globals.simulation.circuitComponents()) {
+            if (component.mouseOverComponent()) {
+                candidate = 'pointer';
+                break;
+            }
+        }
+
+        if (this.globals.canvasCursorCandidate != candidate) this.globals.canvasCursorCandidate = candidate;
     }
 
     onPointerUp(event: PointerEvent) {
@@ -127,8 +141,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 this.globals.view.update((prev) => ({...prev, z: nextZ}));
             }
 
-            this.globals.canvasCursorCandidate = 'default';
-            this.simulation.simulate();
+            //this.globals.canvasCursorCandidate = 'default';
+            this.globals.simulation.simulate();
             this.draw(this.ctx);
             this.globals.canvasCursor = this.globals.canvasCursorCandidate;
 
@@ -164,7 +178,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, w, h);
         this.drawer.drawGrid(ctx);
-        this.drawer.drawWorld(this.ctx, this.simulation);
+        this.drawer.drawWorld(this.ctx, this.globals.simulation);
         this.drawer.drawDebug(ctx);
     }
 

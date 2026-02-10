@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { Simulation } from './simulation';
 
 @Injectable({
     providedIn: 'root'
@@ -9,4 +10,6 @@ export class Globals {
     public readonly frame = signal({dt: 0, fps: 0});
     public canvasCursor = 'default';
     public canvasCursorCandidate = 'default';
+    public selected = -1;
+    public simulation = new Simulation();
 }

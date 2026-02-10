@@ -22,8 +22,8 @@ export class Palette {
     constructor(public globals: Globals) {
         this.components.set([
             new AND(this.globals, -1, -1),
-            new OR(-1, -1),
-            new NOT(-1, -1)
+            new OR(this.globals, -1, -1),
+            new NOT(this.globals, -1, -1)
         ]);
     }
 }

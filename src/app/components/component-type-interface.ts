@@ -1,15 +1,27 @@
-export interface ElectricalComponent {
-    name: string;
-    category: string;
-    type: string;
-    color: string;
-    x: number;
-    y: number;
+import { Globals } from '../globals';
 
-    actualSize: { x1: number, y1: number, w: number, h: number };
-    ins: { x: number, y: number } [];
-    outs: { x: number, y: number } [];
+export abstract class ElectricalComponent {
+    protected constructor(public globals: Globals) {}
 
-    render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number,
+    abstract id: number;
+    abstract name: string;
+    abstract category: string;
+    abstract type: string;
+    abstract color: string;
+    abstract x: number;
+    abstract y: number;
+    abstract w: number;
+    abstract h: number;
+
+    abstract actualSize: { x1: number, y1: number, w: number, h: number };
+    abstract ins: { x: number, y: number } [];
+    abstract outs: { x: number, y: number } [];
+
+    abstract render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number,
         properties?: any): void;
+
+    mouseOverComponent(): boolean {
+        return (this.globals.cursor().x >= this.x && this.globals.cursor().x <= this.x + this.w &&
+            this.globals.cursor().y >= this.y && this.globals.cursor().y <= this.y + this.h);
+    }
 }

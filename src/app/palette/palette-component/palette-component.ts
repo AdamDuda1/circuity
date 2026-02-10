@@ -16,7 +16,7 @@ export class PaletteComponent implements AfterViewInit {
         const canvas = this.canvasRef().nativeElement;
         let ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
 
-        let view = signal({x: 5, y: 4.5, z: 3, w: 0, h: 0});
+        let view = signal({x: 5, y: 12.5, z: 3, w: 0, h: 0});
         this.component().render(ctx, view(), canvas.width - 20, canvas.height - 20);
 
 
