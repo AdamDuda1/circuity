@@ -6,6 +6,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 ## TODO:
 
+- [ ] Add alignment guides and step snapping setting
 - [ ] Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)
 - [ ] ! remove unnecessary func references and move to globals.ts
 - [ ] Move all constant strings to a constants file with array (=> translations possible)

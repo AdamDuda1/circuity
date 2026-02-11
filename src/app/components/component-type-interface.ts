@@ -23,8 +23,49 @@ export abstract class ElectricalComponent {
         this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
     }
 
-    abstract render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number,
-        properties?: any): void;
+    setSize(w: number, h: number) {
+        this.w = w;
+        this.h = h;
+    }
+
+    render(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
+        if (!ctx) return;
+        if (!view) {
+            const defaultView = this.globals.view();
+            view = {...defaultView, w: undefined, h: undefined};
+        }
+
+        this.drawPinDots(ctx);
+        this.drawShape(ctx, view, properties);
+    }
+
+    abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
+
+    drawPinDots(ctx: CanvasRenderingContext2D) {
+        const view = this.globals.view();
+        ctx.save();
+
+        ctx.lineWidth = 0;
+        ctx.fillStyle = 'orange';
+        for (const pin of this.ins) {
+            const screenX = (this.x + pin.x + view.x) * view.z + view.w / 2;
+            const screenY = (-(this.y + pin.y) + view.y) * view.z + view.h / 2;
+            ctx.beginPath();
+            ctx.arc(screenX, screenY, 2 * view.z, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        ctx.lineWidth = 0;
+        ctx.fillStyle = 'purple';
+        for (const pin of this.outs) {
+            const screenX = (this.x + pin.x + view.x) * view.z + view.w / 2;
+            const screenY = (-(this.y + pin.y) + view.y) * view.z + view.h / 2;
+            ctx.beginPath();
+            ctx.arc(screenX, screenY, 1.5 * view.z, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        ctx.restore();
+    }
 
     mouseOverComponent(): boolean {
         return (this.globals.cursor().x >= this.x && this.globals.cursor().x <= this.x + this.w &&

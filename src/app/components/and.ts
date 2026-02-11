@@ -25,24 +25,29 @@ export class AND extends ElectricalComponent {
     w = 20;
 
     actualSize;
-    ins = [];
-    outs = [];
+    ins = [{x: -3.5, y: 4.350}, {x: -3.5, y: 16.350}];
+    outs = [{x: 23.5, y: 10.25}];
 
-    render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
-        const screenX = (this.x + view.x) * view.z + view.w / 2;
-        const screenY = (-this.y + view.y) * view.z + view.h / 2;
-        w = w ?? this.w * view.z;
-        h = h ?? this.h * view.z;
+    drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
+        const viewW = view?.w ?? this.globals.view().w;
+        const viewH = view?.h ?? this.globals.view().h;
 
-        if (this.globals.selected == this.id) this.color = 'blue';
-        else this.color = 'red';
+        const screenX = (this.x + (view?.x ?? 0)) * (view?.z ?? 1) + viewW / 2;
+        const screenY = (-this.y + (view?.y ?? 0)) * (view?.z ?? 1) + viewH / 2;
+
+        const w = this.w * (view?.z ?? 1);
+        const h = this.h * (view?.z ?? 1);
+        const z = view?.z ?? 1;
+
+        // if (this.globals.selected == this.id) this.color = 'blue';
+        // else this.color = 'red';
 
         const x = screenX;
         const y = screenY - h;
 
         ctx.save();
         ctx.strokeStyle = this.color;
-        ctx.lineWidth = 2 * view.z;
+        ctx.lineWidth = 2 * z;
         ctx.beginPath();
         ctx.moveTo(x + w * .05, y);
         ctx.lineTo(x + w * .05, y + h);
@@ -63,24 +68,18 @@ export class AND extends ElectricalComponent {
         ctx.fill();
 
         ctx.strokeStyle = 'black';
-        ctx.lineWidth = 1.3 * view.z;
+        ctx.lineWidth = 1.3 * z;
         ctx.stroke();
 
         ctx.moveTo(x + w / 2, y);
-        ctx.lineTo(x + w * .05 - .65 * view.z, y);
+        ctx.lineTo(x + w * .05 - .65 * z, y);
         ctx.moveTo(x + w, y + h / 2);
-        ctx.lineTo(x + w + 3 * view.z, y + h / 2);
+        ctx.lineTo(x + w + 3 * z, y + h / 2);
         ctx.moveTo(x + w * .05, y + h / 5);
-        ctx.lineTo(x - 3 * view.z, y + h / 5);
+        ctx.lineTo(x - 3 * z, y + h / 5);
         ctx.moveTo(x + w * .05, y + h / 5 * 4);
-        ctx.lineTo(x - 3 * view.z, y + h / 5 * 4);
+        ctx.lineTo(x - 3 * z, y + h / 5 * 4);
         ctx.stroke();
-
-        ctx.strokeStyle = 'black';
-        ctx.font = `${8 * view.z}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.strokeText(String(this.id), x + w /2, y + h /2);
 
         ctx.restore();
     }

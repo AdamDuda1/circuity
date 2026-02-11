@@ -75,7 +75,8 @@ export class CanvasDraw {
 
     drawWorld(ctx: CanvasRenderingContext2D, simulation: Simulation) {
         if (!ctx || !this.globals.view) return;
-        simulation.circuitComponents().forEach(component => component.render(ctx, this.globals.view()));
+        const view = this.globals.view(); // to pass as a copy, not a reference
+        simulation.circuitComponents().forEach(component => component.render(ctx, view));
     }
 
     drawDebug(ctx: CanvasRenderingContext2D) {

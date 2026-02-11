@@ -16,9 +16,9 @@ export class PaletteComponent implements AfterViewInit {
         const canvas = this.canvasRef().nativeElement;
         let ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
 
-        let view = signal({x: 5, y: 12.5, z: 3, w: 0, h: 0});
-        this.component().render(ctx, view(), canvas.width - 20, canvas.height - 20);
-
+        let view = signal({x: 5, y: 11, z: 8, w: -1, h: -1});
+        this.component().setSize((canvas.width - 30) / 10, (canvas.height - 30) / 10);
+        this.component().render(ctx, view()); // y = 26 * 5 + 20 (margin)
 
         canvas.parentElement!.addEventListener('dragstart', (event) => {
             const preview = document.createElement('div');

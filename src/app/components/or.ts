@@ -25,84 +25,57 @@ export class OR extends ElectricalComponent {
     w = 20;
 
     actualSize;
-    ins = [];
-    outs = [];
+    ins = [{x: -3.5, y: 4.350}, {x: -3.5, y: 16.350}];
+    outs = [{x: 23.5, y: 10.25}];
 
-    render(ctx: CanvasRenderingContext2D, view: { x: number, y: number, z: number, w: number, h: number }, w?: number, h?: number, properties?: any) {
-        const screenX = (this.x + view.x) * view.z + view.w / 2;
-        const screenY = (-this.y + view.y) * view.z + view.h / 2;
-        w = w ?? this.w * view.z;
-        h = h ?? this.h * view.z;
+    drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
+        const viewW = view?.w ?? this.globals.view().w;
+        const viewH = view?.h ?? this.globals.view().h;
 
-        if (this.globals.selected == this.id) this.color = 'blue';
-        else this.color = 'red';
+        const z = view?.z ?? 1;
+        const x = view?.x ?? 0;
+        const y = view?.y ?? 0;
 
-        const x = screenX;
-        const y = screenY - h;
+        const screenX = (this.x + x) * z + viewW / 2;
+        const screenY = (-this.y + y) * z + viewH / 2;
+
+        const w = this.w * z;
+        const h = this.h * z;
+
+        // if (this.globals.selected == this.id) this.color = 'blue';
+        // else this.color = 'red';
+
+        const posX = screenX;
+        const posY = screenY - h;
 
         ctx.save();
-        ctx.lineWidth = 1.4 * view.z;
+        ctx.lineWidth = 1.4 * z;
         ctx.strokeStyle = 'black';
         ctx.fillStyle = this.color;
 
-        ctx.moveTo(x - 3 * view.z, y + h * 0.3);
-        ctx.lineTo(x + w * 0.5, y + h * 0.3);
-        ctx.moveTo(x - 3 * view.z, y + h * 0.7);
-        ctx.lineTo(x + w * 0.5, y + h * 0.7);
+        ctx.moveTo(posX - 3 * z, posY + h * 0.3);
+        ctx.lineTo(posX + w * 0.5, posY + h * 0.3);
+        ctx.moveTo(posX - 3 * z, posY + h * 0.7);
+        ctx.lineTo(posX + w * 0.5, posY + h * 0.7);
         ctx.stroke();
 
         ctx.beginPath();
+        ctx.moveTo(posX, posY);
 
-        ctx.moveTo(x, y);
+        ctx.quadraticCurveTo(posX + w * .25, posY + h * 0.25, posX + w * .25, posY + h / 2);
+        ctx.quadraticCurveTo(posX + w * .25, posY + h * 0.75, posX, posY + h);
 
-        ctx.quadraticCurveTo(
-            x + w * .25,
-            y + h * 0.25,
-            x + w * .25,
-            y + h / 2
-        );
-
-        ctx.quadraticCurveTo(
-            x + w * .25,
-            y + h * 0.75,
-            x,
-            y + h
-        );
-
-        ctx.bezierCurveTo(
-            x + w * 0.6,
-            y + h,
-            x + w * 0.9,
-            y + h * 0.75,
-            x + w,
-            y + h / 2
-        );
-
-        ctx.bezierCurveTo(
-            x + w * 0.9,
-            y + h * 0.25,
-            x + w * 0.6,
-            y,
-            x + w * 0.25,
-            y
-        );
+        ctx.bezierCurveTo(posX + w * 0.6, posY + h, posX + w * 0.9, posY + h * 0.75, posX + w, posY + h / 2);
+        ctx.bezierCurveTo(posX + w * 0.9, posY + h * 0.25, posX + w * 0.6, posY, posX + w * 0.25, posY);
 
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
         ctx.beginPath();
-
-        ctx.moveTo(x + w, y + h / 2);
-        ctx.lineTo(x + w + 3 * view.z, y + h / 2);
+        ctx.moveTo(posX + w, posY + h / 2);
+        ctx.lineTo(posX + w + 3 * z, posY + h / 2);
         ctx.stroke();
-
-
-        ctx.strokeStyle = 'black';
-        ctx.font = `${8 * view.z}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.strokeText(String(this.id), x + w /2, y + h /2);
 
         ctx.restore();
     }
