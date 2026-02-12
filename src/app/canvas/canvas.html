@@ -9,6 +9,8 @@
     (touchstart)="onTouchStart($event)"
     (touchmove)="onTouchMove($event)"
     (touchend)="onTouchEnd($event)"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
     [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
 <!--    (pointerout)=""-->
 

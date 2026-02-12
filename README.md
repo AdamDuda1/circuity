@@ -20,6 +20,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
 - [ ] Make movement on mobile
 - [ ] Add wiring
+- [ ] Add grouping components by type (`<ng-content>`)
 - [ ] Add simulation controls (controlPanel) component
 - [ ] Add component categories, favourites and info manels
 - [ ] Add component states (ins, outs, power, color)

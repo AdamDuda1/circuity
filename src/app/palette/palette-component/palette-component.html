@@ -1,4 +1,8 @@
-<div class="select-none">
+<div
+        class="select-none cursor-grab"
+        draggable="true"
+        (dblclick)="onDoubleClick()"
+        (dragstart)="onDragStart($event)">
     <canvas #canvas width="120" height="120" style="width: 27px; height: 27px;"></canvas>
     <b>{{ component().name }}</b>
 </div>

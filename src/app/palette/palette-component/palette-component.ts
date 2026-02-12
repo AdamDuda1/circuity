@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, input, Component, signal, viewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ElectricalComponent } from '../../components/component-type-interface';
+import { Globals } from '../../globals';
 
 @Component({
     selector: 'app-palette-component',
@@ -9,27 +10,28 @@ import { ElectricalComponent } from '../../components/component-type-interface';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaletteComponent implements AfterViewInit {
+    constructor(public globals: Globals) {}
+
     private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
     component = input.required<ElectricalComponent>();
 
     async ngAfterViewInit() {
         const canvas = this.canvasRef().nativeElement;
-        let ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
+        const ctx: CanvasRenderingContext2D = canvas.getContext('2d')!;
 
-        let view = signal({x: 5, y: 11, z: 8, w: -1, h: -1});
+        const view = signal({x: 5, y: 11, z: 8, w: -1, h: -1});
         this.component().setSize((canvas.width - 30) / 10, (canvas.height - 30) / 10);
-        this.component().render(ctx, view()); // y = 26 * 5 + 20 (margin)
+        this.component().render(ctx, view());
+    }
 
-        canvas.parentElement!.addEventListener('dragstart', (event) => {
-            const preview = document.createElement('div');
-            preview.style.width = '50px';
-            preview.style.height = '50px';
-            preview.style.background = 'red';
-            document.body.appendChild(preview);
+    onDragStart(event: DragEvent): void {
+        if (!event.dataTransfer) return;
 
-            event.dataTransfer!.setDragImage(preview, 25, 25);
+        event.dataTransfer.effectAllowed = 'all'; // modify with event.dataTransfer.dropEffect in canvas.ts
+        event.dataTransfer.setData('application/circuity-component', this.component().name);
+    }
 
-            event.dataTransfer!.setData('text/plain', JSON.stringify({shape: 'circle'}));
-        });
+    onDoubleClick(): void {
+        this.globals.simulation.spawnComponent(this.component().name, -this.globals.view().x, this.globals.view().y); // TODO why -x ??
     }
 }

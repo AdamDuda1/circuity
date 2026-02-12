@@ -207,6 +207,32 @@ export class Canvas implements AfterViewInit, OnDestroy {
     }
 
 
+    // DRAG AND DROP
+
+    onDragOver(event: DragEvent): void {
+        if (event.dataTransfer?.types.includes('application/circuity-component')) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        }
+    }
+
+    onDrop(event: DragEvent): void {
+        event.preventDefault();
+
+        const componentName = event.dataTransfer?.getData('application/circuity-component');
+        if (!componentName) return;
+
+        const rect = this.canvasRef().nativeElement.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const worldX = (mouseX - this.globals.view().w / 2) / this.globals.view().z - this.globals.view().x;
+        const worldY = -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y;
+
+        this.globals.simulation.spawnComponent(componentName, worldX, worldY);
+    }
+
+
     // MISC AND HELPERS
 
     private updateCanvasSize(canvas: HTMLCanvasElement) {

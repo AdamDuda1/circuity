@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
     styleUrl: './palette-category.css',
 })
 export class PaletteCategory {
-
+    categoryName = 'category';
 }

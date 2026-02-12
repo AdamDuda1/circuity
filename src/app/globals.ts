@@ -11,7 +11,7 @@ export class Globals {
     public canvasCursor = 'default';
     public canvasCursorCandidate = 'default';
     public selected = -1;
-    public simulation = new Simulation();
+    public simulation = new Simulation(this);
 
     private nextID = 0;
     public getNextID() { return this.nextID++; }
