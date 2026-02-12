@@ -28,6 +28,10 @@ export abstract class ElectricalComponent {
         this.h = h;
     }
 
+    isSelected(): boolean {
+        return this.globals.selected === this.id && this.globals.selected != -1;
+    }
+
     render(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
         if (!ctx) return;
         if (!view) {
@@ -35,6 +39,7 @@ export abstract class ElectricalComponent {
             view = {...defaultView, w: undefined, h: undefined};
         }
 
+        this.drawSelectionIndicator(ctx, view);
         this.drawPinDots(ctx);
         this.drawShape(ctx, view, properties);
     }
@@ -65,6 +70,12 @@ export abstract class ElectricalComponent {
             ctx.fill();
         }
         ctx.restore();
+    }
+
+    drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
+        if (!this.isSelected()) return;
+
+
     }
 
     mouseOverComponent(): boolean {

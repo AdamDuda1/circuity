@@ -39,9 +39,6 @@ export class AND extends ElectricalComponent {
         const h = this.h * (view?.z ?? 1);
         const z = view?.z ?? 1;
 
-        // if (this.globals.selected == this.id) this.color = 'blue';
-        // else this.color = 'red';
-
         const x = screenX;
         const y = screenY - h;
 

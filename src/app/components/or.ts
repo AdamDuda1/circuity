@@ -42,9 +42,6 @@ export class OR extends ElectricalComponent {
         const w = this.w * z;
         const h = this.h * z;
 
-        // if (this.globals.selected == this.id) this.color = 'blue';
-        // else this.color = 'red';
-
         const posX = screenX;
         const posY = screenY - h;
 

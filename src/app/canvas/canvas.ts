@@ -118,7 +118,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
         if (this.globals.selected != -1) this.globals.selected = -1;
-        else for (const component of this.globals.simulation.circuitComponents()) {
+        for (const component of this.globals.simulation.circuitComponents()) {
             if (component.mouseOverComponent()) {
                 this.globals.selected = component.id;
                 break;

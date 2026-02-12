@@ -8,9 +8,10 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] Add adding components to world
+- [ ] Wires
 - [ ] Add simulating
 - [ ] Add component inspection pa
+- [x] ~~Add adding components to world~~
 
 **OTHER:**
 
@@ -19,7 +20,6 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] ! remove unnecessary func references and move to globals.ts
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
 - [ ] Make movement on mobile
-- [ ] Add wiring
 - [ ] Add grouping components by type (`<ng-content>`)
 - [ ] Add simulation controls (controlPanel) component
 - [ ] Add component categories, favourites and info manels
