@@ -25,8 +25,8 @@ export class AND extends ElectricalComponent {
     w = 20;
 
     actualSize;
-    ins = [{x: -3.5, y: 4.350}, {x: -3.5, y: 16.350}];
-    outs = [{x: 23.5, y: 10.25}];
+    ins = [{x: -3, y: 4}, {x: -3, y: 16}];
+    outs = [{x: 22.5, y: 10}];
 
     drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
         const viewW = view?.w ?? this.globals.view().w;
