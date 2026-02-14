@@ -13,6 +13,8 @@ export class Globals {
     public selected = -1;
     public simulation = new Simulation(this);
 
+    public debug = false;
+
     private nextID = 0;
     public getNextID() { return this.nextID++; }
 }

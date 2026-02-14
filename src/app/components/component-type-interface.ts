@@ -1,6 +1,5 @@
 import { Globals } from '../globals';
 import { drawWire } from './wire';
-import { signal } from '@angular/core';
 
 export abstract class ElectricalComponent {
     protected constructor(public globals: Globals) {}
@@ -49,7 +48,7 @@ export abstract class ElectricalComponent {
         }
 
         this.drawSelectionIndicator(ctx, view);
-        this.drawPinDots(ctx);
+        if (this.globals.debug) this.drawPinDots(ctx);
         this.drawShape(ctx, view, properties);
 
         for (const out of this.outTo) {
@@ -92,7 +91,31 @@ export abstract class ElectricalComponent {
     drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
         if (!this.isSelected()) return;
 
+        const viewW = view?.w ?? this.globals.view().w;
+        const viewH = view?.h ?? this.globals.view().h;
 
+        const z = view?.z ?? 1;
+        const x = view?.x ?? 0;
+        const y = view?.y ?? 0;
+
+        const screenX = (this.x + x) * z + viewW / 2;
+        const screenY = (-this.y + y) * z + viewH / 2;
+
+        const w = this.w * z;
+        const h = this.h * z;
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(255,165,0,1)';
+        ctx.shadowBlur = 5 * z;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.lineWidth = 4 * z;
+        ctx.strokeStyle = 'orange';
+        ctx.beginPath();
+        ctx.arc(screenX + w / 2, screenY - h / 2, z, 0, Math.PI * 2);
+        ctx.fillStyle = 'orange';
+        ctx.fill();
+        ctx.restore();
     }
 
     mouseOverComponent(): boolean {

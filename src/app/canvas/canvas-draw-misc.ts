@@ -87,25 +87,27 @@ export class CanvasDraw {
         ctx.strokeText('crs: ' + this.globals.cursor().x.toFixed(2).toString() + ' / ' + this.globals.cursor().y.toFixed(2).toString(), 10, this.globals.view().h - 12);
 
 
-        /* DEBUGGING DOT  */
+        /* DEBUGGING DOTS */
 
-        /*this.ctx.fillStyle = 'red';
-         this.ctx.beginPath();
-         this.ctx.arc(this.world_to_canvas_x(0), this.world_to_canvas_y(0), 5, 0, Math.PI * 2);
-         this.ctx.fill();*/
+        if (this.globals.debug) {
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(this.globals.view().w / 2, this.globals.view().h / 2, 5, 0, Math.PI * 2);
+            ctx.fill();
 
-        /*this.ctx.fillStyle = 'red';
-         this.ctx.beginPath();
-         this.ctx.arc(0, 0, 5, 0, Math.PI * 2);
-         this.ctx.fill();
-         this.ctx.beginPath();
-         this.ctx.arc(0, this.view().h, 5, 0, Math.PI * 2);
-         this.ctx.fill();
-         this.ctx.beginPath();
-         this.ctx.arc(this.view().w, 0, 5, 0, Math.PI * 2);
-         this.ctx.fill();
-         this.ctx.beginPath();
-         this.ctx.arc(this.view().w, this.view().h, 5, 0, Math.PI * 2);
-         this.ctx.fill();*/
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(0, 0, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(0, this.globals.view().h, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(this.globals.view().w, 0, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(this.globals.view().w, this.globals.view().h, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 }

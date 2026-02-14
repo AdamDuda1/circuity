@@ -9,6 +9,7 @@ export class Simulation {
     constructor(public globals: Globals) {}
 
     public circuitComponents = signal<ElectricalComponent[]>([]);
+    public running = signal(false);
 
     spawnComponent(name: string, x: number, y: number) {
         let componentConstructor;

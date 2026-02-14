@@ -8,16 +8,16 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] Wires
+- [ ] 
 - [ ] Add simulating
 - [ ] Add component inspection pa
+- [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
 
 **OTHER:**
 
 - [ ] Add alignment guides and step snapping setting
 - [ ] Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)
-- [ ] ! remove unnecessary func references and move to globals.ts
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
 - [ ] Make movement on mobile
 - [ ] Add grouping components by type (`<ng-content>`)
@@ -25,6 +25,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Add component categories, favourites and info manels
 - [ ] Add component states (ins, outs, power, color)
 - [ ] Fix canvas clipping under palette (??, `background: white; z-index: 5;` + position relative)
+- [x] ~~! remove unnecessary func references and move to globals.ts~~
 
 ---
 
