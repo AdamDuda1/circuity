@@ -4,6 +4,7 @@ import { AND } from './components/and';
 import { OR } from './components/or';
 import { NOT } from './components/not';
 import { Globals } from './globals';
+import { Switch } from './components/switch';
 
 export class Simulation {
     constructor(public globals: Globals) {}
@@ -16,6 +17,7 @@ export class Simulation {
         if (name == 'AND') componentConstructor = new AND(this.globals, true, x, y);
         else if (name == 'OR') componentConstructor = new OR(this.globals, true, x, y);
         else if (name == 'NOT') componentConstructor = new NOT(this.globals, true, x, y);
+        else if (name == 'Switch') componentConstructor = new Switch(this.globals, true, x, y);
         else return;
 
         this.globals.simulation.circuitComponents().push(componentConstructor);

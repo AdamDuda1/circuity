@@ -14,6 +14,7 @@ import { OR } from '../components/or';
 import { NOT } from '../components/not';
 import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
+import { Switch } from '../components/switch';
 
 @Component({
     selector: 'app-canvas',
@@ -49,9 +50,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
         this.resizeObserver.observe(canvas.parentElement!);
 
-        this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, -40));
-        this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, -80));
-        this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 0));
+        // this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, -40));
+        // this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, -80));
+        // this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 0));
+        // this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, 0, 0));
 
         this.startLoop(canvas);
     }

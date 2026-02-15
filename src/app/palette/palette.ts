@@ -5,6 +5,7 @@ import { OR } from '../components/or';
 import { NOT } from '../components/not';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
+import { Switch } from '../components/switch';
 
 @Component({
     selector: 'app-palette',
@@ -23,7 +24,8 @@ export class Palette {
         this.components.set([
             new AND(this.globals, false, -1, -1),
             new OR(this.globals, false, -1, -1),
-            new NOT(this.globals, false, -1, -1)
+            new NOT(this.globals, false, -1, -1),
+            new Switch(this.globals, false, -1, -1)
         ]);
     }
 }
