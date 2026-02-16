@@ -144,15 +144,15 @@ export class Canvas implements AfterViewInit, OnDestroy {
         }
 
         for (const component of this.globals.simulation.circuitComponents()) {
-			const ans = component.mouseOverPin();
+            const ans = component.mouseOverPin();
             if (ans.index != -1) {
-				/*if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
-					const from = component.inFrom[ans.index];
-					this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
-					component.inFrom[ans.index] = {component: -1, pin: -1};
-					break;
-				}*/
-				//if (this.globals.simulation.circuitComponents()[search.index].) {}
+                /*if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
+                 const from = component.inFrom[ans.index];
+                 this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+                 component.inFrom[ans.index] = {component: -1, pin: -1};
+                 break;
+                 }*/
+                //if (this.globals.simulation.circuitComponents()[search.index].) {}
                 this.isConnecting.set(true);
                 this.isPanning.set(false);
                 this.connectingFrom.set({component: component.id, type: ans.type, index: ans.index});
@@ -166,7 +166,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
             this.isConnecting.set(false);
 
             for (const component of this.globals.simulation.circuitComponents()) {
-				const ans = component.mouseOverPin();
+                const ans = component.mouseOverPin();
                 if (ans.index != -1) {
                     const to = {component: component.id, type: ans.type, index: ans.index};
                     const from = this.connectingFrom();
@@ -176,12 +176,12 @@ export class Canvas implements AfterViewInit, OnDestroy {
                     if (from.type === 'out' && to.type === 'in') {
                         this.globals.simulation.circuitComponents()[to.component].inFrom[to.index] = {component: from.component, pin: from.index};
                         if (!this.globals.simulation.circuitComponents()[from.component].outTo[from.index])
-							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
+                            this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
                         this.globals.simulation.circuitComponents()[from.component].outTo[from.index].push({component: to.component, pin: to.index});
                     } else if (from.type === 'in' && to.type === 'out') {
                         this.globals.simulation.circuitComponents()[from.component].inFrom[from.index] = {component: to.component, pin: to.index};
                         if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
-							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
+                            this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
                         this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
                     }
                     break;

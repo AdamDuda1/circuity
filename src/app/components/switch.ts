@@ -52,7 +52,7 @@ export class Switch extends ElectricalComponent {
 
         ctx.save();
 
-        // Draw switch body
+        // Korpus
         ctx.fillStyle = this.color;
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1.3 * z;
@@ -62,19 +62,43 @@ export class Switch extends ElectricalComponent {
         ctx.fill();
         ctx.stroke();
 
-        // Draw switch lever
-        const leverWidth = w * 0.4;
-        const leverHeight = h * 0.6;
-        const leverY = y + h * 0.2;
-        const leverX = this.isOn ? x + w * 0.5 : x + w * 0.1;
+        // Zaciski
+        const padR = 2.2 * z;
+        const leftPad = { x: x + w * 0.18, y: y + h * 0.5 };
+        const rightPad = { x: x + w * 0.82, y: y + h * 0.5 };
 
-        ctx.fillStyle = this.isOn ? 'white' : 'darkgray';
+        ctx.fillStyle = '#222';
         ctx.beginPath();
-        ctx.roundRect(leverX, leverY, leverWidth, leverHeight, 2 * z);
+        ctx.arc(leftPad.x, leftPad.y, padR, 0, Math.PI * 2);
+        ctx.arc(rightPad.x, rightPad.y, padR, 0, Math.PI * 2);
         ctx.fill();
+
+        // Dźwignia (klasyczny przełącznik)
+        const pivot = leftPad;
+        const leverLen = w * 0.52;
+        const leverAngle = this.isOn ? -0.35 * Math.PI : -0.05 * Math.PI; // bardziej otwarty/wyraźny
+        const leverEnd = {
+            x: pivot.x + Math.cos(leverAngle) * leverLen,
+            y: pivot.y + Math.sin(leverAngle) * leverLen
+        };
+
+        ctx.strokeStyle = this.isOn ? '#fff' : '#bbb';
+        ctx.lineWidth = 2.2 * z;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pivot.x, pivot.y);
+        ctx.lineTo(leverEnd.x, leverEnd.y);
         ctx.stroke();
 
-        // Draw output wire
+        // Śrubka/punkt obrotu
+        ctx.fillStyle = this.isOn ? '#fff' : '#aaa';
+        ctx.beginPath();
+        ctx.arc(pivot.x, pivot.y, 1.6 * z, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Przewód wyjściowy
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1.3 * z;
         ctx.beginPath();
         ctx.moveTo(x + w, y + h / 2);
         ctx.lineTo(x + w + 3 * z, y + h / 2);

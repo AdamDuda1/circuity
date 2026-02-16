@@ -3,5 +3,5 @@
      (mouseenter)="isHovered.set(true)"
      (mouseleave)="isHovered.set(false)"
      (click)="onClick()">
-    <b>{{ text }}</b>
+    <b [innerHTML]="text()"></b>
 </div>
