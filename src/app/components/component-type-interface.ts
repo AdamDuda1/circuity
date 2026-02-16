@@ -19,7 +19,7 @@ export abstract class ElectricalComponent {
     abstract outs: { x: number, y: number } [];
 
     inFrom: { component: number, pin: number }[] = [];
-    outTo: { component: number, pin: number }[] = [];
+    outTo: { component: number, pin: number }[][] = [];
     //outTo = signal<{ component: number, pin: number }[][]>([[]]); TODO multiple outs
 
     inStates: boolean[] = [];
@@ -48,44 +48,68 @@ export abstract class ElectricalComponent {
         }
 
         this.drawSelectionIndicator(ctx, view);
-        if (this.globals.debug) this.drawPinDots(ctx);
         this.drawShape(ctx, view, properties);
 
-        for (const out of this.outTo) {
-            const target = this.globals.simulation.circuitComponents()[out.component];
-            if (!target) continue;
+        ctx.save();
+        for (let outIndex = 0; outIndex < this.outTo.length; outIndex++) {
+            const connections = this.outTo[outIndex];
+            if (!connections) continue;
 
-            const fromPin = this.outs[this.outTo.indexOf(out)];
-            const toPin = target.ins[out.pin];
+            for (const connection of connections) {
+                const targetComponent = this.globals.simulation.circuitComponents()[connection.component];
+                if (!targetComponent || !targetComponent.ins[connection.pin]) continue;
 
-            drawWire(ctx, this.globals.view(), {x: this.x + fromPin.x, y: this.y + fromPin.y}, {x: target.x + toPin.x, y: target.y + toPin.y});
+                const fromPin = this.outs[outIndex];
+                const toPin = targetComponent.ins[connection.pin];
+
+                drawWire(ctx, this.globals.view(),
+                    { x: this.x + fromPin.x, y: this.y + fromPin.y },
+                    { x: targetComponent.x + toPin.x, y: targetComponent.y + toPin.y }
+                );
+            }
         }
+        ctx.restore();
+
+		this.drawPinDots(ctx);
     }
 
     abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
 
     drawPinDots(ctx: CanvasRenderingContext2D) {
         const view = this.globals.view();
-        ctx.save();
 
-        const screenSize = 2 * this.globals.view().z;
+		ctx.lineWidth = 0.1 * view.z;
+		ctx.strokeStyle = 'black';
 
-        ctx.lineWidth = 0;
-        ctx.fillStyle = 'orange';
-        for (const pin of this.ins) {
-            const screenX = (this.x + pin.x + view.x) * view.z + view.w / 2;
-            const screenY = (-(this.y + pin.y) + view.y) * view.z + view.h / 2;
-            ctx.fillRect(screenX - screenSize / 2, screenY - screenSize / 2, screenSize, screenSize);
+        for (let i = 0; i < this.ins.length; i++) {
+            const _in = this.ins[i];
+            if (this.inFrom[i] && this.inFrom[i].component !== -1) {
+				const screenX = (this.x + _in.x + view.x) * view.z + view.w / 2;
+				const screenY = (-(this.y + _in.y) + view.y) * view.z + view.h / 2;
+
+				ctx.save();
+				ctx.fillStyle = 'black';
+				ctx.beginPath();
+				ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.restore();
+			}
         }
 
-        ctx.lineWidth = 0;
-        ctx.fillStyle = 'purple';
-        for (const pin of this.outs) {
-            const screenX = (this.x + pin.x + view.x) * view.z + view.w / 2;
-            const screenY = (-(this.y + pin.y) + view.y) * view.z + view.h / 2;
-            ctx.fillRect(screenX - screenSize / 2, screenY - screenSize / 2, screenSize, screenSize);
+        for (let i = 0; i < this.outs.length; i++) {
+            const _out = this.outs[i];
+            if (this.outTo[i] && this.outTo[i].length > 0) {
+				const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
+				const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
+
+				ctx.save();
+				ctx.fillStyle = 'black';
+				ctx.beginPath();
+				ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.restore();
+			}
         }
-        ctx.restore();
     }
 
     drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {

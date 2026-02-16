@@ -9,12 +9,8 @@ import {
     inject
 } from '@angular/core';
 import { CanvasDraw } from './canvas-draw-misc';
-import { AND } from '../components/and';
-import { OR } from '../components/or';
-import { NOT } from '../components/not';
 import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
-import { Switch } from '../components/switch';
 
 @Component({
     selector: 'app-canvas',
@@ -101,6 +97,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
         if (this.isConnecting()) {
             const pos1 = this.connectingFrom();
+            ctx.save();
             drawWire(ctx, this.globals.view(),
                 {
                     x: this.globals.simulation.circuitComponents()[pos1.component].x +
@@ -112,6 +109,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 },
                 {x: this.globals.cursor().x, y: this.globals.cursor().y}
             );
+            ctx.restore();
         }
     }
 
@@ -146,10 +144,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
         }
 
         for (const component of this.globals.simulation.circuitComponents()) {
-            if (component.mouseOverPin().index != -1) {
+			const ans = component.mouseOverPin();
+            if (ans.index != -1) {
+				/*if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
+					const from = component.inFrom[ans.index];
+					this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+					component.inFrom[ans.index] = {component: -1, pin: -1};
+					break;
+				}*/
+				//if (this.globals.simulation.circuitComponents()[search.index].) {}
                 this.isConnecting.set(true);
                 this.isPanning.set(false);
-                this.connectingFrom.set({component: component.id, type: component.mouseOverPin().type, index: component.mouseOverPin().index});
+                this.connectingFrom.set({component: component.id, type: ans.type, index: ans.index});
                 break;
             }
         }
@@ -160,18 +166,23 @@ export class Canvas implements AfterViewInit, OnDestroy {
             this.isConnecting.set(false);
 
             for (const component of this.globals.simulation.circuitComponents()) {
-                if (component.mouseOverPin().index != -1) {
-                    const to = {component: component.id, type: component.mouseOverPin().type, index: component.mouseOverPin().index};
+				const ans = component.mouseOverPin();
+                if (ans.index != -1) {
+                    const to = {component: component.id, type: ans.type, index: ans.index};
                     const from = this.connectingFrom();
 
                     if (to.component === from.component) break;
 
                     if (from.type === 'out' && to.type === 'in') {
                         this.globals.simulation.circuitComponents()[to.component].inFrom[to.index] = {component: from.component, pin: from.index};
-                        this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = {component: to.component, pin: to.index};
+                        if (!this.globals.simulation.circuitComponents()[from.component].outTo[from.index])
+							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
+                        this.globals.simulation.circuitComponents()[from.component].outTo[from.index].push({component: to.component, pin: to.index});
                     } else if (from.type === 'in' && to.type === 'out') {
                         this.globals.simulation.circuitComponents()[from.component].inFrom[from.index] = {component: to.component, pin: to.index};
-                        this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = {component: from.component, pin: from.index};
+                        if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
+							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
+                        this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
                     }
                     break;
                 }
@@ -194,7 +205,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
             if (this.globals.selected != -1) {
                 this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
-                console.log(this.globals.simulation.circuitComponents());
+                //console.log(this.globals.simulation.circuitComponents());
             } else {
                 this.globals.view.update((v) => ({
                     ...v,

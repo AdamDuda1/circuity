@@ -17,8 +17,9 @@ export class CanvasDraw {
         const yMin = Math.floor((-view.h / 2 / view.z + view.y) / step) * step;
         const yMax = Math.ceil((view.h / 2 / view.z + view.y) / step) * step;
 
-        ctx.strokeStyle = 'rgba(135,135,135,0.2)';
-        ctx.lineWidth = 1;
+        // ctx.strokeStyle = 'rgba(135,135,135,0.2)';
+        // ctx.lineWidth = 1;
+		ctx.save();
 
         for (let x = xMin; x <= xMax; x += step) {
             const cx = (x + view.x) * view.z + view.w / 2;
@@ -69,23 +70,27 @@ export class CanvasDraw {
         ctx.closePath();
         ctx.fill();
 
-        ctx.lineWidth = .5;
-        ctx.strokeStyle = 'rgba(135,135,135,0.2)';
+        ctx.restore();
     }
 
     drawWorld(ctx: CanvasRenderingContext2D, simulation: Simulation) {
         if (!ctx || !this.globals.view) return;
-        const view = this.globals.view(); // to pass as a copy, not a reference
+        const view = this.globals.view();
+
+        ctx.save();
         simulation.circuitComponents().forEach(component => component.render(ctx, view));
+        ctx.restore();
     }
 
     drawDebug(ctx: CanvasRenderingContext2D) {
         if (!ctx || !this.globals.view) return;
+
+        ctx.save();
         ctx.strokeStyle = 'rgba(135,135,135,0.5)';
         ctx.strokeText(this.globals.frame().fps.toFixed(2).toString(), 10, this.globals.view().h - 12 - 28);
         ctx.strokeText('x/y: ' + this.globals.view().x.toFixed(2).toString() + ' / ' + this.globals.view().y.toFixed(2).toString() + ' / ' + this.globals.view().z.toFixed(2).toString(), 10, this.globals.view().h - 12 - 14);
         ctx.strokeText('crs: ' + this.globals.cursor().x.toFixed(2).toString() + ' / ' + this.globals.cursor().y.toFixed(2).toString(), 10, this.globals.view().h - 12);
-
+        ctx.restore();
 
         /* DEBUGGING DOTS */
 
