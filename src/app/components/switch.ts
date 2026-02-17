@@ -32,6 +32,10 @@ export class Switch extends ElectricalComponent {
     ins: { x: number; y: number }[] = [];
     outs = [{x: this.w + 3, y: 10}];
 
+    override condition() {
+        this.outStates[0] = this.isOn;
+    }
+
     override clickInSimulation() {
         this.toggle();
     }

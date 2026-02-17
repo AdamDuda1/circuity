@@ -29,10 +29,23 @@ export abstract class ElectricalComponent {
         console.log("clickInSimulation");
     } // override if needed
 
-    //abstract simulate(): void;
+    condition() {}
 
     simulate() {
-
+        for (let i = 0; i < this.ins.length; i++) {
+            const connection = this.inFrom[i];
+            if (connection && connection.component !== -1) {
+                const sourceComponent = this.globals.simulation.circuitComponents()[connection.component];
+                if (sourceComponent && sourceComponent.outStates[connection.pin] !== undefined) {
+                    this.inStates[i] = sourceComponent.outStates[connection.pin];
+                } else {
+                    this.inStates[i] = false;
+                }
+            } else {
+                this.inStates[i] = false;
+            }
+        }
+        this.condition();
     }
 
     updatePos(x: number, y: number) {
@@ -108,7 +121,8 @@ export abstract class ElectricalComponent {
 
         for (let i = 0; i < this.outs.length; i++) {
             const _out = this.outs[i];
-            if (this.outTo[i] && this.outTo[i].length > 0) {
+            if (this.outTo[i] && this.outTo[i].length > 0 && this.outTo[i].some(conn => conn.component !== -1)) {
+            //if (this.outTo[i] && this.outTo[i].length > 0) {
                 const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
                 const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
 

@@ -28,6 +28,10 @@ export class OR extends ElectricalComponent {
     ins = [{x: -3, y: 6}, {x: -3, y: 14}];
     outs = [{x: 22.5, y: 10}];
 
+    override condition() {
+        this.outStates[0] = this.inStates[0] || this.inStates[1];
+    }
+
     drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
         const viewW = view?.w ?? this.globals.view().w;
         const viewH = view?.h ?? this.globals.view().h;

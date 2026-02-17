@@ -28,6 +28,9 @@ export class AND extends ElectricalComponent {
     ins = [{x: -3, y: 4}, {x: -3, y: 16}];
     outs = [{x: 22.5, y: 10}];
 
+    override condition() {
+        this.outStates[0] = this.inStates[0] && this.inStates[1];
+    }
 
     drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
         const viewW = view?.w ?? this.globals.view().w;

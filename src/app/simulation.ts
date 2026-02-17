@@ -18,6 +18,8 @@ export class Simulation {
     }
 
     spawnComponent(name: string, x: number, y: number) {
+        if (this.globals.simulation.running()) return;
+
         let componentConstructor;
         if (name == 'AND') componentConstructor = new AND(this.globals, true, x, y);
         else if (name == 'OR') componentConstructor = new OR(this.globals, true, x, y);

@@ -28,6 +28,10 @@ export class NOT extends ElectricalComponent {
     ins = [{x: -3.5, y: 10}];
     outs = [{x: 22.5, y: 10}];
 
+    override condition() {
+        this.outStates[0] = !this.inStates[0];
+    }
+
     drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
         const viewW = view?.w ?? this.globals.view().w;
         const viewH = view?.h ?? this.globals.view().h;
@@ -46,7 +50,7 @@ export class NOT extends ElectricalComponent {
         const posY = screenY - h;
 
         ctx.save();
-        ctx.strokeStyle = this.color;
+        ctx.strokeStyle = 'black';
         ctx.lineWidth = 2 * z;
 
         ctx.beginPath();
@@ -77,5 +81,4 @@ export class NOT extends ElectricalComponent {
 
         ctx.restore();
     }
-
 }

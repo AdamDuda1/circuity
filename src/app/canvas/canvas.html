@@ -16,6 +16,6 @@
         [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
 <!--    (pointerout)=""-->
 
-<footer class="absolute bottom-0.5 right-1 text-xs text-gray-500">
+<footer class="absolute bottom-0.5 right-1 text-xs text-gray-500" [style.margin]="this.globals.simulation.running() ? '5px' : '1px'">
     &copy;Adam Duda &sdot; <a href="https://github.com/AdamDuda1/circuity" class="hover:underline" target="_blank">GitHub</a>
 </footer>

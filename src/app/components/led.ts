@@ -42,7 +42,7 @@ export class LED extends ElectricalComponent {
         const x = screenX;
         const y = screenY - h;
 
-        const isOn = Boolean(this.inStates[0]);
+        const isOn = this.inStates[0] && this.globals.simulation.running();
         const ledColor = this.color;
 
         ctx.strokeStyle = 'black';
