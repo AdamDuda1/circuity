@@ -25,7 +25,9 @@ export abstract class ElectricalComponent {
     inStates: boolean[] = [];
     outStates: boolean[] = [];
 
-    clickInSimulation(x: number, y: number) {} // override if needed
+    clickInSimulation() {
+        console.log("clickInSimulation");
+    } // override if needed
 
     //abstract simulate(): void;
 

@@ -25,6 +25,7 @@ export class SimulationControls {
             this.text.set('Stop <span class="material-symbols-outlined"> stop </span>');
             this.normalColor.set('#b54747');
             this.hoverColor.set('#a13f3f');
+            this.globals.selected = -1;
         }
         this.globals.simulation.switch();
     }

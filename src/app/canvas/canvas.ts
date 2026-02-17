@@ -138,6 +138,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.lastPointer.set({x: event.clientX, y: event.clientY});
         (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
+        if (this.globals.simulation.running()) return;
+
         if (this.globals.selected != -1) this.globals.selected = -1;
         for (const component of this.globals.simulation.circuitComponents()) {
             if (component.mouseOverComponent()) {
@@ -167,7 +169,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
     }
 
     onPointerUp(event: PointerEvent) {
-        if (this.isConnecting()) {
+        this.isPanning.set(false);
+        (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
+        if (this.moved_amt > 5) this.globals.selected = -1;
+        const click = this.moved_amt <= 5;
+        this.moved_amt = 0;
+
+        if (this.globals.simulation.running()) {
+            if (click) {
+                for (const component of this.globals.simulation.circuitComponents())
+                    if (component.mouseOverComponent()) component.clickInSimulation();
+            }
+        } else if (this.isConnecting()) {
             this.isConnecting.set(false);
 
             for (const component of this.globals.simulation.circuitComponents()) {
@@ -193,11 +206,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 }
             }
         }
-
-        this.isPanning.set(false);
-        (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
-        if (this.moved_amt > 5) this.globals.selected = -1;
-        this.moved_amt = 0;
     }
 
     onPointerMove(event: PointerEvent) {
@@ -239,7 +247,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
             }
         }
 
-        for (const component of this.globals.simulation.circuitComponents()) {
+        if (!this.globals.simulation.running()) for (const component of this.globals.simulation.circuitComponents()) {
             if (component.mouseOverPin().index != -1) {
                 candidate = 'crosshair';
                 break;

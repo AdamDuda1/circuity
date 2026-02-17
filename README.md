@@ -8,10 +8,10 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] **FIX:** The first drawn wire dot is always bigger
 - [ ] Add simulating
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
+- [x] ~~**FIX:** The first drawn wire dot is always bigger~~
 - [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
 
