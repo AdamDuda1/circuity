@@ -137,15 +137,14 @@ export abstract class ElectricalComponent {
         const h = this.h * z;
 
         ctx.save();
-        ctx.shadowColor = 'rgba(255,165,0,1)';
-        ctx.shadowBlur = 5000 * z;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
-        ctx.lineWidth = 4 * z;
-        ctx.strokeStyle = 'orange';
+        ctx.shadowBlur = 20 * z;
+        ctx.shadowOffsetX = 5000 * z;
+        ctx.shadowOffsetY = 5000 * z;
         ctx.beginPath();
-        ctx.arc(screenX + w / 2, screenY - h / 2, z, 0, Math.PI * 2);
-        ctx.fillStyle = 'orange';
+        ctx.arc(screenX + w / 2 - 5000 * z, screenY - h / 2 - 5000 * z, z * 10, 0, Math.PI * 2);
+        ctx.fillStyle = 'red';
+        //ctx.shadowColor = 'blue'; // TODO pick selection color
+        ctx.shadowColor = this.color;
         ctx.fill();
         ctx.restore();
     }

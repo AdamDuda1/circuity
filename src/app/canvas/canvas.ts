@@ -11,6 +11,7 @@ import {
 import { CanvasDraw } from './canvas-draw-misc';
 import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
+import { LED } from '../components/led';
 
 @Component({
     selector: 'app-canvas',
@@ -49,7 +50,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         // this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, -40));
         // this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, -80));
         // this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 0));
-        // this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, 0, 0));
+        this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 0, 0));
 
         this.startLoop(canvas);
     }

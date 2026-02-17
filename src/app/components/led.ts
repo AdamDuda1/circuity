@@ -25,7 +25,7 @@ export class LED extends ElectricalComponent {
     w = 20;
 
     actualSize;
-    ins = [{x: -3, y: 10}];
+    ins = [{x: -1.5, y: 10}];
     outs = [];
 
     drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
@@ -49,7 +49,7 @@ export class LED extends ElectricalComponent {
         ctx.lineWidth = 1.3 * z;
         ctx.beginPath();
         ctx.moveTo(x + 3 * z, y + h / 2);
-        ctx.lineTo(x - 3 * z, y + h / 2);
+        ctx.lineTo(x - 1.5 * z, y + h / 2);
         ctx.stroke();
 
         const withAlpha = (hex: string, alpha: number): string => {

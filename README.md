@@ -10,12 +10,14 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 - [ ] Add simulating
 - [ ] Add component inspection pa
+- [ ] Sort elements in the design by ViewOrder (last selected desc)
 - [x] ~~**FIX:** The first drawn wire dot is always bigger~~
 - [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
 
 **OTHER:**
 
+- [ ] Pick color for the selection indicator
 - [ ] Add alignment guides and step snapping setting
 - [ ] Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
