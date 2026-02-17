@@ -1,4 +1,3 @@
-
 import { Globals } from '../globals';
 import { drawWire } from './wire';
 
@@ -25,6 +24,14 @@ export abstract class ElectricalComponent {
 
     inStates: boolean[] = [];
     outStates: boolean[] = [];
+
+    clickInSimulation(x: number, y: number) {} // override if needed
+
+    //abstract simulate(): void;
+
+    simulate() {
+
+    }
 
     updatePos(x: number, y: number) {
         this.x += x;
@@ -64,14 +71,14 @@ export abstract class ElectricalComponent {
                 const toPin = targetComponent.ins[connection.pin];
 
                 drawWire(ctx, this.globals.view(),
-                    { x: this.x + fromPin.x, y: this.y + fromPin.y },
-                    { x: targetComponent.x + toPin.x, y: targetComponent.y + toPin.y }
+                    {x: this.x + fromPin.x, y: this.y + fromPin.y},
+                    {x: targetComponent.x + toPin.x, y: targetComponent.y + toPin.y}
                 );
             }
         }
         ctx.restore();
 
-		this.drawPinDots(ctx);
+        this.drawPinDots(ctx);
     }
 
     abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
@@ -79,37 +86,37 @@ export abstract class ElectricalComponent {
     drawPinDots(ctx: CanvasRenderingContext2D) {
         const view = this.globals.view();
 
-		ctx.lineWidth = 0.1 * view.z;
-		ctx.strokeStyle = 'black';
+        ctx.lineWidth = 0.1 * view.z;
+        ctx.strokeStyle = 'black';
 
         for (let i = 0; i < this.ins.length; i++) {
             const _in = this.ins[i];
             if (this.inFrom[i] && this.inFrom[i].component !== -1) {
-				const screenX = (this.x + _in.x + view.x) * view.z + view.w / 2;
-				const screenY = (-(this.y + _in.y) + view.y) * view.z + view.h / 2;
+                const screenX = (this.x + _in.x + view.x) * view.z + view.w / 2;
+                const screenY = (-(this.y + _in.y) + view.y) * view.z + view.h / 2;
 
-				ctx.save();
-				ctx.fillStyle = 'black';
-				ctx.beginPath();
-				ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
-				ctx.fill();
-				ctx.restore();
-			}
+                ctx.save();
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
         }
 
         for (let i = 0; i < this.outs.length; i++) {
             const _out = this.outs[i];
             if (this.outTo[i] && this.outTo[i].length > 0) {
-				const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
-				const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
+                const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
+                const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
 
-				ctx.save();
-				ctx.fillStyle = 'black';
-				ctx.beginPath();
-				ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
-				ctx.fill();
-				ctx.restore();
-			}
+                ctx.save();
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
         }
     }
 
@@ -131,7 +138,7 @@ export abstract class ElectricalComponent {
 
         ctx.save();
         ctx.shadowColor = 'rgba(255,165,0,1)';
-        ctx.shadowBlur = 5 * z;
+        ctx.shadowBlur = 5000 * z;
         ctx.shadowOffsetX = 10;
         ctx.shadowOffsetY = 10;
         ctx.lineWidth = 4 * z;

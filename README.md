@@ -8,9 +8,9 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] **FIX:** The first drawn wire dot is always bigger
 - [ ] Add simulating
 - [ ] Add component inspection pa
+- [x] ~~**FIX:** The first drawn wire dot is always bigger~~
 - [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
 
@@ -19,12 +19,12 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Add alignment guides and step snapping setting
 - [ ] Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
-- [ ] Make movement on mobile
 - [ ] Add grouping components by type (`<ng-content>`)
-- [ ] Add simulation controls (controlPanel) component
 - [ ] Add component categories, favourites and info manels
-- [ ] Add component states (ins, outs, power, color)
 - [ ] Fix canvas clipping under palette (??, `background: white; z-index: 5;` + position relative)
+- [x] ~~Add simulation controls (controlPanel) component~~
+- [x] ~~Add component states (ins, outs, power, color)~~
+- [x] ~~Make movement on mobile~~
 - [x] ~~! remove unnecessary func references and move to globals.ts~~
 
 ---

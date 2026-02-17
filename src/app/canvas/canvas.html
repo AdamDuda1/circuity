@@ -1,17 +1,19 @@
 <canvas
-    #canvas
-    role="presentation"
-    (wheel)="onWheel($event)"
-    (pointerdown)="onPointerDown($event)"
-    (pointermove)="onPointerMove($event)"
-    (pointerup)="onPointerUp($event)"
-    (pointerleave)="onPointerUp($event)"
-    (touchstart)="onTouchStart($event)"
-    (touchmove)="onTouchMove($event)"
-    (touchend)="onTouchEnd($event)"
-    (dragover)="onDragOver($event)"
-    (drop)="onDrop($event)"
-    [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
+        id="canvas"
+        #canvas
+        role="presentation"
+        [style.border]="this.globals.simulation.running() ? 'dashed 5px #a13f3f' : '0'"
+        (wheel)="onWheel($event)"
+        (pointerdown)="onPointerDown($event)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointerleave)="onPointerUp($event)"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd($event)"
+        (dragover)="onDragOver($event)"
+        (drop)="onDrop($event)"
+        [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
 <!--    (pointerout)=""-->
 
 <footer class="absolute bottom-0.5 right-1 text-xs text-gray-500">

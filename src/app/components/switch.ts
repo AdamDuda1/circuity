@@ -30,7 +30,7 @@ export class Switch extends ElectricalComponent {
 
     actualSize;
     ins: { x: number; y: number }[] = [];
-    outs = [{x: 32.5, y: 10}];
+    outs = [{x: 33, y: 10}];
 
     toggle() {
         this.isOn = !this.isOn;
@@ -52,51 +52,51 @@ export class Switch extends ElectricalComponent {
 
         ctx.save();
 
-        // Korpus
-        ctx.fillStyle = this.color;
+        // Switch Housing Body
+        ctx.fillStyle = '#666';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1.3 * z;
-
         ctx.beginPath();
-        ctx.roundRect(x, y, w, h, 3 * z);
+        ctx.roundRect(x, y + h * 0.1, w, h * 0.8, 2 * z);
         ctx.fill();
         ctx.stroke();
 
-        // Zaciski
-        const padR = 2.2 * z;
-        const leftPad = { x: x + w * 0.18, y: y + h * 0.5 };
-        const rightPad = { x: x + w * 0.82, y: y + h * 0.5 };
-
-        ctx.fillStyle = '#222';
+        // Slider Track (Background)
+        ctx.fillStyle = '#333';
         ctx.beginPath();
-        ctx.arc(leftPad.x, leftPad.y, padR, 0, Math.PI * 2);
-        ctx.arc(rightPad.x, rightPad.y, padR, 0, Math.PI * 2);
+        ctx.roundRect(x + w * 0.15, y + h * 0.35, w * 0.7, h * 0.3, 1 * z);
         ctx.fill();
 
-        // Dźwignia (klasyczny przełącznik)
-        const pivot = leftPad;
-        const leverLen = w * 0.52;
-        const leverAngle = this.isOn ? -0.35 * Math.PI : -0.05 * Math.PI; // bardziej otwarty/wyraźny
-        const leverEnd = {
-            x: pivot.x + Math.cos(leverAngle) * leverLen,
-            y: pivot.y + Math.sin(leverAngle) * leverLen
-        };
+        // Active Indicator
+        if (this.isOn) {
+             ctx.fillStyle = '#2fbf53';
+             ctx.fillRect(x + w * 0.15, y + h * 0.35, w * 0.35, h * 0.3);
+        }
 
-        ctx.strokeStyle = this.isOn ? '#fff' : '#bbb';
-        ctx.lineWidth = 2.2 * z;
-        ctx.lineCap = 'round';
+        // Slider Handle
+        const sliderWidth = w * 0.25;
+        const sliderHeight = h * 0.6;
+
+        // Position: Left (OFF) or Right (ON)
+        const sliderX = this.isOn ? x + w * 0.6 : x + w * 0.15;
+        const sliderY = y + h * 0.2;
+
+        ctx.fillStyle = '#eee';
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 1 * z;
         ctx.beginPath();
-        ctx.moveTo(pivot.x, pivot.y);
-        ctx.lineTo(leverEnd.x, leverEnd.y);
+        ctx.roundRect(sliderX, sliderY, sliderWidth, sliderHeight, 2 * z);
+        ctx.fill();
         ctx.stroke();
 
-        // Śrubka/punkt obrotu
-        ctx.fillStyle = this.isOn ? '#fff' : '#aaa';
+        // Grip lines on handle
+        ctx.strokeStyle = '#aaa';
         ctx.beginPath();
-        ctx.arc(pivot.x, pivot.y, 1.6 * z, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.moveTo(sliderX + sliderWidth * 0.5, sliderY + sliderHeight * 0.2);
+        ctx.lineTo(sliderX + sliderWidth * 0.5, sliderY + sliderHeight * 0.8);
+        ctx.stroke();
 
-        // Przewód wyjściowy
+        // Pin (black line like in AND gate)
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1.3 * z;
         ctx.beginPath();

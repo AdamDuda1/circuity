@@ -19,15 +19,14 @@ export class SimulationControls {
 
     onClick() {
         if (this.globals.simulation.running()) {
-            this.globals.simulation.running.set(false);
             this.text.set('Run <span class="material-symbols-outlined"> play_arrow </span>');
             this.normalColor.set('#4CAF50');
             this.hoverColor.set('#367c39');
         } else {
-            this.globals.simulation.running.set(true);
             this.text.set('Stop <span class="material-symbols-outlined"> stop </span>');
             this.normalColor.set('#b54747');
             this.hoverColor.set('#a13f3f');
         }
+        this.globals.simulation.switch();
     }
 }
