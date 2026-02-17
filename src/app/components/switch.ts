@@ -20,17 +20,17 @@ export class Switch extends ElectricalComponent {
     isOn = false;
 
     get color() {
-        return this.isOn ? 'lime' : 'gray';
+        return this.isOn ? 'lime' : 'black'; // only for selection indicator (bg color is hardcoded)
     }
 
     x = 0;
     y = 0;
     h = 20;
-    w = 30;
+    w = 20;
 
     actualSize;
     ins: { x: number; y: number }[] = [];
-    outs = [{x: 33, y: 10}];
+    outs = [{x: this.w + 3, y: 10}];
 
     toggle() {
         this.isOn = !this.isOn;
@@ -52,7 +52,6 @@ export class Switch extends ElectricalComponent {
 
         ctx.save();
 
-        // Switch Housing Body
         ctx.fillStyle = '#666';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1.3 * z;
@@ -61,23 +60,19 @@ export class Switch extends ElectricalComponent {
         ctx.fill();
         ctx.stroke();
 
-        // Slider Track (Background)
         ctx.fillStyle = '#333';
         ctx.beginPath();
         ctx.roundRect(x + w * 0.15, y + h * 0.35, w * 0.7, h * 0.3, 1 * z);
         ctx.fill();
 
-        // Active Indicator
         if (this.isOn) {
-             ctx.fillStyle = '#2fbf53';
-             ctx.fillRect(x + w * 0.15, y + h * 0.35, w * 0.35, h * 0.3);
+            ctx.fillStyle = '#2fbf53';
+            ctx.fillRect(x + w * 0.15, y + h * 0.35, w * 0.35, h * 0.3);
         }
 
-        // Slider Handle
         const sliderWidth = w * 0.25;
         const sliderHeight = h * 0.6;
 
-        // Position: Left (OFF) or Right (ON)
         const sliderX = this.isOn ? x + w * 0.6 : x + w * 0.15;
         const sliderY = y + h * 0.2;
 
@@ -89,14 +84,12 @@ export class Switch extends ElectricalComponent {
         ctx.fill();
         ctx.stroke();
 
-        // Grip lines on handle
         ctx.strokeStyle = '#aaa';
         ctx.beginPath();
         ctx.moveTo(sliderX + sliderWidth * 0.5, sliderY + sliderHeight * 0.2);
         ctx.lineTo(sliderX + sliderWidth * 0.5, sliderY + sliderHeight * 0.8);
         ctx.stroke();
 
-        // Pin (black line like in AND gate)
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 1.3 * z;
         ctx.beginPath();

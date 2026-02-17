@@ -50,6 +50,7 @@ export class OR extends ElectricalComponent {
         ctx.strokeStyle = 'black';
         ctx.fillStyle = this.color;
 
+        ctx.beginPath();
         ctx.moveTo(posX - 3 * z, posY + h * 0.3);
         ctx.lineTo(posX + w * 0.5, posY + h * 0.3);
         ctx.moveTo(posX - 3 * z, posY + h * 0.7);

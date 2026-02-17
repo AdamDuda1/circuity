@@ -12,6 +12,7 @@ import { CanvasDraw } from './canvas-draw-misc';
 import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
 import { LED } from '../components/led';
+import { Switch } from '../components/switch';
 
 @Component({
     selector: 'app-canvas',
@@ -50,7 +51,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
         // this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, -40));
         // this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, -80));
         // this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 0));
-        this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 0, 0));
+        this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
+        this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
         this.startLoop(canvas);
     }
@@ -147,12 +149,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
         for (const component of this.globals.simulation.circuitComponents()) {
             const ans = component.mouseOverPin();
             if (ans.index != -1) {
-                /*if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
-                 const from = component.inFrom[ans.index];
-                 this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
-                 component.inFrom[ans.index] = {component: -1, pin: -1};
-                 break;
-                 }*/
+                if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
+                    const from = component.inFrom[ans.index];
+                    this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+                    component.inFrom[ans.index] = {component: -1, pin: -1};
+                    this.isConnecting.set(true);
+                    this.isPanning.set(false);
+                    break;
+                }
                 //if (this.globals.simulation.circuitComponents()[search.index].) {}
                 this.isConnecting.set(true);
                 this.isPanning.set(false);

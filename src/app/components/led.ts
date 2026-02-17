@@ -17,7 +17,7 @@ export class LED extends ElectricalComponent {
 
     type = '';
 
-    color = '#ff0000';
+    color = '#0048ff';
 
     x = 0;
     y = 0;

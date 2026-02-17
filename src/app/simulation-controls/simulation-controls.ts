@@ -13,8 +13,6 @@ export class SimulationControls {
     public text = signal('Run <span class="material-symbols-outlined"> play_arrow </span>');
     isHovered = signal(false);
     normalColor = signal('#3fc138');
-    //normalColor = signal('#4CAF50');
-    //hoverColor = signal('#367c39');
     hoverColor = signal('#4CAF50');
 
     onClick() {
@@ -22,6 +20,7 @@ export class SimulationControls {
             this.text.set('Run <span class="material-symbols-outlined"> play_arrow </span>');
             this.normalColor.set('#4CAF50');
             this.hoverColor.set('#367c39');
+            this.globals.simulation.stop();
         } else {
             this.text.set('Stop <span class="material-symbols-outlined"> stop </span>');
             this.normalColor.set('#b54747');

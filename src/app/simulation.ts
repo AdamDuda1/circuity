@@ -32,4 +32,8 @@ export class Simulation {
     simulate() {
         for (const component of this.circuitComponents()) component.simulate();
     }
+
+    stop() {
+        // TODO reset all states
+    }
 }

@@ -18,8 +18,8 @@ export abstract class ElectricalComponent {
     abstract ins: { x: number, y: number } [];
     abstract outs: { x: number, y: number } [];
 
-    inFrom: { component: number, pin: number }[] = [];
-    outTo: { component: number, pin: number }[][] = [];
+    inFrom: { component: number, pin: number }[] = [{component: -1, pin: -1}, {component: -1, pin: -1}]; // set all to -1 in the beginning!!
+    outTo: { component: number, pin: number }[][] = [[{component: -1, pin: -1}, {component: -1, pin: -1}], [{component: -1, pin: -1}, {component: -1, pin: -1}]]; // TODO multiple outs
     //outTo = signal<{ component: number, pin: number }[][]>([[]]); TODO multiple outs
 
     inStates: boolean[] = [];
