@@ -28,7 +28,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
     protected readonly isPanning = signal(false);
     protected readonly isConnecting = signal(false);
-    protected readonly connectingFrom = signal({component: -1, type: 'in', index: -1});
+    protected readonly connectingToOrFrom = signal({component: -1, type: 'in', index: -1});
     private readonly targetZ = signal(1);
     private readonly lastPointer = signal({x: 0, y: 0});
     private lastPinchDist = 0;
@@ -99,7 +99,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.drawer.drawDebug(ctx);
 
         if (this.isConnecting()) {
-            const pos1 = this.connectingFrom();
+            const pos1 = this.connectingToOrFrom();
             ctx.save();
             drawWire(ctx, this.globals.view(),
                 {
@@ -138,32 +138,41 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.lastPointer.set({x: event.clientX, y: event.clientY});
         (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
-        if (this.globals.simulation.running()) return;
+        if (this.globals.simulation.running()) {
+            // component.clickInSimulation
+        } else {
+            //if (this.globals.selected != -1)
 
-        if (this.globals.selected != -1) this.globals.selected = -1;
-        for (const component of this.globals.simulation.circuitComponents()) {
-            if (component.mouseOverComponent()) {
-                this.globals.selected = component.id;
-                break;
-            }
-        }
-
-        for (const component of this.globals.simulation.circuitComponents()) {
-            const ans = component.mouseOverPin();
-            if (ans.index != -1) {
-                if (ans.type === 'in' && component.inFrom[ans.index].component != -1) {
-                    const from = component.inFrom[ans.index];
-                    this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
-                    component.inFrom[ans.index] = {component: -1, pin: -1};
-                    this.isConnecting.set(true);
-                    this.isPanning.set(false);
+            this.globals.selected = -1;
+            // if or atomic is ok? ^ and v
+            for (const component of this.globals.simulation.circuitComponents()) {
+                if (component.mouseOverComponent()) {
+                    this.globals.selected = component.id;
                     break;
                 }
-                //if (this.globals.simulation.circuitComponents()[search.index].) {}
-                this.isConnecting.set(true);
-                this.isPanning.set(false);
-                this.connectingFrom.set({component: component.id, type: ans.type, index: ans.index});
-                break;
+            }
+
+            for (const component of this.globals.simulation.circuitComponents()) {
+                const ans = component.mouseOverPin();
+                if (ans.index != -1) { // if is over pin
+                    this.isConnecting.set(true);
+                    this.isPanning.set(false);
+
+                    if (ans.type == 'out') {
+                        this.connectingToOrFrom.set({component: component.id, type: 'out', index: ans.index});
+                    } else if (ans.type == 'in') {
+                        if (component.inFrom[ans.index].component == -1) { // not already connected
+                            this.connectingToOrFrom.set({component: component.id, type: 'in', index: ans.index});
+                        } else { // connected -> move, but from out
+                            const from = component.inFrom[ans.index];
+                            this.connectingToOrFrom.set({component: from.component, type: 'out', index: from.pin});
+
+                            this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+                            component.inFrom[ans.index] = {component: -1, pin: -1};
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
@@ -187,7 +196,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
                 const ans = component.mouseOverPin();
                 if (ans.index != -1) {
                     const to = {component: component.id, type: ans.type, index: ans.index};
-                    const from = this.connectingFrom();
+                    const from = this.connectingToOrFrom();
 
                     if (to.component === from.component) break;
 

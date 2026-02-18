@@ -70,12 +70,12 @@ export class Switch extends ElectricalComponent {
 
         ctx.fillStyle = '#333';
         ctx.beginPath();
-        ctx.roundRect(x + w * 0.15, y + h * 0.35, w * 0.7, h * 0.3, 1 * z);
+        ctx.roundRect(x + w * 0.15, y + h * 0.35, w * 0.7, h * 0.3, z);
         ctx.fill();
 
         if (this.isOn) {
             ctx.fillStyle = '#2fbf53';
-            ctx.fillRect(x + w * 0.15, y + h * 0.35, w * 0.35, h * 0.3);
+            ctx.fillRect(x + w * 0.15, y + h * 0.35, w * 0.5, h * 0.3);
         }
 
         const sliderWidth = w * 0.25;
@@ -86,7 +86,7 @@ export class Switch extends ElectricalComponent {
 
         ctx.fillStyle = '#eee';
         ctx.strokeStyle = '#555';
-        ctx.lineWidth = 1 * z;
+        ctx.lineWidth = z;
         ctx.beginPath();
         ctx.roundRect(sliderX, sliderY, sliderWidth, sliderHeight, 2 * z);
         ctx.fill();
