@@ -2,6 +2,7 @@
         id="canvas"
         #canvas
         role="presentation"
+        tabindex="0"
         [style.border]="this.globals.simulation.running() ? 'dashed 5px #a13f3f' : '0'"
         (wheel)="onWheel($event)"
         (pointerdown)="onPointerDown($event)"
@@ -13,8 +14,8 @@
         (touchend)="onTouchEnd($event)"
         (dragover)="onDragOver($event)"
         (drop)="onDrop($event)"
-        [style.cursor]="isPanning() ? 'grabbing' : this.globals.canvasCursor"></canvas>
-<!--    (pointerout)=""-->
+        (keydown)="onKeyDown($event)"
+        [style.cursor]="(this.globals.simulation.running() ? (moved_amt > 5) : (isPanning())) ? 'grabbing' : this.globals.canvasCursor"></canvas>
 
 <footer class="absolute bottom-0.5 right-1 text-xs text-gray-500" [style.margin]="this.globals.simulation.running() ? '5px' : '1px'">
     &copy;Adam Duda &sdot; <a href="https://github.com/AdamDuda1/circuity" class="hover:underline" target="_blank">GitHub</a>

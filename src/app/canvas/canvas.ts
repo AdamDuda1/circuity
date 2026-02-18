@@ -33,7 +33,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
     private readonly lastPointer = signal({x: 0, y: 0});
     private lastPinchDist = 0;
 
-    private moved_amt = 0;
+    protected moved_amt = 0;
+    public overComponent = false;
     public ctx!: CanvasRenderingContext2D;
     private animationRef = 0;
     private resizeObserver?: ResizeObserver;
@@ -48,11 +49,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
         this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
         this.resizeObserver.observe(canvas.parentElement!);
 
-        // this.globals.simulation.circuitComponents().push(new AND(this.globals, true, 0, -40));
-        // this.globals.simulation.circuitComponents().push(new OR(this.globals, true, 0, -80));
-        // this.globals.simulation.circuitComponents().push(new NOT(this.globals, true, 0, 0));
         this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
         this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
+
+        this.globals.view().z = 1;
+        setTimeout(() => this.targetZ.set(2), 50);
 
         this.startLoop(canvas);
     }
@@ -264,6 +265,37 @@ export class Canvas implements AfterViewInit, OnDestroy {
         }
 
         this.globals.canvasCursorCandidate = candidate;
+    }
+
+
+    // KEYBOARD
+
+    onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Delete') {
+            console.log("delete key pressed");
+            if (this.globals.selected != -1) {
+                const component = this.globals.simulation.circuitComponents()[this.globals.selected];
+
+                for (const pin of component.ins) {
+                    const connection = component.inFrom[component.ins.indexOf(pin)];
+                    if (connection.component != -1) {
+                        this.globals.simulation.circuitComponents()[connection.component].outTo[connection.pin] = this.globals.simulation.circuitComponents()[connection.component].outTo[connection.pin].filter(c => c.component !== component.id || c.pin !== component.ins.indexOf(pin));
+                    }
+                }
+
+                for (const pin of component.outs) {
+                    const connections = component.outTo[component.outs.indexOf(pin)] || [];
+                    for (const connection of connections) {
+                        if (connection.component != -1) {
+                            this.globals.simulation.circuitComponents()[connection.component].inFrom[connection.pin] = {component: -1, pin: -1};
+                        }
+                    }
+                }
+
+                this.globals.simulation.circuitComponents().splice(this.globals.simulation.circuitComponents().indexOf(component), 1);
+                this.globals.selected = -1;
+            }
+        }
     }
 
 

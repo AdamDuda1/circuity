@@ -8,9 +8,10 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] Add simulating
+- [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
+- [x] ~~Add simulating~~
 - [x] ~~**FIX:** The first drawn wire dot is always bigger~~
 - [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
