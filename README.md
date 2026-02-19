@@ -16,7 +16,8 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [x] ~~Wires~~
 - [x] ~~Add adding components to world~~
 
-**OTHER:**
+
+  **OTHER:**
 
 - [ ] (??) Add separate methods for mouseOverComponent and Pin in general (not only for each component)
 - [ ] Pick color for the selection indicator
@@ -30,6 +31,28 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [x] ~~Add component states (ins, outs, power, color)~~
 - [x] ~~Make movement on mobile~~
 - [x] ~~! remove unnecessary func references and move to globals.ts~~
+
+🔹 Derived / Common Gates
+
+NAND (NOT AND)
+
+NOR (NOT OR)
+
+XOR (Exclusive OR)
+
+XNOR (Exclusive NOR)
+
+🔹 Less Common / Special Gates
+
+Buffer
+Output equals input (used for signal strengthening).
+
+Tri-state buffer
+Has three possible outputs: 0, 1, or High-Impedance (Z).
+Used in bus systems.
+
+Schmitt trigger
+A gate with hysteresis (used for noisy signals).
 
 ---
 

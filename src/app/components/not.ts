@@ -9,11 +9,13 @@ export class NOT extends ElectricalComponent {
         this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
         if (giveID) this.id = this.globals.getNextID();
         else this.id = -1;
+
+        this.category = this.globals.constants.categoryName.basicLogicGates;
     }
 
     id;
+    category;
     name = 'NOT';
-    category = 'basic-gates';
 
     type = '';
 

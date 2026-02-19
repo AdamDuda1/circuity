@@ -1,33 +1,55 @@
-import { Component, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, Signal } from '@angular/core';
 import { PaletteComponent } from './palette-component/palette-component';
-import { AND } from '../components/and';
-import { OR } from '../components/or';
-import { NOT } from '../components/not';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
-import { Switch } from '../components/switch';
-import { LED } from '../components/led';
+import { PaletteCategory } from './palette-category/palette-category';
+
+type Category = {
+	name: Signal<string>;
+	defaultOpened: boolean;
+	components: ElectricalComponent[];
+}
 
 @Component({
-    selector: 'app-palette',
-    imports: [PaletteComponent],
-    template: `
-        @for (component of components(); track component) {
-            <app-palette-component [component]="component" />
+	selector: 'app-palette',
+	imports: [PaletteComponent, PaletteCategory],
+	template: `
+        @for (category of categories; track categories.indexOf(category)) {
+            <app-palette-category [name]="category.name()" [defaultOpened]="category.defaultOpened">
+                @for (component of category.components; track component.id) {
+                    <app-palette-component [component]="component" />
+                }
+            </app-palette-category>
         }
     `,
-    styleUrl: './palette.css'
+	styleUrl: './palette.css',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Palette {
-    components = signal<ElectricalComponent[]>([]);
+	private globals = inject(Globals);
+	components = signal<ElectricalComponent[]>([]);
+	categories: Category[] = [];
+	defaultCategories: string[] = [];
 
-    constructor(public globals: Globals) {
-        this.components.set([
-            new AND(this.globals, false, -1, -1),
-            new OR(this.globals, false, -1, -1),
-            new NOT(this.globals, false, -1, -1),
-            new Switch(this.globals, false, -1, -1),
-            new LED(this.globals, false, -1, -1)
-        ]);
-    }
+	constructor() {
+		this.components.set(this.globals.palette);
+
+		this.defaultCategories = [ // TODO move to globals?
+			this.globals.constants.categoryName.basicLogicGates,
+			this.globals.constants.categoryName.input,
+			this.globals.constants.categoryName.output
+		];
+
+		for (const component of this.components()) {
+			let category = this.categories.find(c => c.name() == component.category);
+			if (!category) {
+				category = {name: signal(component.category), defaultOpened: this.defaultCategories.includes(component.category), components: []};
+				this.categories.push(category);
+			}
+			category.components.push(component);
+		}
+
+		console.log(this.categories);
+		console.log(this.categories[0].name);
+	}
 }

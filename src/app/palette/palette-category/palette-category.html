@@ -1,4 +1,6 @@
 <div>
-    <span>{{ categoryName }}</span>
-    <ng-content></ng-content>
+    <details [open]="defaultOpened">
+        <summary>{{ name() }}</summary>
+        <ng-content></ng-content>
+    </details>
 </div>
