@@ -1,11 +1,15 @@
 import { Injectable, signal } from '@angular/core';
 import { Simulation } from './simulation';
 import { Constants } from './constants';
+import { ElectricalComponent } from './components/component-type-interface';
 import { AND } from './components/and';
 import { OR } from './components/or';
 import { NOT } from './components/not';
 import { Switch } from './components/switch';
 import { LED } from './components/led';
+import { XOR } from './components/xor';
+
+type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 
 @Injectable({
 	providedIn: 'root'
@@ -20,13 +24,17 @@ export class Globals {
 	public simulation = new Simulation(this);
 	public constants = new Constants();
 
-	public readonly palette = [
-		new AND(this, false, -1, -1),
-		new OR(this, false, -1, -1),
-		new NOT(this, false, -1, -1),
-		new Switch(this, false, -1, -1),
-		new LED(this, false, -1, -1)
-	];
+	public readonly componentRegistry = new Map<string, ComponentFactory>([
+		['AND', (g, id, x, y) => new AND(g, id, x, y)],
+		['OR', (g, id, x, y) => new OR(g, id, x, y)],
+		['NOT', (g, id, x, y) => new NOT(g, id, x, y)],
+		['Switch', (g, id, x, y) => new Switch(g, id, x, y)],
+		['LED', (g, id, x, y) => new LED(g, id, x, y)],
+		['XOR', (g, id, x, y) => new XOR(g, id, x, y)],
+	]);
+
+	public readonly palette = [...this.componentRegistry.values()]
+		.map(factory => factory(this, false, -1, -1));
 
 	public debug = false;
 

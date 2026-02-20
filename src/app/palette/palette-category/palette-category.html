@@ -1,6 +1,6 @@
 <div>
-    <details [open]="defaultOpened">
-        <summary>{{ name() }}</summary>
+    <details [open]="defaultOpened()">
+        <summary class="select-none">{{ name() }}</summary>
         <ng-content></ng-content>
     </details>
 </div>
