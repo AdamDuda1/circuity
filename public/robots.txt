@@ -1,0 +1,42 @@
+# Circuity - Interactive Logic Circuit Simulator
+# robots.txt - Search engine crawler instructions
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /.angular/
+Disallow: /dist/
+
+# Crawl delay for bots (in seconds)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://circuity.deltos.space/sitemap.xml
+
+# Allow specific bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
