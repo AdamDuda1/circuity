@@ -34,7 +34,7 @@ export class OR extends ElectricalComponent {
         this.outStates[0] = this.inStates[0] || this.inStates[1];
     }
 
-    drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
+    drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
         const viewW = view?.w ?? this.globals.view().w;
         const viewH = view?.h ?? this.globals.view().h;
 

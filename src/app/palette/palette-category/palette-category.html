@@ -1,6 +1,11 @@
 <div>
     <details [open]="defaultOpened()">
-        <summary class="select-none">{{ name() }}</summary>
+        <summary class="select-none">
+            @if (icon() != "") {
+                <span class="material-symbols-outlined">{{ icon() }}</span>
+            }
+            <span class="name">{{ name() }}</span>
+        </summary>
         <ng-content></ng-content>
     </details>
 </div>

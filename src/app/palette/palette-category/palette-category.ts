@@ -8,6 +8,7 @@ import { Component, input } from '@angular/core';
 })
 export class PaletteCategory {
 	name = input.required<string>();
+	icon = input.required<string>();
 	defaultOpened = input.required<boolean>();
-    protected readonly toString = toString;
+	protected readonly toString = toString;
 }
