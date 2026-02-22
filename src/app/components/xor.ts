@@ -26,6 +26,9 @@ export class XOR extends ElectricalComponent {
 	h = 20;
 	w = 20;
 
+	noOfIns = 2;
+	noOfOuts = 1;
+
 	actualSize;
 	ins = [{x: -3, y: 6}, {x: -3, y: 14}];
 	outs = [{x: 22.5, y: 10}];

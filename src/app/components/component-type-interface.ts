@@ -18,8 +18,8 @@ export abstract class ElectricalComponent {
 	abstract ins: { x: number, y: number } [];
 	abstract outs: { x: number, y: number } [];
 
-	abstract noIns: number;
-	abstract noOuts: number;
+	abstract noOfIns: number;
+	abstract noOfOuts: number;
 	noOutConnections: number[] = [];
 
 	inFrom: { component: number, pin: number }[] = [{component: -1, pin: -1}, {component: -1, pin: -1}]; // set all
@@ -40,12 +40,12 @@ export abstract class ElectricalComponent {
 	setPinDefaults() { // TODO!!!
 		const d = {component: -1, pin: -1};
 
-		for (let i = 0; i < this.noIns; i++) {
+		for (let i = 0; i < this.noOfIns; i++) {
 			this.inFrom[i] = d;
 			this.inStates[i] = false;
 		}
 
-		for (let i = 0; i < this.noOuts; i++) {
+		for (let i = 0; i < this.noOfOuts; i++) {
 			this.outTo[i] = [];
 			this.outStates[i] = false;
 			this.noOutConnections[i] = 0;
