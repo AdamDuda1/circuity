@@ -1,0 +1,22 @@
+.container {
+	background: white;
+	box-shadow: 0 0 12px 0 #00000073,
+	inset 0 0 30px 13px #0000000d;
+	margin: 4px 2px;
+	border: none;
+	padding: 10px 10px; /* gora, boki */
+	border-radius: 6px;
+}
+
+input#component-name {
+	width: 100%;
+	padding: 5px;
+	margin-top: 5px;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-weight: bold;
+}
+
+input#component-name::selection {
+	border: 1px solid #ccc;
+}
