@@ -12,11 +12,18 @@ export class Simulation {
 		this.running.set(!this.running());
 	}
 
-	spawnComponent(name: string, x: number, y: number) {
+	spawnComponent(name: string, x: number, y: number, thoseWereCenterCoordinates = false) {
 		if (this.globals.simulation.running()) return;
 
 		const factory = this.globals.componentRegistry.get(name);
 		if (!factory) return;
+
+		const component = factory(this.globals, true, x, y);
+
+		if (thoseWereCenterCoordinates) {
+			x -= component.w / 2;
+			y -= component.h / 2;
+		}
 
 		this.globals.simulation.circuitComponents().push(factory(this.globals, true, x, y));
 	}

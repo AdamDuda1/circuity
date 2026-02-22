@@ -347,7 +347,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		const worldX = (mouseX - this.globals.view().w / 2) / this.globals.view().z - this.globals.view().x;
 		const worldY = -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y;
 
-		this.globals.simulation.spawnComponent(componentName, worldX, worldY);
+		this.globals.simulation.spawnComponent(componentName, worldX, worldY, true);
 	}
 
 
