@@ -8,6 +8,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
+- [ ] **FIX DELETING AND PIN ASSIGNING!!**
 - [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)

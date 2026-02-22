@@ -271,31 +271,26 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	// KEYBOARD
 
 	onKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Delete') {
-			console.log('delete key pressed');
-			if (this.globals.selected != -1) {
-				const component = this.globals.simulation.circuitComponents()[this.globals.selected];
+		if (event.key !== 'Delete') return;
 
-				for (const pin of component.ins) {
-					const connection = component.inFrom[component.ins.indexOf(pin)];
-					if (connection.component != -1) {
-						this.globals.simulation.circuitComponents()[connection.component].outTo[connection.pin] = this.globals.simulation.circuitComponents()[connection.component].outTo[connection.pin].filter(c => c.component !== component.id || c.pin !== component.ins.indexOf(pin));
-					}
-				}
+		if (this.globals.selected === -1) return;
 
-				for (const pin of component.outs) {
-					const connections = component.outTo[component.outs.indexOf(pin)] || [];
-					for (const connection of connections) {
-						if (connection.component != -1) {
-							this.globals.simulation.circuitComponents()[connection.component].inFrom[connection.pin] = {component: -1, pin: -1};
-						}
-					}
-				}
-
-				this.globals.simulation.circuitComponents().splice(this.globals.simulation.circuitComponents().indexOf(component), 1);
-				this.globals.selected = -1;
+		// Remove all the conenctions to and from the selected component and move it to [-1000, -1000] so it doesn't interfere with mouse events while deleted
+		const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
+		for (const [index, from] of selectedComponent.inFrom.entries()) {
+			if (from.component != -1) {
+				this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== this.globals.selected || c.pin !== index);
 			}
 		}
+		for (const out of selectedComponent.outTo) {
+			if (out) for (const to of out) {
+				this.globals.simulation.circuitComponents()[to.component].inFrom[to.pin] = {component: -1, pin: -1};
+			}
+		}
+
+		selectedComponent.updatePos(-1000, -1000);
+
+		this.globals.selected = -1;
 	}
 
 
