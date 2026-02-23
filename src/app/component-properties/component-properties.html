@@ -20,14 +20,16 @@
 
 		<div>
 			<span>X: </span>
-			<input type="text" name="posX" id="posX"
-				   value="{{globals.simulation.circuitComponents()[globals.selected].x}}">
+			<input type="number" name="posX" id="posX"
+				   value="{{globals.simulation.circuitComponents()[globals.selected].x}}"
+				   (input)="change_x($event)">
 		</div>
 
 		<div>
 			<span>Y: </span>
-			<input type="text" name="posY" id="posY"
-				   value="{{globals.simulation.circuitComponents()[globals.selected].y}}">
+			<input type="number" name="posY" id="posY"
+				   value="{{globals.simulation.circuitComponents()[globals.selected].y}}"
+				   (input)="change_y($event)">
 		</div>
 
 		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
