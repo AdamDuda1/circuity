@@ -12,8 +12,10 @@
 			   (input)="change_name($event)">
 
 		<div>
-			<input type="checkbox" name="displayLabel" id="displayLabel">
-			<label for="displayLabel">display label</label>
+			<input type="checkbox" name="displayLabel" id="displayLabel"
+				   [checked]="globals.simulation.circuitComponents()[globals.selected].showLabel"
+				   (input)="change_showLabel($event)">
+			<label for="displayLabel" class="select-none">display label</label>
 		</div>
 
 		<category>{{ this.globals.constants.translations.componentProperties.section2 }}</category>

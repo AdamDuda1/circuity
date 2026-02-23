@@ -14,6 +14,8 @@ export abstract class ElectricalComponent {
 	abstract w: number;
 	abstract h: number;
 
+	showLabel: boolean = false;
+
 	abstract actualSize: { x1: number, y1: number, w: number, h: number };
 	abstract ins: { x: number, y: number } [];
 	abstract outs: { x: number, y: number } [];
@@ -26,7 +28,7 @@ export abstract class ElectricalComponent {
 	// to -1 in the beginning!!
 	outTo: { component: number, pin: number }[][] = [
 		[{component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}],
-		[{component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}],
+		[{component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}, {component: -1, pin: -1}]
 	]; // TODO multiple outs
 	//outTo = signal<{ component: number, pin: number }[][]>([[]]); TODO multiple outs
 
@@ -117,6 +119,8 @@ export abstract class ElectricalComponent {
 			}
 		}
 		ctx.restore();
+
+		this.drawLabel(ctx);
 	}
 
 	abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
@@ -180,6 +184,22 @@ export abstract class ElectricalComponent {
 				ctx.restore();
 			}
 		}
+	}
+
+	drawLabel(ctx: CanvasRenderingContext2D) {
+		if (!this.showLabel || !this.name) return;
+
+		const view = this.globals.view();
+
+		ctx.save();
+		ctx.fillStyle = 'black';
+		ctx.font = `${12 * view.z}px Arial`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		const screenX = (this.x + this.w / 2 + view.x) * view.z + view.w / 2;
+		const screenY = (-(this.y - this.h / 2) + view.y) * view.z + view.h / 2;
+		ctx.fillText(this.name, screenX, screenY);
+		ctx.restore();
 	}
 
 	drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
