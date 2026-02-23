@@ -6,6 +6,9 @@
 	border: none;
 	padding: 10px 10px; /* gora, boki */
 	border-radius: 6px;
+	max-width: 250px;
+	display: flex;
+	flex-direction: column;
 }
 
 input#component-name {

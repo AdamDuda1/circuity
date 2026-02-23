@@ -7,4 +7,13 @@ export class Constants {
 	};
 
 	public readonly favoriteCategory = 'Favorites';
+
+	public readonly translations = {
+		componentProperties: {
+			title: 'Component Properties',
+			name: 'Name',
+			namePlaceholder: 'Name',
+			type: 'Type',
+		},
+	}
 }

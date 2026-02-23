@@ -14,7 +14,7 @@ type Category = {
 
 @Component({
 	selector: 'app-palette',
-	imports: [PaletteComponent, PaletteCategory, PaletteComponentDetails],
+	imports: [PaletteComponent, PaletteCategory],
 	template: `
         @for (category of categories; track categories.indexOf(category)) {
             <app-palette-category [name]="category.name()" [icon]="category.icon()"

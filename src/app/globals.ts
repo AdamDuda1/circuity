@@ -16,6 +16,8 @@ type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number
 })
 export class Globals {
 	public readonly view = signal({x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0});
+	public readonly isPanning = signal(false);
+	public readonly isDragging = signal(false);
 	public readonly cursor = signal({x: 0, y: 0});
 	public readonly frame = signal({dt: 0, fps: 0});
 	public canvasCursor = 'default';

@@ -15,7 +15,7 @@
 	(dragover)="onDragOver($event)"
 	(drop)="onDrop($event)"
 	(keydown)="onKeyDown($event)"
-	[style.cursor]="(this.globals.simulation.running() ? (moved_amt > 5) : (isPanning())) ? 'grabbing' : this.globals.canvasCursor"></canvas>
+	[style.cursor]="(this.globals.simulation.running() ? (moved_amt > 5) : (this.globals.isPanning())) ? 'grabbing' : this.globals.canvasCursor"></canvas>
 
 <footer class="absolute bottom-0.5 right-1 text-xs text-gray-500"
 		[style.margin]="this.globals.simulation.running() ? '5px' : '1px'">

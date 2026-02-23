@@ -26,7 +26,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
-	protected readonly isPanning = signal(false);
 	protected readonly isConnecting = signal(false);
 	protected readonly connectingToOrFrom = signal({component: -1, type: 'in', index: -1});
 	private readonly targetZ = signal(1);
@@ -133,9 +132,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	onPointerDown(event: PointerEvent) {
 		if (event.button !== 0) return;
-		if (event.pointerType === 'touch' && this.isPanning()) return; // ignore second touch for panning
+		if (event.pointerType === 'touch' && this.globals.isPanning()) return; // ignore second touch for panning
 
-		this.isPanning.set(true);
+		this.globals.isPanning.set(true);
 		this.lastPointer.set({x: event.clientX, y: event.clientY});
 		(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
@@ -157,7 +156,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 				const ans = component.mouseOverPin();
 				if (ans.index != -1) { // if is over pin
 					this.isConnecting.set(true);
-					this.isPanning.set(false);
+					this.globals.isPanning.set(false);
 
 					if (ans.type == 'out') {
 						this.connectingToOrFrom.set({component: component.id, type: 'out', index: ans.index});
@@ -179,7 +178,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	onPointerUp(event: PointerEvent) {
-		this.isPanning.set(false);
+		this.globals.isPanning.set(false);
+		this.globals.isDragging.set(false);
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
 		if (this.moved_amt > 5) this.globals.selected = -1;
 		const click = this.moved_amt <= 5;
@@ -221,12 +221,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	onPointerMove(event: PointerEvent) {
 		const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 
-		if (this.isPanning() && !this.isConnecting()) {
+		if (this.globals.isPanning() && !this.isConnecting()) {
 			this.moved_amt++;
 			const last = this.lastPointer();
 			const z = this.globals.view().z;
 
 			if (this.globals.selected != -1) {
+				if (!this.globals.isDragging()) this.globals.isDragging.set(true);
 				this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
 				//console.log(this.globals.simulation.circuitComponents());
 			} else {

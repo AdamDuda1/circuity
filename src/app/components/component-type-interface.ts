@@ -192,7 +192,7 @@ export abstract class ElectricalComponent {
 	}
 
 	mouseOverPin(): { index: number, type: 'in' | 'out' } {
-		const zone = 2;
+		const zone = 4;
 
 		for (let i = 0; i < this.ins.length; ++i) {
 			if (this.globals.cursor().x >= this.x + this.ins[i].x - zone && this.globals.cursor().x <= this.x + this.ins[i].x + zone &&

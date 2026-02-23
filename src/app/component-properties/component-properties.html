@@ -1,5 +1,16 @@
-<div class="container">
-	<input type="text" name="component-name" id="component-name">
+<!--<div class="container" id="properties-undefined">-->
+<!--	<span class="accent-gray-600 font-"></span>-->
+<!--</div>-->
 
-	<p>component-properties works!</p>
+<div class="container" id="properties" [style.visibility]="(globals.selected != -1 && !globals.isDragging()) ? 'visible' : 'hidden'">
+	<category>
+a
+	</category>
+	<input type="text" name="component-name" id="component-name"
+		   value="asd"
+		   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}">
+
+	<div><span>X: </span> <input type="text" name="posX" id="posX"></div>
+
+	<div><span>Y: </span> <input type="text" name="posY" id="posY"></div>
 </div>
