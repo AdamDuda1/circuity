@@ -33,6 +33,8 @@ export abstract class ElectricalComponent {
 	inStates: boolean[] = [];
 	outStates: boolean[] = [];
 
+	hoveredOverPin: { index: number, type: 'in' | 'out' } = {index: -1, type: 'in'};
+
 	clickInSimulation() {}
 
 	condition() {}
@@ -91,6 +93,8 @@ export abstract class ElectricalComponent {
 			view = {...defaultView, w: undefined, h: undefined};
 		}
 
+		this.drawPinDots(ctx);
+
 		this.drawSelectionIndicator(ctx, view);
 		this.drawShape(ctx, view, properties);
 
@@ -113,8 +117,6 @@ export abstract class ElectricalComponent {
 			}
 		}
 		ctx.restore();
-
-		this.drawPinDots(ctx);
 	}
 
 	abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
@@ -138,12 +140,23 @@ export abstract class ElectricalComponent {
 				ctx.fill();
 				ctx.restore();
 			}
+
+			if (this.hoveredOverPin.index === i && this.hoveredOverPin.type === 'in') {
+				const screenX = (this.x + _in.x + view.x) * view.z + view.w / 2;
+				const screenY = (-(this.y + _in.y) + view.y) * view.z + view.h / 2;
+
+				ctx.save();
+				ctx.beginPath();
+				ctx.fillStyle = '#e3fe2257';
+				ctx.lineWidth = 2 * view.z;
+				ctx.fillRect(screenX - 3 * view.z, screenY - 3 * view.z, 6 * view.z, 6 * view.z);
+				ctx.restore();
+			}
 		}
 
 		for (let i = 0; i < this.outs.length; i++) {
 			const _out = this.outs[i];
 			if (this.outTo[i] && this.outTo[i].length > 0 && this.outTo[i].some(conn => conn.component !== -1)) {
-				//if (this.outTo[i] && this.outTo[i].length > 0) {
 				const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
 				const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
 
@@ -152,6 +165,18 @@ export abstract class ElectricalComponent {
 				ctx.beginPath();
 				ctx.arc(screenX, screenY, 1.1 * view.z, 0, Math.PI * 2);
 				ctx.fill();
+				ctx.restore();
+			}
+
+			if (this.hoveredOverPin.index === i && this.hoveredOverPin.type === 'out') {
+				const screenX = (this.x + _out.x + view.x) * view.z + view.w / 2;
+				const screenY = (-(this.y + _out.y) + view.y) * view.z + view.h / 2;
+
+				ctx.save();
+				ctx.beginPath();
+				ctx.fillStyle = '#e3fe2257';
+				ctx.lineWidth = 2 * view.z;
+				ctx.fillRect(screenX - 3 * view.z, screenY - 3 * view.z, 6 * view.z, 6 * view.z);
 				ctx.restore();
 			}
 		}
@@ -196,14 +221,21 @@ export abstract class ElectricalComponent {
 
 		for (let i = 0; i < this.ins.length; ++i) {
 			if (this.globals.cursor().x >= this.x + this.ins[i].x - zone && this.globals.cursor().x <= this.x + this.ins[i].x + zone &&
-				this.globals.cursor().y >= this.y + this.ins[i].y - zone && this.globals.cursor().y <= this.y + this.ins[i].y + zone) return {index: i, type: 'in'};
+				this.globals.cursor().y >= this.y + this.ins[i].y - zone && this.globals.cursor().y <= this.y + this.ins[i].y + zone) {
+				this.hoveredOverPin = {index: i, type: 'in'};
+				return {index: i, type: 'in'};
+			}
 		}
 
 		for (let i = 0; i < this.outs.length; ++i) {
 			if (this.globals.cursor().x >= this.x + this.outs[i].x - zone && this.globals.cursor().x <= this.x + this.outs[i].x + zone &&
-				this.globals.cursor().y >= this.y + this.outs[i].y - zone && this.globals.cursor().y <= this.y + this.outs[i].y + zone) return {index: i, type: 'out'};
+				this.globals.cursor().y >= this.y + this.outs[i].y - zone && this.globals.cursor().y <= this.y + this.outs[i].y + zone) {
+				this.hoveredOverPin = {index: i, type: 'out'};
+				return {index: i, type: 'out'};
+			}
 		}
 
+		this.hoveredOverPin = {index: -1, type: 'in'};
 		return {index: -1, type: 'in'};
 	}
 }
