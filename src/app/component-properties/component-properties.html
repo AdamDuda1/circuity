@@ -18,6 +18,13 @@
 			<label for="displayLabel" class="select-none">display label</label>
 		</div>
 
+		<div>
+			<span>Color: </span>
+			<input type="color" name="color" id="color"
+				   value="{{globals.simulation.circuitComponents()[globals.selected].color}}"
+				   (input)="change_color($event)">
+		</div>
+
 		<category>{{ this.globals.constants.translations.componentProperties.section2 }}</category>
 
 		<div>

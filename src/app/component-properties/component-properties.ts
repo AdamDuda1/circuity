@@ -35,6 +35,8 @@ export class ComponentProperties {
 
 	change_showLabel(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].showLabel = Boolean((event.target as HTMLInputElement).value); }
 
+	change_color(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].color = (event.target as HTMLInputElement).value; }
+
 	change_x(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].x = Number((event.target as HTMLInputElement).value); }
 
 	change_y(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].y = Number((event.target as HTMLInputElement).value); }

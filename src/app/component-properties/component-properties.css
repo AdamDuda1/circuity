@@ -36,6 +36,29 @@ label[for = "displayLabel"] {
 	color: gray;
 }
 
+#color {
+	-webkit-appearance: none;
+	appearance: none;
+	border: none;
+	width: 60px;
+	height: 20px;
+	border-radius: 12px;
+	cursor: pointer;
+	background: none;
+	padding: 0;
+	position: relative;
+	top: 3px;
+}
+
+#color::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+#color::-webkit-color-swatch {
+	border-radius: 12px;
+	border: 2px solid #ddd;
+}
+
 .category-container {
 	display: flex;
 	align-items: center;
