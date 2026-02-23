@@ -23,3 +23,31 @@ input#component-name {
 input#component-name::selection {
 	border: 1px solid #ccc;
 }
+
+.category-container {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	gap: 1rem;
+	color: gray;
+}
+
+.category-bar {
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(
+		to right,
+		transparent,
+		rgba(0, 0, 0, 0.15),
+		transparent
+	);
+}
+
+.category-title {
+	white-space: nowrap;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase !important;
+	opacity: 0.8;
+	font-size: 9px !important;
+}

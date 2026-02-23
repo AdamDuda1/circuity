@@ -1,16 +1,28 @@
-<!--<div class="container" id="properties-undefined">-->
-<!--	<span class="accent-gray-600 font-"></span>-->
-<!--</div>-->
+<div class="container" id="properties"
+	 [style.visibility]="(globals.selected != -1 && !globals.isDragging()) ? 'visible' : 'hidden'">
+	@if (globals.selected == -1) {
+		<category>no component selected</category>
+	}
+	@if (globals.selected != -1) {
+		<!--else ??-->
+		<category>basic</category>
+		<input type="text" name="component-name" id="component-name"
+			   value="{{globals.simulation.circuitComponents()[globals.selected].name}}"
+			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}">
 
-<div class="container" id="properties" [style.visibility]="(globals.selected != -1 && !globals.isDragging()) ? 'visible' : 'hidden'">
-	<category>
-a
-	</category>
-	<input type="text" name="component-name" id="component-name"
-		   value="asd"
-		   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}">
+		<category>positioning</category>
 
-	<div><span>X: </span> <input type="text" name="posX" id="posX"></div>
+		<div><span>X: </span>
+			<input type="text" name="posX" id="posX"
+				   value="{{globals.simulation.circuitComponents()[globals.selected].x}}">
+		</div>
 
-	<div><span>Y: </span> <input type="text" name="posY" id="posY"></div>
+		<div><span>Y: </span>
+			<input type="text" name="posY" id="posY"
+				   value="{{globals.simulation.circuitComponents()[globals.selected].y}}">
+		</div>
+
+		<category>component-specific</category>
+
+	}
 </div>

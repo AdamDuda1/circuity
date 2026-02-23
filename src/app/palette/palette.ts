@@ -3,7 +3,6 @@ import { PaletteComponent } from './palette-component/palette-component';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
 import { PaletteCategory } from './palette-category/palette-category';
-import { PaletteComponentDetails } from './palette-component-details/palette-component-details';
 
 type Category = {
 	name: Signal<string>;

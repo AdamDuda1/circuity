@@ -179,7 +179,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	onPointerUp(event: PointerEvent) {
 		this.globals.isPanning.set(false);
-		this.globals.isDragging.set(false);
+
+		if (this.globals.isDragging()) {
+			const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
+			selectedComponent.x = Math.round(selectedComponent.x * 100) / 100;
+			selectedComponent.y = Math.round(selectedComponent.y * 100) / 100;
+			this.globals.isDragging.set(false);
+		}
+
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
 		if (this.moved_amt > 5) this.globals.selected = -1;
 		const click = this.moved_amt <= 5;
