@@ -19,6 +19,7 @@ import { Globals } from '../globals';
 })
 export class Category {}
 
+
 @Component({
 	selector: 'app-component-properties',
 	imports: [
@@ -30,4 +31,9 @@ export class Category {}
 export class ComponentProperties {
 	constructor(public globals: Globals) {}
 
+	change_name(event: Event) {
+		const input = event.target as HTMLInputElement;
+		this.globals.simulation.circuitComponents()[this.globals.selected].name = input.value;
+		console.log(input.value);
+	}
 }

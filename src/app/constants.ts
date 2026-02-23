@@ -14,9 +14,9 @@ export class Constants {
 			name: 'Name',
 			namePlaceholder: 'Name',
 			type: 'Type',
-			section1: 'Basic',
-			section2: 'Basic',
-			section3: 'Basic',
+			section1: 'basic',
+			section2: 'positioning',
+			section3: 'component-specific',
 		},
 	}
 

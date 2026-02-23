@@ -33,6 +33,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	private lastPinchDist = 0;
 
 	protected moved_amt = 0;
+	protected selectedPreviously = false;
 
 	public ctx!: CanvasRenderingContext2D;
 	private animationRef = 0;
@@ -144,7 +145,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			//if (this.globals.selected != -1)
 
 			this.globals.selected = -1;
-			// if or atomic is ok? ^ and v
 			for (const component of this.globals.simulation.circuitComponents()) {
 				if (component.mouseOverComponent()) {
 					this.globals.selected = component.id;
@@ -188,7 +188,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		}
 
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
-		if (this.moved_amt > 5) this.globals.selected = -1;
+		if (this.moved_amt > 5) {
+			if (!this.selectedPreviously) this.globals.selected = -1;
+			this.selectedPreviously = false;
+		} else this.selectedPreviously = true;
 		const click = this.moved_amt <= 5;
 		this.moved_amt = 0;
 

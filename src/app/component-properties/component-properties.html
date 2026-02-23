@@ -5,24 +5,31 @@
 	}
 	@if (globals.selected != -1) {
 		<!--else ??-->
-		<category>basic</category>
-		<input type="text" name="component-name" id="component-name"
+		<category>{{ this.globals.constants.translations.componentProperties.section1 }}</category>
+		<input type="text" name="componentName" id="componentName"
 			   value="{{globals.simulation.circuitComponents()[globals.selected].name}}"
-			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}">
+			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
+			   (input)="change_name($event)">
 
-		<category>positioning</category>
+		<div>
+			<input type="checkbox" name="displayLabel" id="displayLabel">
+			<label for="displayLabel">display label</label>
+		</div>
 
-		<div><span>X: </span>
+		<category>{{ this.globals.constants.translations.componentProperties.section2 }}</category>
+
+		<div>
+			<span>X: </span>
 			<input type="text" name="posX" id="posX"
 				   value="{{globals.simulation.circuitComponents()[globals.selected].x}}">
 		</div>
 
-		<div><span>Y: </span>
+		<div>
+			<span>Y: </span>
 			<input type="text" name="posY" id="posY"
 				   value="{{globals.simulation.circuitComponents()[globals.selected].y}}">
 		</div>
 
-		<category>component-specific</category>
-
+		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
 	}
 </div>

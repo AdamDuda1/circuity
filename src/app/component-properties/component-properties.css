@@ -11,7 +11,7 @@
 	flex-direction: column;
 }
 
-input#component-name {
+input#componentName {
 	width: 100%;
 	padding: 5px;
 	margin-top: 5px;
@@ -20,8 +20,20 @@ input#component-name {
 	font-weight: bold;
 }
 
-input#component-name::selection {
+input#componentName::selection {
 	border: 1px solid #ccc;
+}
+
+#displayLabel {
+	width: 10px;
+}
+
+label[for = "displayLabel"] {
+	font-size: 14px;
+	position: relative;
+	top: -1px;
+	left: 2px;
+	color: gray;
 }
 
 .category-container {
