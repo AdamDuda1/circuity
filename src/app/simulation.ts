@@ -21,11 +21,10 @@ export class Simulation {
 		const component = factory(this.globals, true, x, y);
 
 		if (thoseWereCenterCoordinates) {
-			x -= component.w / 2;
-			y -= component.h / 2;
+			component.updatePos(-component.w / 2, -component.h / 2);
 		}
 
-		this.globals.simulation.circuitComponents().push(factory(this.globals, true, x, y));
+		this.globals.simulation.circuitComponents().push(component);
 	}
 
 	simulate() {

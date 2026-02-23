@@ -19,4 +19,6 @@ export class Constants {
 			section3: 'Basic',
 		},
 	}
+
+	public readonly pinSelectionZone = 3;
 }
