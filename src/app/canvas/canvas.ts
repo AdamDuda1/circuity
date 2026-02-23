@@ -102,17 +102,27 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		if (this.isConnecting()) {
 			const pos1 = this.connectingToOrFrom();
 			ctx.save();
-			drawWire(ctx, this.globals.view(),
-				{
-					x: this.globals.simulation.circuitComponents()[pos1.component].x +
-						(pos1.type == 'in' ? this.globals.simulation.circuitComponents()[pos1.component].ins
-							: this.globals.simulation.circuitComponents()[pos1.component].outs)[pos1.index].x,
-					y: this.globals.simulation.circuitComponents()[pos1.component].y +
-						(pos1.type == 'in' ? this.globals.simulation.circuitComponents()[pos1.component].ins
-							: this.globals.simulation.circuitComponents()[pos1.component].outs)[pos1.index].y
-				},
-				{x: this.globals.cursor().x, y: this.globals.cursor().y}
-			);
+			if (pos1.type == 'in') {
+				drawWire(ctx, this.globals.view(),
+					{x: this.globals.cursor().x, y: this.globals.cursor().y},
+					{
+						x: this.globals.simulation.circuitComponents()[pos1.component].x +
+							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].x,
+						y: this.globals.simulation.circuitComponents()[pos1.component].y +
+							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].y
+					}
+				);
+			} else {
+				drawWire(ctx, this.globals.view(),
+					{
+						x: this.globals.simulation.circuitComponents()[pos1.component].x +
+							this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].x,
+						y: this.globals.simulation.circuitComponents()[pos1.component].y +
+							this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].y
+					},
+					{x: this.globals.cursor().x, y: this.globals.cursor().y}
+				);
+			}
 			ctx.restore();
 		}
 	}
