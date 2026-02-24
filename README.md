@@ -20,6 +20,8 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] Add a gradient color when simulating on wires (HI or LO): <== keep??
+- [ ] Add custom context menu
 - [ ] dark mode
 - [ ] (??) Add separate methods for mouseOverComponent and Pin in general (not only for each component)
 - [ ] Pick color for the selection indicator

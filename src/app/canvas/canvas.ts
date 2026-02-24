@@ -110,7 +110,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].x,
 						y: this.globals.simulation.circuitComponents()[pos1.component].y +
 							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].y
-					}
+					},
+					false,
+					false
 				);
 			} else {
 				drawWire(ctx, this.globals.view(),
@@ -120,13 +122,22 @@ export class Canvas implements AfterViewInit, OnDestroy {
 						y: this.globals.simulation.circuitComponents()[pos1.component].y +
 							this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].y
 					},
-					{x: this.globals.cursor().x, y: this.globals.cursor().y}
+					{x: this.globals.cursor().x, y: this.globals.cursor().y},
+					false,
+					false
 				);
 			}
 			ctx.restore();
 		}
 	}
 
+	// CONTEXT MENU
+
+	openContextMenu(event: MouseEvent) {
+		event.preventDefault();
+		if (this.globals.simulation.running()) return;
+
+	}
 
 	// MOVEMENT AND ZOOM (DESKTOP)
 
