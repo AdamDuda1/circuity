@@ -16,7 +16,7 @@ export function drawWire(ctx: CanvasRenderingContext2D, view: { x: number, y: nu
 
 	ctx.lineWidth = 1.5 * view.z;
 
-	if (p2.x - p1.x < 0) { // TODO fix: reversed while connecting
+	if (p2.x - p1.x < 0) {
 		ctx.beginPath();
 		ctx.moveTo(screenX1, screenY1);
 		const midY = (screenY1 + screenY2) / 2;

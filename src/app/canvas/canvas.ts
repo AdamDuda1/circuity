@@ -233,6 +233,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 					if (to.component === from.component) break;
 
 					if (from.type === 'out' && to.type === 'in') {
+						if (component.inFrom[to.index].component != -1) {
+							this.globals.simulation.circuitComponents()[component.inFrom[to.index].component].outTo[component.inFrom[to.index].pin] = this.globals.simulation.circuitComponents()[component.inFrom[to.index].component].outTo[component.inFrom[to.index].pin].filter(c => c.component !== to.component || c.pin !== to.index);
+							component.inFrom[to.index] = {component: -1, pin: -1};
+						}
 						this.globals.simulation.circuitComponents()[to.component].inFrom[to.index] = {component: from.component, pin: from.index};
 						if (!this.globals.simulation.circuitComponents()[from.component].outTo[from.index])
 							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
