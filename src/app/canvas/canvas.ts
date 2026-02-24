@@ -55,6 +55,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.globals.view().z = 1;
 		setTimeout(() => this.targetZ.set(2), 50);
 
+		canvas.focus();
+
 		this.startLoop(canvas);
 	}
 
@@ -85,6 +87,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			this.globals.canvasCursor = this.globals.canvasCursorCandidate;
 
 			this.animationRef = requestAnimationFrame(tick);
+			canvas.focus(); // <- TODO safe?
 		};
 
 		this.animationRef = requestAnimationFrame(tick);
@@ -325,6 +328,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			selectedComponent.updatePos(-1000, -1000);
 
 			this.globals.selected = -1;
+		}
+
+		if (event.key == ' ') {
+			this.globals.simulation.switch();
 		}
 	}
 

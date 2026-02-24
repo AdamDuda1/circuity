@@ -1,7 +1,9 @@
 <div class="button select-none"
-	 [style.background]="isHovered() ? hoverColor() : normalColor()"
+	 [style.background]="isHovered() ? (this.globals.simulation.running() ? '#a13f3f' : '#367c39') : (this.globals.simulation.running() ? '#b54747' : '#4CAF50')"
 	 (mouseenter)="isHovered.set(true)"
 	 (mouseleave)="isHovered.set(false)"
 	 (click)="onClick()">
-	<b [innerHTML]="text()"></b>
+	<b [innerHTML]="this.globals.simulation.running() ?
+	this.globals.constants.translations.simulationControls.stop : this.globals.constants.translations.simulationControls.run"></b>
+	<span>{{ this.globals.constants.translations.simulationControls.keyboardShortcut }}</span>
 </div>

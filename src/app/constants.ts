@@ -9,6 +9,11 @@ export class Constants {
 	public readonly favoriteCategory = 'Favorites';
 
 	public readonly translations = {
+		simulationControls: {
+			run: 'Run <span class="material-symbols-outlined"> play_arrow </span>',
+			stop: 'Stop <span class="material-symbols-outlined"> stop </span>',
+			keyboardShortcut: '[ space ]'
+		},
 		componentProperties: {
 			title: 'Component Properties',
 			name: 'Name',

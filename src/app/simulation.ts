@@ -9,6 +9,8 @@ export class Simulation {
 	public running = signal(false);
 
 	switch() {
+		if (this.running()) this.globals.simulation.stop();
+		else this.globals.selected = -1;
 		this.running.set(!this.running());
 	}
 
