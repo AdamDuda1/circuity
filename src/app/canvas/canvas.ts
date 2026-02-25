@@ -33,7 +33,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	private lastPinchDist = 0;
 
 	protected moved_amt = 0;
-	protected selectedPreviously = false;
+	private selectedBeforeDrag = -1;
 
 	public ctx!: CanvasRenderingContext2D;
 	private animationRef = 0;
@@ -148,17 +148,16 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		event.preventDefault();
 		const v = this.globals.view();
 		const rawFactor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
-		const nextZ = this.clamp(v.z * rawFactor, 0.2, 10);
-		const factor = nextZ / v.z;
+		const nextZ = this.clamp(v.z * rawFactor, 0.2, 10) / v.z;
 
-		this.targetZ.set(nextZ);
-		this.targetZ.update((z) => this.clamp(z * factor, 0.2, 10));
+		this.targetZ.update((z) => this.clamp(z * nextZ, 0.2, 10));
 	}
 
 	onPointerDown(event: PointerEvent) {
 		if (event.button !== 0) return;
-		if (event.pointerType === 'touch' && this.globals.isPanning()) return; // ignore second touch for panning
+		if (event.pointerType === 'touch' && this.globals.isPanning()) return;
 
+		this.selectedBeforeDrag = this.globals.selected;
 		this.globals.isPanning.set(true);
 		this.lastPointer.set({x: event.clientX, y: event.clientY});
 		(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
@@ -166,8 +165,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		if (this.globals.simulation.running()) {
 			// component.clickInSimulation
 		} else {
-			//if (this.globals.selected != -1)
-
 			this.globals.selected = -1;
 			for (const component of this.globals.simulation.circuitComponents()) {
 				if (component.mouseOverComponent()) {
@@ -212,11 +209,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		}
 
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
-		if (this.moved_amt > 5) {
-			if (!this.selectedPreviously) this.globals.selected = -1;
-			this.selectedPreviously = false;
-		} else this.selectedPreviously = true;
 		const click = this.moved_amt <= 5;
+		if (!click && this.selectedBeforeDrag !== this.globals.selected) {
+			this.globals.selected = -1;
+		}
+		this.selectedBeforeDrag = -1;
 		this.moved_amt = 0;
 
 		if (this.globals.simulation.running()) {
