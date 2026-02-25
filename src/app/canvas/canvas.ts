@@ -41,6 +41,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private drawer = inject(CanvasDraw);
 
+	private ensureCanvasFocus() {
+		const canvas = this.canvasRef().nativeElement;
+		if (document.activeElement !== canvas) {
+			canvas.focus({preventScroll: true});
+		}
+	}
+
 	ngAfterViewInit() {
 		const canvas = this.canvasRef().nativeElement;
 
@@ -87,7 +94,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			this.globals.canvasCursor = this.globals.canvasCursorCandidate;
 
 			this.animationRef = requestAnimationFrame(tick);
-			canvas.focus(); // <- TODO safe?
+			//canvas.focus(); // <- TODO safe?
 		};
 
 		this.animationRef = requestAnimationFrame(tick);
@@ -154,6 +161,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	onPointerDown(event: PointerEvent) {
+		this.ensureCanvasFocus();
 		if (event.button !== 0) return;
 		if (event.pointerType === 'touch' && this.globals.isPanning()) return;
 
@@ -336,6 +344,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	// TOUCH EVENTS FOR MOBILE MOVEMENT
 
 	onTouchStart(event: TouchEvent) {
+		this.ensureCanvasFocus();
 		if (event.touches.length === 2) {
 			event.preventDefault();
 			this.lastPinchDist = this.getPinchDistance(event.touches);

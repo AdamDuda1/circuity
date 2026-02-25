@@ -9,6 +9,7 @@
 		<input type="text" name="componentName" id="componentName"
 			   value="{{globals.simulation.circuitComponents()[globals.selected].name}}"
 			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
+			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
 			   (input)="change_name($event)">
 
 		<div>
