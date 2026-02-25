@@ -318,20 +318,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		if (event.key == 'Delete') {
 			if (this.globals.selected === -1) return;
 
-			const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
-			for (const [index, from] of selectedComponent.inFrom.entries()) {
-				if (from.component != -1) {
-					this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== this.globals.selected || c.pin !== index);
-				}
-			}
-			for (const out of selectedComponent.outTo) {
-				if (out) for (const to of out) {
-					this.globals.simulation.circuitComponents()[to.component].inFrom[to.pin] = {component: -1, pin: -1};
-				}
-			}
+			const selectedId = this.globals.selected;
+			const components = this.globals.simulation.circuitComponents();
+			const selectedComponent = components.find(c => c.id === selectedId);
 
-			selectedComponent.updatePos(-1000, -1000);
+			if (!selectedComponent) return; // for safety
 
+			selectedComponent.disconnect();
+			selectedComponent.deleted = true;
 			this.globals.selected = -1;
 		}
 

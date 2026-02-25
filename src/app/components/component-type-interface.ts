@@ -16,6 +16,8 @@ export abstract class ElectricalComponent {
 
 	showLabel: boolean = false;
 
+	deleted = false;
+
 	abstract actualSize: { x1: number, y1: number, w: number, h: number };
 	abstract ins: { x: number, y: number } [];
 	abstract outs: { x: number, y: number } [];
@@ -57,6 +59,7 @@ export abstract class ElectricalComponent {
 	}
 
 	simulate() {
+		if (this.deleted) return;
 		for (let i = 0; i < this.ins.length; i++) {
 			const connection = this.inFrom[i];
 			if (connection && connection.component !== -1) {
@@ -89,7 +92,7 @@ export abstract class ElectricalComponent {
 	}
 
 	render(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
-		if (!ctx) return;
+		if (!ctx || this.deleted) return;
 		if (!view) {
 			const defaultView = this.globals.view();
 			view = {...defaultView, w: undefined, h: undefined};
@@ -259,5 +262,30 @@ export abstract class ElectricalComponent {
 
 		this.hoveredOverPin = {index: -1, type: 'in'};
 		return {index: -1, type: 'in'};
+	}
+
+	disconnect() {
+		for (const [index, from] of this.inFrom.entries()) {
+			if (from.component !== -1) {
+				const sourceComponent = this.globals.simulation.circuitComponents().find(c => c.id === from.component);
+				if (sourceComponent) {
+					sourceComponent.outTo[from.pin] = sourceComponent.outTo[from.pin].filter(
+						c => c.component !== this.id || c.pin !== index
+					);
+				}
+			}
+		}
+
+		for (const out of this.outTo) {
+			if (out) for (const to of out) {
+				const targetComponent = this.globals.simulation.circuitComponents().find(c => c.id === to.component);
+				if (targetComponent) {
+					targetComponent.inFrom[to.pin] = {component: -1, pin: -1};
+				}
+			}
+
+		}
+
+		this.setPinDefaults();
 	}
 }

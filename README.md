@@ -28,11 +28,11 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] (??) Add separate methods for mouseOverComponent and Pin in general (not only for each component)
 - [ ] Pick color for the selection indicator
 - [ ] Add alignment guides and step snapping setting
-- [ ] Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
 - [ ] Add grouping components by type (`<ng-content>`)
-- [ ] Add component categories, favourites and info manels
+- [ ] Add component categories, favourites and info panels
 - [ ] Fix canvas clipping under palette (??, `background: white; z-index: 5;` + position relative)
+- [x] ~~Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)~~
 - [x] ~~Add simulation controls (controlPanel) component~~
 - [x] ~~Add component states (ins, outs, power, color)~~
 - [x] ~~Make movement on mobile~~
