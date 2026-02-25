@@ -1,7 +1,9 @@
+
+
 .button {
 	border: none;
 	color: white;
-	padding: 15px 32px;
+	padding: 13px 32px;
 	box-shadow: 0 0 12px 0 #00000073,
 	inset 0 0 12px 0 #00000073;
 	text-align: center;
@@ -17,7 +19,7 @@
 	flex-direction: column;
 }
 
-.button span {
+.shortcut {
 	font-size: 12px;
 	color: #ddd;
 	margin-top: -4px;

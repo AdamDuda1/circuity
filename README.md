@@ -20,6 +20,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] Add tutorials (general + for each component)
 - [ ] Do we need canvas.focus every tick??/?
 - [ ] Add a gradient color when simulating on wires (HI or LO): <== keep??
 - [ ] Add custom context menu

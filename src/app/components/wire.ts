@@ -5,6 +5,7 @@ export function drawWire(ctx: CanvasRenderingContext2D, view: { x: number, y: nu
 	const screenY2 = (-(p2.y) + view.y) * view.z + view.h / 2;
 
 	ctx.save();
+	active = false;
 	if (active) {
 		const gradient = ctx.createLinearGradient(screenX1, screenY1, screenX2, screenY2);
 		gradient.addColorStop(0, 'black');
