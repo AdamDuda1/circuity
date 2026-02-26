@@ -1,7 +1,11 @@
 <div class="flex flex-row-reverse flex-wrap">
-	<span class="material-symbols-outlined">
-	settings
-	</span>
+	<div class="settings-button select-none cursor-pointer">
+		<span class="material-symbols-outlined">save</span>
+	</div>
+
+	<div class="settings-button select-none cursor-pointer">
+		<span class="material-symbols-outlined">settings</span>
+	</div>
 
 	<div class="button select-none"
 		 [style.background]="isHovered() ? (this.globals.simulation.running() ? '#a13f3f' : '#367c39') : (this.globals.simulation.running() ? '#b54747' : '#4CAF50')"
