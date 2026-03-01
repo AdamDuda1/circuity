@@ -1,11 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, signal, viewChild, ElementRef } from '@angular/core';
 
 @Component({
-    selector: 'app-menu',
-    imports: [],
-    templateUrl: './menu.html',
-    styleUrl: './menu.css'
+	selector: 'app-menu',
+	imports: [],
+	templateUrl: './menu.html',
+	styleUrl: './menu.css',
+	host: {
+		'(document:pointerdown)': 'onDocumentClick($event)',
+	},
 })
 export class Menu {
+	currentPage = signal('Design');
+	details = viewChild<ElementRef<HTMLDetailsElement>>('details');
 
+	switchPage(page: string) {
+		this.currentPage.set(page);
+	}
+
+	onDocumentClick(event: Event) {
+		const el = this.details()?.nativeElement;
+		if (el && !el.contains(event.target as Node)) {
+			el.open = false;
+		}
+	}
 }

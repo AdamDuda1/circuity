@@ -59,6 +59,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
 		this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
+		this.globals.data.load();
+
 		this.globals.view().z = 1;
 		setTimeout(() => this.targetZ.set(2), 50);
 
@@ -331,6 +333,17 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (event.key == ' ') {
 			this.globals.simulation.switch();
+		}
+
+		if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+			//this.globals.data.load();
+		}
+
+		if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+			console.log("asdada");
+			event.preventDefault();
+			console.log("asdad12a");
+			this.globals.data.save();
 		}
 	}
 

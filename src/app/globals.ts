@@ -8,6 +8,7 @@ import { NOT } from './components/not';
 import { Switch } from './components/switch';
 import { LED } from './components/led';
 import { XOR } from './components/xor';
+import { Data } from './data';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 
@@ -23,6 +24,7 @@ export class Globals {
 	public canvasCursor = 'default';
 	public canvasCursorCandidate = 'default';
 	public selected = -1;
+	public data = new Data(this);
 	public simulation = new Simulation(this);
 	public constants = new Constants();
 
@@ -32,14 +34,15 @@ export class Globals {
 		['NOT', (g, id, x, y) => new NOT(g, id, x, y)],
 		['Switch', (g, id, x, y) => new Switch(g, id, x, y)],
 		['LED', (g, id, x, y) => new LED(g, id, x, y)],
-		['XOR', (g, id, x, y) => new XOR(g, id, x, y)],
+		['XOR', (g, id, x, y) => new XOR(g, id, x, y)]
 	]);
 
 	public readonly palette = [...this.componentRegistry.values()]
-		.map(factory => factory(this, false, -1, -1));
+	.map(factory => factory(this, false, -1, -1));
 
 	public debug = false;
 
 	private nextID = 0;
+
 	public getNextID() { return this.nextID++; }
 }

@@ -15,4 +15,12 @@ export class SimulationControls {
 	onClick() {
 		this.globals.simulation.switch();
 	}
+
+	onSave() {
+		this.globals.data.save();
+	}
+
+	onLoad() {
+		this.globals.data.load();
+	}
 }
