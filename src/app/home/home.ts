@@ -7,12 +7,14 @@ import { Canvas } from '../canvas/canvas';
 @Component({
 	selector: 'app-home',
 	template: `
-		<div id="tr" class="absolute top-2.5 right-2.5">
-			<app-simulation-controls/>
-			<app-component-properties/>
+		<div class="flex h-full w-full">
+			<div id="tr" class="absolute top-2.5 right-2.5">
+				<app-simulation-controls/>
+				<app-component-properties/>
+			</div>
+			<app-palette/>
+			<app-canvas/>
 		</div>
-		<app-palette/>
-		<app-canvas/>
 	`,
 	imports: [SimulationControls, ComponentProperties, Palette, Canvas],
 	changeDetection: ChangeDetectionStrategy.OnPush,

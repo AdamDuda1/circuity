@@ -19,7 +19,11 @@ import { Switch } from '../components/switch';
 	imports: [],
 	templateUrl: './canvas.html',
 	styleUrl: './canvas.css',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: {
+		//'(contextmenu)': 'openContextMenu($event)',
+		'(document:keydown)': 'onKeyDown($event)',
+	}
 })
 export class Canvas implements AfterViewInit, OnDestroy {
 	constructor(public globals: Globals) {}
@@ -40,13 +44,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	private resizeObserver?: ResizeObserver;
 
 	private drawer = inject(CanvasDraw);
-
-	private ensureCanvasFocus() {
-		const canvas = this.canvasRef().nativeElement;
-		if (document.activeElement !== canvas) {
-			canvas.focus({preventScroll: true});
-		}
-	}
 
 	ngAfterViewInit() {
 		const canvas = this.canvasRef().nativeElement;
@@ -163,7 +160,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	onPointerDown(event: PointerEvent) {
-		this.ensureCanvasFocus();
 		if (event.button !== 0) return;
 		if (event.pointerType === 'touch' && this.globals.isPanning()) return;
 
@@ -351,7 +347,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	// TOUCH EVENTS FOR MOBILE MOVEMENT
 
 	onTouchStart(event: TouchEvent) {
-		this.ensureCanvasFocus();
 		if (event.touches.length === 2) {
 			event.preventDefault();
 			this.lastPinchDist = this.getPinchDistance(event.touches);

@@ -8,7 +8,7 @@ import { Menu } from './menu/menu';
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, Canvas, Palette, SimulationControls, ComponentProperties, Menu],
+	imports: [RouterOutlet, Menu],
 	templateUrl: './app.html',
 	styleUrl: './app.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,

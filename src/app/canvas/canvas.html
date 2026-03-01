@@ -2,7 +2,6 @@
 	id="canvas"
 	#canvas
 	role="presentation"
-	tabindex="0"
 	[style.border]="this.globals.simulation.running() ? 'dashed 5px #a13f3f' : '0'"
 	(wheel)="onWheel($event)"
 	(pointerdown)="onPointerDown($event)"
@@ -17,7 +16,6 @@
 	(touchend)="onTouchEnd($event)"
 	(dragover)="onDragOver($event)"
 	(drop)="onDrop($event)"
-	(keydown)="onKeyDown($event)"
 	[style.cursor]="(this.globals.simulation.running() ? (moved_amt > 5) : (this.globals.isPanning())) ? 'grabbing' : this.globals.canvasCursor"></canvas>
 
 <footer class="absolute bottom-0.5 right-1 text-xs text-gray-500"
