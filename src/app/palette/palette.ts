@@ -25,9 +25,6 @@ type Category = {
         }
 
 	`,
-	//<app-palette-component-details [description]='"a"' [name]='"a"'></app-palette-component-details>
-
-	styleUrl: './palette.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Palette {
