@@ -1,5 +1,29 @@
 <div class="blog-container">
-	<div class="loading-container">
-		<div class="spinner"></div>
-	</div>
+	@if (isLoading()) {
+		<div class="loading-container">
+			<div class="spinner"></div>
+		</div>
+	}
+
+	@if (error()) {
+		<div class="error-container">
+			<p class="error-message">Error: {{ error() }}</p>
+		</div>
+	}
+
+	@if (!isLoading() && !error()) {
+		@if (posts().length > 0) {
+			<div class="posts-grid">
+				@for (post of posts(); track post.id) {
+					<article class="post-card">
+						<h2>{{ post.title }}</h2>
+						<p class="post-date">{{ post.created_at | date: 'mediumDate' }}</p>
+						<p class="post-content">{{ post.content }}</p>
+					</article>
+				}
+			</div>
+		} @else {
+			<p class="no-posts">No blog posts found.</p>
+		}
+	}
 </div>
