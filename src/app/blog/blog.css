@@ -1,85 +1,87 @@
 .blog-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+	padding: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
 }
 
 .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
 }
 
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #333;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
+	border: 4px solid rgba(0, 0, 0, 0.1);
+	border-top: 4px solid #333;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 .error-container {
-    background-color: #fee;
-    border: 1px solid #fcc;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
+	background-color: #fee;
+	border: 1px solid #fcc;
+	border-radius: 8px;
+	padding: 1rem;
+	margin-bottom: 2rem;
 }
 
 .error-message {
-    color: #c33;
-    margin: 0;
-    font-weight: 500;
+	color: #c33;
+	margin: 0;
+	font-weight: 500;
 }
 
 .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+	display: flex;
+	flex-direction: column;
+	/*grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));*/
+	/*gap: 2rem;*/
+	margin-bottom: 2rem;
 }
 
 .post-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-top: 50px;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 1.5rem;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .post-card h2 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.5rem;
-    color: #333;
+	margin: 0 0 0.5rem 0;
+	font-size: 1.5rem;
+	color: #333;
 }
 
 .post-date {
-    color: #666;
-    font-size: 0.875rem;
-    margin: 0 0 1rem 0;
+	color: #666;
+	font-size: 0.875rem;
+	margin: 0 0 1rem 0;
 }
 
 .post-content {
-    color: #555;
-    line-height: 1.6;
-    margin: 0;
+	color: #555;
+	line-height: 1.6;
+	margin: 0;
 }
 
 .no-posts {
-    text-align: center;
-    color: #999;
-    font-size: 1.1rem;
-    padding: 2rem;
+	text-align: center;
+	color: #999;
+	font-size: 1.1rem;
+	padding: 2rem;
 }
 

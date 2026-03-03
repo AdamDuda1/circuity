@@ -19,7 +19,9 @@
 						<h2>{{ post.title }}</h2>
 						<p class="post-date">{{ post.created_at | date: 'mediumDate' }}</p>
 						<p class="post-content">{{ post.text }}</p>
-						<img [src]="post.media_link" alt="" width="100%" class="post-image">
+						@if (post.media_link != null && post.media_link != '' && post.media_link) {
+							<img [src]="post.media_link" alt="" height="100px" class="post-image">
+						}
 					</article>
 				}
 			</div>
