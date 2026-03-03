@@ -3,7 +3,9 @@ main {
 	width: 100vw;
 	height: 100vh;
 	justify-content: center;
-	align-items: center;
+	/*align-items: center;*/
+	overflow-y: auto;
+	align-items: flex-start;
 }
 
 header {

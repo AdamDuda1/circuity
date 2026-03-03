@@ -1,4 +1,4 @@
-import { Component, signal, effect, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
@@ -6,7 +6,8 @@ import { environment } from '../../environments/environment';
 interface BlogPost {
 	id: number;
 	title: string;
-	content: string;
+	text: string;
+	media_link: string;
 	created_at: string;
 
 	[key: string]: unknown;

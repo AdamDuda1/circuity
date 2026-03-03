@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 	selector: 'app-not-found',
 	imports: [RouterLink],
 	template: `
-    <div style="margin-left: auto; margin-right: auto;">
+    <div style="margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto;">
 	    <h1 class="text-6xl font-bold">404</h1>
 	    <p class="mt-4 text-xl">Not found</p>
 	    <a routerLink="/" class="mt-6 underline">Return home</a>
