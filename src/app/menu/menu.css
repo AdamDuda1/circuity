@@ -11,12 +11,26 @@ ul {
 	padding: 2px;
 	border-radius: 8px;
 	box-shadow: 0 0 14px 0 #0000005c;
+	transform: translate(-20%, 10px);
+}
+
+li {
+	width: 100%;
+	display: flex;
 }
 
 a {
-	width: 100%;
 	background: rgba(213, 213, 213, 0.34);
 	padding: 6px;
 	margin: 5px;
 	border-radius: 4px;
+	width: 100%;
+}
+
+.material-symbols-outlined {
+	font-size: 18px;
+	width: 14px;
+	position: relative;
+	top: 2px;
+	left: -2px;
 }

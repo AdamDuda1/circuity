@@ -1,5 +1,7 @@
-import { Component, signal, viewChild, ElementRef } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, computed, viewChild, ElementRef, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
 	selector: 'app-menu',
@@ -13,12 +15,19 @@ import { RouterLink } from '@angular/router';
 	},
 })
 export class Menu {
-	currentPage = signal('Design');
-	details = viewChild<ElementRef<HTMLDetailsElement>>('details');
+	private router = inject(Router);
+	private url = toSignal(this.router.events.pipe(map(() => this.router.url)), {
+		initialValue: this.router.url,
+	});
 
-	switchPage(page: string) {
-		this.currentPage.set(page);
-	}
+	currentPage = computed(() => {
+		const url = this.url();
+		if (url.startsWith('/browse')) return 'Browse';
+		if (url.startsWith('/blog')) return 'Blog';
+		return 'Design';
+	});
+
+	details = viewChild<ElementRef<HTMLDetailsElement>>('details');
 
 	onDocumentClick(event: Event) {
 		const el = this.details()?.nativeElement;
