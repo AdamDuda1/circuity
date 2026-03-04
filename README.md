@@ -38,20 +38,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [x] ~~Make movement on mobile~~
 - [x] ~~! remove unnecessary func references and move to globals.ts~~
 
-🔹 Derived / Common Gates
-
-NAND (NOT AND)
-
-NOR (NOT OR)
-
-XOR (Exclusive OR)
-
-XNOR (Exclusive NOR)
-
 🔹 Less Common / Special Gates
-
-Buffer
-Output equals input (used for signal strengthening).
 
 Tri-state buffer
 Has three possible outputs: 0, 1, or High-Impedance (Z).
