@@ -8,14 +8,9 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 **IMPORTANT (in order):**
 
-- [ ] **FIX DELETING AND PIN ASSIGNING!!**
 - [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
-- [x] ~~Add simulating~~
-- [x] ~~**FIX:** The first drawn wire dot is always bigger~~
-- [x] ~~Wires~~
-- [x] ~~Add adding components to world~~
 
 
   **OTHER:**
@@ -29,14 +24,8 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Pick color for the selection indicator
 - [ ] Add alignment guides and step snapping setting
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
-- [ ] Add grouping components by type (`<ng-content>`)
 - [ ] Add component categories, favourites and info panels
 - [ ] Fix canvas clipping under palette (??, `background: white; z-index: 5;` + position relative)
-- [x] ~~Add something to get rid of event onPointerUp not registering on ex. alt+tab or window exit (onFocusLost/onLeave/sth like that???)~~
-- [x] ~~Add simulation controls (controlPanel) component~~
-- [x] ~~Add component states (ins, outs, power, color)~~
-- [x] ~~Make movement on mobile~~
-- [x] ~~! remove unnecessary func references and move to globals.ts~~
 
 🔹 Less Common / Special Gates
 

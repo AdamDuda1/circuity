@@ -13,6 +13,7 @@ import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
 import { LED } from '../components/led';
 import { Switch } from '../components/switch';
+import { Palette } from '../palette/palette';
 
 @Component({
 	selector: 'app-canvas',
@@ -62,6 +63,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		setTimeout(() => this.targetZ.set(2), 50);
 
 		canvas.focus();
+
+		if (localStorage.getItem('tutorial') !== 'true') Palette.openTutorial();
 
 		this.startLoop(canvas);
 	}

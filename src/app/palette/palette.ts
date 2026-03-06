@@ -15,6 +15,8 @@ type Category = {
 	selector: 'app-palette',
 	imports: [PaletteComponent, PaletteCategory],
 	template: `
+		<a class="w-full text-center gray m" href="#" (click)="openTutorial($event)">Tutorial</a>
+
         @for (category of categories; track categories.indexOf(category)) {
             <app-palette-category [name]="category.name()" [icon]="category.icon()"
                                   [defaultOpened]="category.defaultOpened">
@@ -24,6 +26,12 @@ type Category = {
             </app-palette-category>
         }
 
+	`,
+	styles: `
+		* {
+			display: flex;
+			flex-direction: column;
+		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -62,5 +70,14 @@ export class Palette {
 		if (favoritesIDs.length > 0) {
 			this.categories.unshift(favorites);
 		}
+	}
+
+	openTutorial(event: MouseEvent): void { // from the button
+		event.preventDefault();
+		Palette.openTutorial();
+	}
+
+	static openTutorial() {
+
 	}
 }
