@@ -31,7 +31,7 @@ export class Blog implements OnInit {
 
 	ngOnInit() {
 		let q = _Toast.loading("Fetching blog posts...");
-		this.fetchBlogPosts().then(r => {
+		this.fetchBlogPosts().then(() => {
 			q.close();
 			_Toast.info("Fetching complete!", {duration: 500});
 		});
@@ -55,6 +55,7 @@ export class Blog implements OnInit {
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Unknown error occurred';
 			console.error('Unexpected error:', err);
+			_Toast.error(message);
 			this.error.set(message);
 			this.posts.set([]);
 		} finally {

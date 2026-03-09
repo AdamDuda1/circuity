@@ -1,4 +1,4 @@
-import { EnvironmentInjector, inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, Injectable } from '@angular/core';
 import { HotToastService, Toast } from '@ngxpert/hot-toast';
 
 @Injectable({providedIn: 'root'})

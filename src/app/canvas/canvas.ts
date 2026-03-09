@@ -13,6 +13,7 @@ import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
 import { LED } from '../components/led';
 import { Switch } from '../components/switch';
+import { _Toast } from '../toasts';
 
 @Component({
 	selector: 'app-canvas',
@@ -254,7 +255,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 						if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
 							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
 						this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
-					}
+					} else _Toast.warning("You can only connect an output pin to an input pin and vice versa.");
 					break;
 				}
 			}
@@ -321,6 +322,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			const selectedId = this.globals.selected;
 			const components = this.globals.simulation.circuitComponents();
 			const selectedComponent = components.find(c => c.id === selectedId);
+
+			_Toast.warning(selectedComponent!.name + " deleted.");
 
 			if (!selectedComponent) return; // for safety
 
