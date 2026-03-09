@@ -23,6 +23,16 @@ export class Constants {
 			section2: 'positioning',
 			section3: 'component-specific',
 		},
+		tutorial: {
+			pages: [
+				'Add components to the design by dragging them with your mouse onto the canvas or by double-clicking them in the palette.',
+				'Connect the components with wires by dragging from pin to pin with your mouse.',
+				'After connecting run the simulation by clicking the \'run\' button or by hitting space on your keyboard.',
+			],
+			next: 'Next',
+			prev: 'Previous',
+			close: 'Let\'s go!'
+		}
 	}
 
 	public readonly pinSelectionZone = 3;

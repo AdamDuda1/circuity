@@ -3,6 +3,7 @@ import { PaletteComponent } from './palette-component/palette-component';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
 import { PaletteCategory } from './palette-category/palette-category';
+import { Tutorial } from '../tutorial/tutorial';
 
 type Category = {
 	name: Signal<string>;
@@ -15,7 +16,9 @@ type Category = {
 	selector: 'app-palette',
 	imports: [PaletteComponent, PaletteCategory],
 	template: `
-		<a class="w-full text-center gray m" href="#" (click)="openTutorial($event)">Tutorial</a>
+		<a class="w-full text-center gray m" href="#" (click)="tutorial()">
+			<div class="tutorial"><span class="material-symbols-outlined">tour</span> Tutorial</div>
+		</a>
 
         @for (category of categories; track categories.indexOf(category)) {
             <app-palette-category [name]="category.name()" [icon]="category.icon()"
@@ -31,6 +34,20 @@ type Category = {
 		* {
 			display: flex;
 			flex-direction: column;
+		}
+
+		.tutorial {
+			margin-top: 5px;
+			display: flex;
+			flex-direction: row !important;
+			justify-content: center !important;
+			font-size: small;
+		}
+
+		.material-symbols-outlined {
+			font-size: medium;
+			position: relative;
+			top: 2px;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush
@@ -72,12 +89,7 @@ export class Palette {
 		}
 	}
 
-	openTutorial(event: MouseEvent): void { // from the button
-		event.preventDefault();
-		Palette.openTutorial();
-	}
-
-	static openTutorial() {
-
+	tutorial() {
+		this.globals.tutorial.open();
 	}
 }

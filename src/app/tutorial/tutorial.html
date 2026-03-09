@@ -1,6 +1,26 @@
-<div class="box">
-	<img [src]="">
-	<span>
-		s
-	</span>
+<div class="c" [style.display]="this.globals.tutorial_open() ? 'flex' : 'none'">
+	<div class="box flex justify-between">
+		<div>
+			<img [src]="'/tutorial/' + (this.globals.tutorial_page() + 1) + '.gif'" alt="alt">
+			@if (this.globals.tutorial_page() >= 0 && this.globals.tutorial_page() < this.pages) {
+				<span class="text">
+					{{ this.globals.constants.translations.tutorial.pages[this.globals.tutorial_page()] }}
+				</span>
+			}
+		</div>
+		<div class="flex justify-between">
+			<a href="#" (click)="prevPage()" class="p-[10px]"
+			   [style.visibility]="this.globals.tutorial_page() == 0 ? 'hidden' : 'visible'">
+				<span class="material-symbols-outlined l">arrow_back</span>
+				{{ this.globals.constants.translations.tutorial.prev }}
+			</a>
+
+			<a href="#" (click)="nextPage()" class="p-[10px]">
+				{{ this.globals.tutorial_page() == this.pages - 1 ? this.globals.constants.translations.tutorial.close : this.globals.constants.translations.tutorial.next }}
+				<span class="material-symbols-outlined">
+					{{ this.globals.tutorial_page() == this.pages - 1 ? 'done_all' : 'arrow_forward' }}
+				</span>
+			</a>
+		</div>
+	</div>
 </div>

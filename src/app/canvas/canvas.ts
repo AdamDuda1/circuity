@@ -64,7 +64,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		canvas.focus();
 
-		if (localStorage.getItem('tutorial') !== 'true') Palette.openTutorial();
+		if (localStorage.getItem('tutorial') !== 'true') this.globals.tutorial.open();
 
 		this.startLoop(canvas);
 	}

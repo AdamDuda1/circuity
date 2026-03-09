@@ -3,6 +3,7 @@ import { SimulationControls } from '../simulation-controls/simulation-controls';
 import { ComponentProperties } from '../component-properties/component-properties';
 import { Palette } from '../palette/palette';
 import { Canvas } from '../canvas/canvas';
+import { Tutorial } from '../tutorial/tutorial';
 
 @Component({
 	selector: 'app-home',
@@ -15,6 +16,8 @@ import { Canvas } from '../canvas/canvas';
 			<app-palette/>
 			<app-canvas/>
 		</div>
+
+		<app-tutorial/>
 	`,
 	styles: [`
 
@@ -25,7 +28,7 @@ import { Canvas } from '../canvas/canvas';
 		}
 
 	`],
-	imports: [SimulationControls, ComponentProperties, Palette, Canvas],
+	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		class: 'contents',

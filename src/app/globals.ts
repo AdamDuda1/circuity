@@ -9,6 +9,7 @@ import { Switch } from './components/switch';
 import { LED } from './components/led';
 import { XOR } from './components/xor';
 import { Data } from './data';
+import { Tutorial } from './tutorial/tutorial';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 
@@ -24,7 +25,12 @@ export class Globals {
 	public canvasCursor = 'default';
 	public canvasCursorCandidate = 'default';
 	public selected = -1;
+
+	public readonly tutorial_open = signal(false);
+	public readonly tutorial_page = signal(0);
+
 	public data = new Data(this);
+	public tutorial = new Tutorial(this);
 	public simulation = new Simulation(this);
 	public constants = new Constants();
 
