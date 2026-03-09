@@ -12,7 +12,12 @@ export class Constants {
 		simulationControls: {
 			run: 'Run <span class="material-symbols-outlined"> play_arrow </span>',
 			stop: 'Stop <span class="material-symbols-outlined"> stop </span>',
-			keyboardShortcut: '[ space ]'
+			keyboardShortcut: '[ space ]',
+			savePanel: {
+				doneButtonText: [
+					'Save',
+				]
+			}
 		},
 		componentProperties: {
 			title: 'Component Properties',
