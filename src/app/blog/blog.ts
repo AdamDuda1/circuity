@@ -30,10 +30,12 @@ export class Blog implements OnInit {
 	error = signal<string | null>(null);
 
 	ngOnInit() {
-		let q = _Toast.loading("Fetching blog posts...");
+		let q: ReturnType<typeof _Toast.loading> | null = null; // TODO ok?
+		if (sessionStorage.getItem('blogPosts') !== null) q = _Toast.loading('Fetching blog posts...');
 		this.fetchBlogPosts().then(() => {
-			q.close();
-			_Toast.info("Fetching complete!", {duration: 500});
+			if (q) q.close();
+			if (q) _Toast.info('Fetching complete!', {duration: 500});
+			sessionStorage.setItem('blogLoaded', 'true');
 		});
 	}
 

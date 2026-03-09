@@ -14,7 +14,7 @@
 	@if (!isLoading() && !error()) {
 		@if (posts().length > 0) {
 			<div class="posts-grid">
-				@for (post of posts(); track post.id) {
+				@for (post of posts().slice().reverse(); track post.id) {
 					<article class="post-card">
 						<h2>{{ post.title }}</h2>
 						<p class="post-date">{{ post.created_at | date: 'mediumDate' }}</p>
