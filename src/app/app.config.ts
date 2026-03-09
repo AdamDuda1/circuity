@@ -1,9 +1,11 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode, EnvironmentInjector, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
+import { provideAppInitializer } from '@angular/core';
+import { Toast } from './toasts';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -12,6 +14,9 @@ export const appConfig: ApplicationConfig = {
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: !isDevMode(),
 			registrationStrategy: 'registerWhenStable:30000'
-		}), provideHotToastConfig()
+		}), provideHotToastConfig(),
+		provideAppInitializer(() => {
+			Toast.init(inject(EnvironmentInjector));
+		})
 	]
 };

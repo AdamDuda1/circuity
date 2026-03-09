@@ -10,7 +10,6 @@ import { LED } from './components/led';
 import { XOR } from './components/xor';
 import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
-import { Toast } from './toasts';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 

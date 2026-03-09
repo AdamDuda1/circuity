@@ -1,20 +1,27 @@
-import { Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable } from '@angular/core';
 import { HotToastService } from '@ngxpert/hot-toast';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class Toast {
-	constructor(private toast: HotToastService) {}
+	private static injector: EnvironmentInjector;
 
-	public success(msg: string) {
-		this.toast.success(msg);
+	static init(injector: EnvironmentInjector) {
+		Toast.injector = injector;
 	}
 
-	error(msg: string) {
-		this.toast.error(msg);
+	private static get toast(): HotToastService {
+		return Toast.injector.get(HotToastService);
 	}
 
-	info(msg: string) {
-		this.toast.info(msg);
+	static success(msg: string) {
+		Toast.toast.success(msg);
 	}
 
+	static error(msg: string) {
+		Toast.toast.error(msg);
+	}
+
+	static info(msg: string) {
+		Toast.toast.info(msg);
+	}
 }

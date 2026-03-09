@@ -1,7 +1,5 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Globals } from '../globals';
-import { NgOptimizedImage } from '@angular/common';
-import { Toast } from '../toasts';
 
 @Component({
 	selector: 'app-tutorial',

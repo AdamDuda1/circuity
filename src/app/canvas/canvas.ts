@@ -13,7 +13,6 @@ import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
 import { LED } from '../components/led';
 import { Switch } from '../components/switch';
-import { Toast } from '../toasts';
 
 @Component({
 	selector: 'app-canvas',
