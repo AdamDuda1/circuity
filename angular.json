@@ -36,6 +36,7 @@
               }
             ],
             "styles": [
+              "@ngxpert/hot-toast/styles.css",
               "src/styles.css"
             ]
           },

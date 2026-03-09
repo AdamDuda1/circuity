@@ -10,6 +10,7 @@ import { LED } from './components/led';
 import { XOR } from './components/xor';
 import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
+import { Toast } from './toasts';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 
@@ -30,6 +31,7 @@ export class Globals {
 	public readonly tutorial_page = signal(0);
 
 	public data = new Data(this);
+	// public toast = new Toast();
 	public tutorial = new Tutorial(this);
 	public simulation = new Simulation(this);
 	public constants = new Constants();

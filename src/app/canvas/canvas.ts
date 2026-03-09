@@ -13,7 +13,7 @@ import { Globals } from '../globals';
 import { drawWire } from '../components/wire';
 import { LED } from '../components/led';
 import { Switch } from '../components/switch';
-import { Palette } from '../palette/palette';
+import { Toast } from '../toasts';
 
 @Component({
 	selector: 'app-canvas',
@@ -54,13 +54,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
 		this.resizeObserver.observe(canvas.parentElement!);
 
-		this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
-		this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
+		if (!this.globals.data.load()) {
+			this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
+			this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
-		this.globals.data.load();
-
-		this.globals.view().z = 1;
-		setTimeout(() => this.targetZ.set(2), 50);
+			this.globals.view().z = 1;
+			setTimeout(() => this.targetZ.set(2), 50);
+		}
 
 		canvas.focus();
 

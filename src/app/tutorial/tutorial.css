@@ -14,7 +14,7 @@
 
 .box {
 	width: 650px;
-	height: 550px;
+	min-height: 550px;
 	background-color: white;
 	border-radius: 10px;
 	box-sizing: border-box;

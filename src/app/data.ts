@@ -27,32 +27,30 @@ export class Data {
 				y: c.y,
 				showLabel: c.showLabel,
 				inFrom: c.inFrom,
-				outTo: c.outTo,
+				outTo: c.outTo
 			})),
 			view: {
 				x: this.globals.view().x,
 				y: this.globals.view().y,
-				z: this.globals.view().z,
-			},
+				z: this.globals.view().z
+			}
 		};
 		localStorage.setItem('simulationData', JSON.stringify(state));
 	}
 
-	load() {
+	load(): boolean {
 		const json = localStorage.getItem('simulationData');
-		if (!json) return;
+		if (!json) return false;
 
 		try {
 			const state: SavedState = JSON.parse(json);
 
 			this.globals.simulation.circuitComponents.set([]);
 
-			// First pass: create all components
 			for (const comp of state.components) {
 				this.globals.simulation.spawnComponent(comp.name, comp.x, comp.y);
 			}
 
-			// Second pass: restore data and connections
 			const components = this.globals.simulation.circuitComponents();
 			for (let i = 0; i < components.length; i++) {
 				const component = components[i];
@@ -61,19 +59,20 @@ export class Data {
 				component.color = savedComp.color;
 				component.showLabel = savedComp.showLabel;
 
-				// Deep copy inFrom array
 				component.inFrom = savedComp.inFrom.map(item => ({...item}));
 
-				// Deep copy outTo array of arrays
 				component.outTo = savedComp.outTo.map(arr => arr.map(item => ({...item})));
 			}
 
 			if (state.view) {
-				this.globals.view.update(v => ({ ...v, ...state.view }));
+				this.globals.view.update(v => ({...v, ...state.view}));
 			}
+
+			return true;
 		} catch (e) {
 			console.error('Failed to load simulation:', e);
 			localStorage.removeItem('simulationData');
+			return false;
 		}
 	}
 }

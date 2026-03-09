@@ -1,11 +1,9 @@
 <div class="c" [style.display]="this.globals.tutorial_open() ? 'flex' : 'none'">
 	<div class="box flex justify-between">
-		<div>
+		<div class="flex flex-col">
 			<img [src]="'/tutorial/' + (this.globals.tutorial_page() + 1) + '.gif'" alt="alt">
 			@if (this.globals.tutorial_page() >= 0 && this.globals.tutorial_page() < this.pages) {
-				<span class="text">
-					{{ this.globals.constants.translations.tutorial.pages[this.globals.tutorial_page()] }}
-				</span>
+				<span class="text" [innerHTML]="this.globals.constants.translations.tutorial.pages[this.globals.tutorial_page()]"></span>
 			}
 		</div>
 		<div class="flex justify-between">
