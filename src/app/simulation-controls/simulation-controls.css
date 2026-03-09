@@ -43,24 +43,3 @@
 	top: 55px;
 	left: 15px;
 }
-
-.speech-bubble {
-	position: relative;           /* needed for the triangle positioning */
-	background: #4CAF50;          /* bubble color */
-	color: white;
-	padding: 10px 15px;
-	border-radius: 10px;
-	display: inline-block;
-	max-width: 200px;
-}
-
-/* triangle */
-.speech-bubble::after {
-	content: "";
-	position: absolute;
-	bottom: -10px;               /* move below the bubble */
-	left: 20px;                   /* horizontal offset */
-	border-width: 10px;           /* size of the triangle */
-	border-style: solid;
-	border-color: #4CAF50 transparent transparent transparent; /* triangle pointing down */
-}

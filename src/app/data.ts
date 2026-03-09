@@ -1,5 +1,5 @@
 import { Globals } from './globals';
-import { Toast } from './toasts';
+import { _Toast } from './toasts';
 
 interface SavedComponent {
 	name: string;
@@ -38,7 +38,7 @@ export class Data {
 		};
 		localStorage.setItem('simulationData', JSON.stringify(state));
 
-		Toast.success("Saved!");
+		_Toast.success("Saved!");
 	}
 
 	load(): boolean {

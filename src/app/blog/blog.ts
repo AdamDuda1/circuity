@@ -2,6 +2,7 @@ import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { createClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
+import { _Toast } from '../toasts';
 
 interface BlogPost {
 	id: number;
@@ -29,7 +30,11 @@ export class Blog implements OnInit {
 	error = signal<string | null>(null);
 
 	ngOnInit() {
-		this.fetchBlogPosts();
+		let q = _Toast.loading("Fetching blog posts...");
+		this.fetchBlogPosts().then(r => {
+			q.close();
+			_Toast.info("Fetching complete!", {duration: 500});
+		});
 	}
 
 	private async fetchBlogPosts() {

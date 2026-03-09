@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 import { provideAppInitializer } from '@angular/core';
-import { Toast } from './toasts';
+import { _Toast } from './toasts';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
 			registrationStrategy: 'registerWhenStable:30000'
 		}), provideHotToastConfig(),
 		provideAppInitializer(() => {
-			Toast.init(inject(EnvironmentInjector));
+			_Toast.init(inject(EnvironmentInjector));
 		})
 	]
 };
