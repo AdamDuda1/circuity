@@ -13,23 +13,7 @@
 	<!--	</div>-->
 
 	<div class="settings-button select-none cursor-pointer">
-		<span class="material-symbols-outlined" (click)="panelOpen.set(true)">save</span>
-
-		<div class="panel" #panel [style.display]="panelOpen() ? 'flex' : 'none'">
-
-			<label for="method"><b>Save:</b></label>
-
-			<select name="method" id="method" (change)="onMethodChange($event)">
-				<option value="local-copy">Save a copy locally</option>
-				<option value="export">Export JSON</option>
-				<option value="cloud-private">Save privately on cloud</option>
-				<option value="cloud-public">Share publicly to cloud</option>
-			</select>
-
-			<button class="done-button">
-				{{ getButtonText() }}
-				<span class="material-symbols-outlined">{{ getButtonIcon() }}</span></button>
-		</div>
+		<span class="material-symbols-outlined" (click)="this.globals.savePanel_open.set(true)">save</span>
 	</div>
 
 	<!--	<div class="settings-button select-none cursor-pointer">-->

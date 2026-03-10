@@ -29,6 +29,8 @@ export class Globals {
 	public readonly tutorial_open = signal(false);
 	public readonly tutorial_page = signal(0);
 
+	public readonly savePanel_open = signal(false);
+
 	public data = new Data(this);
 	// public toast = new Toast();
 	public tutorial = new Tutorial(this);

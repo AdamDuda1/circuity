@@ -1,0 +1,25 @@
+<div class="savePanelBox" (click)="this.globals.savePanel_open.set(false)"
+	 [style.display]="this.globals.savePanel_open() ? 'flex' : 'none'">
+	<div class="savePanel" #panel (click)="$event.stopPropagation()">
+
+		<label for="method"><b>Save:</b></label>
+
+		<select name="method" id="method" (change)="onMethodChange($event)">
+			<option value="local-copy">Save a copy locally</option>
+			<option value="export">Export JSON</option>
+			<option value="cloud-private">Save privately on cloud</option>
+			<option value="cloud-public">Share publicly to cloud</option>
+		</select>
+
+		<div class="buttonRow">
+			<button class="done-button">
+				{{ getButtonText() }}
+				<span class="material-symbols-outlined">{{ getButtonIcon() }}</span>
+			</button>
+			<button class="cancel-button" (click)="this.globals.savePanel_open.set(false)">
+				{{ this.globals.constants.translations.common.cancel }}
+				<span class="material-symbols-outlined">cancel</span>
+			</button>
+		</div>
+	</div>
+</div>

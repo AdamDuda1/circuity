@@ -37,6 +37,10 @@ export class Constants {
 			next: 'Next',
 			prev: 'Previous',
 			close: 'Let\'s go!'
+		},
+
+		common: {
+			cancel: 'Cancel',
 		}
 	}
 
