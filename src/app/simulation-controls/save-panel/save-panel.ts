@@ -26,4 +26,8 @@ export class SavePanel {
 		else if (this.selectedMethod() === 'cloud-public') return 'cloud_upload';
 		else return 'save';
 	}
+
+	execute() {
+
+	}
 }

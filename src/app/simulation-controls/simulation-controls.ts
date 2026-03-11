@@ -1,4 +1,4 @@
-import { Component, ElementRef, signal, viewChild } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Globals } from '../globals';
 
 @Component({
