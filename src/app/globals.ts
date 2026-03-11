@@ -37,6 +37,8 @@ export class Globals {
 	public simulation = new Simulation(this);
 	public constants = new Constants();
 
+	public readonly blog_loaded = signal(false);
+
 	public readonly componentRegistry = new Map<string, ComponentFactory>([
 		['AND', (g, id, x, y) => new AND(g, id, x, y)],
 		['OR', (g, id, x, y) => new OR(g, id, x, y)],

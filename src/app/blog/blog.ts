@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { createClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { _Toast } from '../toasts';
+import { Globals } from '../globals';
 
 interface BlogPost {
 	id: number;
@@ -23,6 +24,8 @@ interface BlogPost {
 	imports: [CommonModule]
 })
 export class Blog implements OnInit {
+	constructor(public globals: Globals) {}
+
 	private readonly supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
 
 	posts = signal<BlogPost[]>([]);
@@ -30,12 +33,12 @@ export class Blog implements OnInit {
 	error = signal<string | null>(null);
 
 	ngOnInit() {
-		let q: ReturnType<typeof _Toast.loading> | null = null; // TODO ok?
-		if (sessionStorage.getItem('blogPosts') !== null) q = _Toast.loading('Fetching blog posts...');
+		let q = _Toast.loading('Fetching blog posts...');
+		if (this.globals.blog_loaded()) q.close();
 		this.fetchBlogPosts().then(() => {
 			if (q) q.close();
-			if (q) _Toast.info('Fetching complete!', {duration: 500});
-			sessionStorage.setItem('blogLoaded', 'true');
+			if (!this.globals.blog_loaded()) _Toast.info('Fetching complete!', {duration: 500, dismissible: true});
+			this.globals.blog_loaded.set(true);
 		});
 	}
 
