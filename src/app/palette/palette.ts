@@ -15,22 +15,30 @@ type Category = {
 	selector: 'app-palette',
 	imports: [PaletteComponent, PaletteCategory],
 	template: `
-		<a class="w-full text-center gray m" href="#" (click)="tutorial()">
-			<div class="tutorial"><span class="material-symbols-outlined">tour</span> Tutorial</div>
-		</a>
+        <div class="scroll">
+	        @for (category of categories; track categories.indexOf(category)) {
+		        <app-palette-category [name]="category.name()" [icon]="category.icon()"
+		                              [defaultOpened]="category.defaultOpened">
+			        @for (component of category.components; track component.id) {
+				        <app-palette-component [component]="component"/>
+			        }
+		        </app-palette-category>
+	        }
+        </div>
 
-        @for (category of categories; track categories.indexOf(category)) {
-            <app-palette-category [name]="category.name()" [icon]="category.icon()"
-                                  [defaultOpened]="category.defaultOpened">
-                @for (component of category.components; track component.id) {
-                    <app-palette-component [component]="component"/>
-                }
-            </app-palette-category>
-        }
 
+        <a class="text-center gray m" href="#" (click)="tutorial()">
+	        <div class="tutorial"><span class="material-symbols-outlined">tour</span> Tutorial</div>
+        </a>
 	`,
 	styles: `
 		* {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.scroll {
 			display: flex;
 			flex-direction: column;
 		}
@@ -47,6 +55,12 @@ type Category = {
 			font-size: medium;
 			position: relative;
 			top: 2px;
+		}
+
+		a {
+			position: absolute;
+			bottom: 7px;
+			left: 7px;
 		}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush
