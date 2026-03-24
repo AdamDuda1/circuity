@@ -6,7 +6,8 @@ menu {
 ul {
 	position: absolute;
 	top: 28px;
-	width: 130px;
+	left: -30px;
+	width: 230px;
 	background: white;
 	padding: 2px;
 	border-radius: 8px;
