@@ -4,12 +4,34 @@
 		<div class="top">
 			<label for="method"><b>Save:</b></label>
 
-			<select name="method" id="method" (change)="onMethodChange($event)">
+			<select name="method" #methodDropdown (change)="onMethodChange($event)">
 				<option value="local-copy">Save a copy locally</option>
 				<option value="export">Export JSON</option>
 				<option value="cloud-private">Save privately on cloud</option>
 				<option value="cloud-public">Share publicly to cloud</option>
 			</select>
+		</div>
+
+		<div>
+			@switch (selectedMethod()) {
+				@case ('local-copy') {
+
+				}
+				@case ('export') {
+
+				}
+				@case ('cloud-private') {
+
+				}
+				@case ('cloud-public') {
+					<div class="alert alert-danger" role="alert">
+						<span class="material-symbols-outlined">warning</span>
+						<p>
+							Your design will be uploaded to our server but you will be able to access it only with your secret key.
+						</p>
+					</div>
+				}
+			}
 		</div>
 
 		<div class="buttonRow">

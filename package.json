@@ -34,8 +34,10 @@
     "@supabase/supabase-js": "^2.98.0",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
+    "bootstrap": "^5.3.8",
     "darkreader": "^4.9.120",
     "rxjs": "~7.8.0",
+    "sass": "^1.98.0",
     "tslib": "^2.3.0",
     "vercel": "^50.23.2"
   },
