@@ -1,5 +1,11 @@
 :host {
 	width: 60%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
+}
+
+
+.btn {
+	margin: 2px;
 }

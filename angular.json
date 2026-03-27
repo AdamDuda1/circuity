@@ -42,7 +42,9 @@
 						],
 						"stylePreprocessorOptions": {
 							"sass": {
-								"silenceDeprecations": ["import"]
+								"silenceDeprecations": [
+									"import"
+								]
 							}
 						}
 					},
