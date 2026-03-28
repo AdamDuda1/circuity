@@ -1,14 +1,19 @@
-import { Component, ChangeDetectionStrategy, signal, inject, viewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Globals } from '../globals';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 interface BlogPost {
 	title: string;
 	text: string;
 	media_link: string;
 	created_at: string;
+}
+
+interface LoginResponse {
+	token: string;
 }
 
 @Component({
@@ -18,9 +23,10 @@ interface BlogPost {
 	styleUrl: './admin.css',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Admin {
+export class Admin implements OnInit {
 	private readonly formBuilder = inject(FormBuilder);
 	private readonly globals = inject(Globals);
+	private readonly http = inject(HttpClient);
 	protected readonly window = window;
 
 	readonly isSubmitting = signal(false);
@@ -31,7 +37,7 @@ export class Admin {
 		title: ['', [Validators.required, Validators.minLength(3)]],
 		text: ['', [Validators.required, Validators.minLength(10)]],
 		media_link: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
-		created_at: [''],
+		created_at: ['']
 	});
 
 	async onSubmit(): Promise<void> {
@@ -47,7 +53,7 @@ export class Admin {
 		try {
 			await this.createBlogPost(this.blogForm.getRawValue());
 			this.submitSuccess.set(true);
-			this.blogForm.reset({ title: '', text: '', media_link: '' });
+			this.blogForm.reset({title: '', text: '', media_link: ''});
 		} catch (error) {
 			this.submitError.set(error instanceof Error ? error.message : 'Nie udalo sie utworzyc posta.');
 		} finally {
@@ -72,6 +78,17 @@ export class Admin {
 	protected readonly loadingPosts = signal(true);
 	protected readonly blogPosts = signal([] as BlogPost[]);
 
+	login() {
+		const login = this.window.document.querySelector<HTMLInputElement>('#adminLogin')?.value.trim() ?? '';
+		const password = this.window.document.querySelector<HTMLInputElement>('#adminPassword')?.value ?? '';
+
+		const q = this.http.post<{ token: string }>(this.globals.database + 'admin_auth/login', {login, password})
+		.subscribe((res) => {
+			localStorage.setItem('token', res.token);
+		});
+		console.log(q);
+	}
+
 	ngOnInit() {
 		this.loadPosts();
 	}
@@ -92,4 +109,7 @@ export class Admin {
 			this.loadingPosts.set(false);
 		}
 	}
+
+	protected readonly localStorage = localStorage;
+	protected readonly event = event;
 }

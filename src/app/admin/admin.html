@@ -1,124 +1,165 @@
-<nav style="margin-top: 40px">
-	<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_new']">New blog entry</button>
-	<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_manage']">Manage blog</button>
-</nav>
+@if (!localStorage.getItem('adminToken')) {
+	<div class="row justify-content-center" style="display: flex;">
+		<div class="col-12 col-sm-10 col-md-6 col-lg-4" style="width: 60%; margin-top: 50px">
+			<h1 class="h3 mb-4 text-center">Admin Login</h1>
 
-@if (window.location.href.includes('blog_new')) {
-	<div class="container mt-5">
-		<div class="row justify-content-center">
-			<div class="col-md-8">
-				<h1 class="mb-4">Create Blog Post</h1>
+			<div>
+				<div class="mb-3">
+					<label for="adminLogin" class="form-label">Login</label>
+					<input
+						id="adminLogin"
+						type="text"
+						class="form-control"
+						autocomplete="username"
+						required
+					/>
+				</div>
 
-				@if (submitSuccess()) {
-					<div class="alert alert-success alert-dismissible fade show" role="alert">
-						Blog post created successfully!
-						<button type="button" class="btn-close" (click)="submitSuccess.set(false)"></button>
-					</div>
-				}
+				<div class="mb-3">
+					<label for="adminPassword" class="form-label">Password</label>
+					<input
+						id="adminPassword"
+						type="password"
+						class="form-control"
+						autocomplete="current-password"
+						required
+					/>
+				</div>
 
-				@if (submitError()) {
-					<div class="alert alert-danger alert-dismissible fade show" role="alert">
-						{{ submitError() }}
-						<button type="button" class="btn-close" (click)="submitError.set(null)"></button>
-					</div>
-				}
-
-				<form [formGroup]="blogForm" (ngSubmit)="onSubmit()" novalidate>
-					<div class="mb-3">
-						<label for="titleInput" class="form-label">Title</label>
-						<input
-							type="text"
-							class="form-control"
-							id="titleInput"
-							formControlName="title"
-							[class.is-invalid]="blogForm.get('title')?.invalid && blogForm.get('title')?.touched"
-							required
-						/>
-						@if (blogForm.get('title')?.errors?.['required'] && blogForm.get('title')?.touched) {
-							<div class="invalid-feedback d-block">Title is required</div>
-						}
-						@if (blogForm.get('title')?.errors?.['minlength'] && blogForm.get('title')?.touched) {
-							<div class="invalid-feedback d-block">Title must be at least 3 characters</div>
-						}
-					</div>
-
-					<div class="mb-3">
-						<label for="textInput" class="form-label">Content</label>
-						<textarea
-							class="form-control"
-							id="textInput"
-							formControlName="text"
-							rows="6"
-							[class.is-invalid]="blogForm.get('text')?.invalid && blogForm.get('text')?.touched"
-							required
-						></textarea>
-						@if (blogForm.get('text')?.errors?.['required'] && blogForm.get('text')?.touched) {
-							<div class="invalid-feedback d-block">Content is required</div>
-						}
-						@if (blogForm.get('text')?.errors?.['minlength'] && blogForm.get('text')?.touched) {
-							<div class="invalid-feedback d-block">Content must be at least 10 characters</div>
-						}
-					</div>
-
-					<div class="mb-3">
-						<label for="mediaInput" class="form-label">Media Link (URL)</label>
-						<input
-							type="url"
-							class="form-control"
-							id="mediaInput"
-							formControlName="media_link"
-							[class.is-invalid]="blogForm.get('media_link')?.invalid && blogForm.get('media_link')?.touched"
-							placeholder="https://example.com/image.jpg"
-							required
-						/>
-						@if (blogForm.get('media_link')?.errors?.['required'] && blogForm.get('media_link')?.touched) {
-							<div class="invalid-feedback d-block">Media link is required</div>
-						}
-						@if (blogForm.get('media_link')?.errors?.['pattern'] && blogForm.get('media_link')?.touched) {
-							<div class="invalid-feedback d-block">Please enter a valid URL (http:// or https://)</div>
-						}
-					</div>
-
-					<button
-						type="submit"
-						class="btn btn-primary"
-						[disabled]="blogForm.invalid || isSubmitting()"
-					>
-						@if (isSubmitting()) {
-							<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-							Submitting...
-						} @else {
-							Create Post
-						}
-					</button>
-				</form>
+				<button class="btn btn-outline-dark w-100 m-0" (click)="login()">Sign in</button>
 			</div>
 		</div>
 	</div>
-}
+} @else {
+	<nav style="margin-top: 40px">
+		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_new']">New blog entry</button>
+		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_manage']">Manage blog</button>
+	</nav>
 
-@if (window.location.href.includes('blog_manage')) {
-	<div class="container mt-5" (load)="loadPosts()">
-		<h1 class="mb-4">Manage Blog Posts</h1>
-		<div *ngIf="loadingPosts()" class="text-center my-5">
-			<div class="spinner-border" role="status">
-				<span class="visually-hidden">Loading...</span>
+	@if (window.location.href.includes('blog_new')) {
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<h1 class="mb-4">Create Blog Post</h1>
+
+					@if (submitSuccess()) {
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							Blog post created successfully!
+							<button type="button" class="btn-close" (click)="submitSuccess.set(false)"></button>
+						</div>
+					}
+
+					@if (submitError()) {
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							{{ submitError() }}
+							<button type="button" class="btn-close" (click)="submitError.set(null)"></button>
+						</div>
+					}
+
+					<form [formGroup]="blogForm" (ngSubmit)="onSubmit()" novalidate>
+						<div class="mb-3">
+							<label for="titleInput" class="form-label">Title</label>
+							<input
+								type="text"
+								class="form-control"
+								id="titleInput"
+								formControlName="title"
+								[class.is-invalid]="blogForm.get('title')?.invalid && blogForm.get('title')?.touched"
+								required
+							/>
+							@if (blogForm.get('title')?.errors?.['required'] && blogForm.get('title')?.touched) {
+								<div class="invalid-feedback d-block">Title is required</div>
+							}
+							@if (blogForm.get('title')?.errors?.['minlength'] && blogForm.get('title')?.touched) {
+								<div class="invalid-feedback d-block">Title must be at least 3 characters</div>
+							}
+						</div>
+
+						<div class="mb-3">
+							<label for="textInput" class="form-label">Content</label>
+							<textarea
+								class="form-control"
+								id="textInput"
+								formControlName="text"
+								rows="6"
+								[class.is-invalid]="blogForm.get('text')?.invalid && blogForm.get('text')?.touched"
+								required
+							></textarea>
+							@if (blogForm.get('text')?.errors?.['required'] && blogForm.get('text')?.touched) {
+								<div class="invalid-feedback d-block">Content is required</div>
+							}
+							@if (blogForm.get('text')?.errors?.['minlength'] && blogForm.get('text')?.touched) {
+								<div class="invalid-feedback d-block">Content must be at least 10 characters</div>
+							}
+						</div>
+
+						<div class="mb-3">
+							<label for="mediaInput" class="form-label">Media Link (URL)</label>
+							<input
+								type="url"
+								class="form-control"
+								id="mediaInput"
+								formControlName="media_link"
+								[class.is-invalid]="blogForm.get('media_link')?.invalid && blogForm.get('media_link')?.touched"
+								placeholder="https://example.com/image.jpg"
+								required
+							/>
+							@if (blogForm.get('media_link')?.errors?.['required'] && blogForm.get('media_link')?.touched) {
+								<div class="invalid-feedback d-block">Media link is required</div>
+							}
+							@if (blogForm.get('media_link')?.errors?.['pattern'] && blogForm.get('media_link')?.touched) {
+								<div class="invalid-feedback d-block">Please enter a valid URL (http:// or https://)
+								</div>
+							}
+						</div>
+
+						<button
+							type="submit"
+							class="btn btn-primary"
+							[disabled]="blogForm.invalid || isSubmitting()"
+						>
+							@if (isSubmitting()) {
+								<span class="spinner-border spinner-border-sm me-2" role="status"
+									  aria-hidden="true"></span>
+								Submitting...
+							} @else {
+								Create Post
+							}
+						</button>
+					</form>
+				</div>
 			</div>
 		</div>
-		<div *ngIf="!loadingPosts() && blogPosts().length === 0" class="alert alert-info">
-			No blog posts found. <a [routerLink]="['/admin', 'blog_new']" class="alert-link">Create your first post!</a>
-		</div>
-		<div *ngIf="!loadingPosts() && blogPosts().length > 0" class="list-group">
-			<div *ngFor="let post of blogPosts()" class="list-group-item d-flex justify-content-between align-items-start">
-				<div class="ms-2 me-auto">
-					<div class="fw-bold">{{ post.title }}</div>
-					<small class="text-muted">Created on {{ post.created_at | date:'medium' }}</small>
+	}
+
+	@if (window.location.href.includes('blog_manage')) {
+		<div class="container mt-5" (load)="loadPosts()">
+			<h1 class="mb-4">Manage Blog Posts</h1>
+			<div *ngIf="loadingPosts()" class="text-center my-5">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
 				</div>
-				<div>
-					<button class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin', 'blog_edit']">Edit</button>
-					<button class="btn btn-sm btn-outline-danger">Delete</button><!--(click)="deletePost(post.id)"  ,	 post.id-->
+			</div>
+			<div *ngIf="!loadingPosts() && blogPosts().length === 0" class="alert alert-info">
+				No blog posts found. <a [routerLink]="['/admin', 'blog_new']" class="alert-link">Create your first
+				post!</a>
+			</div>
+			<div *ngIf="!loadingPosts() && blogPosts().length > 0" class="list-group">
+				<div *ngFor="let post of blogPosts()"
+					 class="list-group-item d-flex justify-content-between align-items-start">
+					<div class="ms-2 me-auto">
+						<div class="fw-bold">{{ post.title }}</div>
+						<small class="text-muted">Created on {{ post.created_at | date:'medium' }}</small>
+					</div>
+					<div>
+						<button class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin', 'blog_edit']">
+							Edit
+						</button>
+						<button class="btn btn-sm btn-outline-danger">Delete</button>
+						<!--(click)="deletePost(post.id)"  ,	 post.id-->
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	}
 }
