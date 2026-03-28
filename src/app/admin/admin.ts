@@ -82,11 +82,21 @@ export class Admin implements OnInit {
 		const login = this.window.document.querySelector<HTMLInputElement>('#adminLogin')?.value.trim() ?? '';
 		const password = this.window.document.querySelector<HTMLInputElement>('#adminPassword')?.value ?? '';
 
-		const q = this.http.post<{ token: string }>(this.globals.database + 'admin_auth/login', {login, password})
-		.subscribe((res) => {
-			localStorage.setItem('token', res.token);
-		});
-		console.log(q);
+		try {
+			this.http.post<LoginResponse>(this.globals.database + 'admin_auth/login', { login, password })
+				.subscribe({
+					next: (res) => {
+						localStorage.setItem('adminToken', res.token);
+						alert('welcome!');
+						window.location.reload();
+					},
+					error: (error: unknown) => {
+						alert(error instanceof Error ? error.message : 'Login failed.');
+					}
+				});
+		} catch (error: unknown) {
+			alert(error instanceof Error ? error.message : 'Unexpected error.');
+		}
 	}
 
 	ngOnInit() {

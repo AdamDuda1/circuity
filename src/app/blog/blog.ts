@@ -1,7 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { createClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment';
 import { _Toast } from '../toasts';
 import { Globals } from '../globals';
 
@@ -26,8 +24,6 @@ interface BlogPost {
 export class Blog implements OnInit {
 	constructor(public globals: Globals) {}
 
-	private readonly supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-
 	posts = signal<BlogPost[]>([]);
 	isLoading = signal(true);
 	error = signal<string | null>(null);
@@ -42,27 +38,18 @@ export class Blog implements OnInit {
 		});
 	}
 
-	private async fetchBlogPosts() {
+	async fetchBlogPosts(): Promise<void> {
+		this.isLoading.set(true);
+
 		try {
-			this.isLoading.set(true);
-			this.error.set(null);
+			const response = await fetch(this.globals.database + 'blog/read', {});
 
-			const {data, error} = await this.supabase.from('blog').select('*');
-
-			if (error) {
-				console.error('Error fetching blog posts:', error);
-				this.error.set(error.message);
-				this.posts.set([]);
-				return;
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
-			this.posts.set((data as BlogPost[]) || []);
-		} catch (err) {
-			const message = err instanceof Error ? err.message : 'Unknown error occurred';
-			console.error('Unexpected error:', err);
-			_Toast.error(message);
-			this.error.set(message);
-			this.posts.set([]);
+			const posts = (await response.json()) as BlogPost[];
+			this.posts.set(posts);
 		} finally {
 			this.isLoading.set(false);
 		}
