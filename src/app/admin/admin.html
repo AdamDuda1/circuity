@@ -34,7 +34,7 @@
 	<nav style="margin-top: 40px">
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_new']">New blog entry</button>
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_manage']">Manage blog</button>
-		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'admins']">Manage admins</button>
+		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'admins']" (click)="loadAdmins()">Manage admins</button>
 		<button class="btn btn-dark btn-outline-danger" style="color: white" type="button" (click)="logout()">Logout</button>
 	</nav>
 
@@ -194,6 +194,53 @@
 				</div>
 
 				<button class="btn btn-outline-dark w-100 m-0" (click)="newAdmin()">Create new one</button>
+			</div>
+
+			<div class="card mt-4" style="padding: 10px">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="h5 m-0">Current admins</h2>
+					<button class="btn btn-sm btn-outline-secondary" type="button" (click)="loadAdmins()" [disabled]="loadingAdmins()">
+						Refresh list
+					</button>
+				</div>
+
+				@if (true||loadingAdmins()) {
+					<div class="text-center my-4">
+						<div class="spinner-border" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				} @else {
+					@if (adminsError()) {
+						<div class="alert alert-danger" role="alert">{{ adminsError() }}</div>
+					} @else if (admins().length === 0) {
+						<div class="alert alert-info" role="status">No admins found.</div>
+					} @else {
+						<div class="table-responsive">
+							<table class="table table-striped table-hover align-middle mb-0 w-100">
+								<caption class="visually-hidden">List of admin users</caption>
+								<thead class="table-light">
+									<tr>
+										<th scope="col" style="width: 80px">ID</th>
+										<th scope="col">Login</th>
+										<th scope="col" class="text-end">Password</th>
+									</tr>
+								</thead>
+								<tbody>
+									@for (admin of admins(); track admin.id) {
+										<tr>
+											<td>{{ admin.id }}</td>
+											<td>{{ admin.login }}</td>
+											<td class="text-end">
+												<button class="btn btn-sm btn-outline-danger">Delete</button>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
+					}
+				}
 			</div>
 		</div>
 	}

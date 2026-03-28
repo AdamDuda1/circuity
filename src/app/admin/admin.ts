@@ -13,6 +13,12 @@ interface BlogPost {
 	created_at: string;
 }
 
+interface AdminUser {
+	id: number;
+	login: string;
+	password: string;
+}
+
 interface LoginResponse {
 	token: string;
 }
@@ -76,7 +82,10 @@ export class Admin implements OnInit {
 	}
 
 	protected readonly loadingPosts = signal(true);
+	protected readonly loadingAdmins = signal(true);
 	protected readonly blogPosts = signal([] as BlogPost[]);
+	protected readonly admins = signal([] as AdminUser[]);
+	protected readonly adminsError = signal<string | null>(null);
 
 	async login(): Promise<void> {
 		const login = this.window.document.querySelector<HTMLInputElement>('#adminLogin')?.value.trim() ?? '';
@@ -116,6 +125,7 @@ export class Admin implements OnInit {
 			);
 
 			alert(response.message ?? 'User created');
+			await this.loadAdmins();
 		} catch (error: unknown) {
 			alert(this.readErrorMessage(error, 'Operation failed.'));
 		}
@@ -123,6 +133,28 @@ export class Admin implements OnInit {
 
 	ngOnInit() {
 		this.loadPosts();
+		if (this.window.location.href.includes('admins')) {
+			this.loadAdmins();
+		}
+	}
+
+	async loadAdmins(): Promise<void> {
+		this.loadingAdmins.set(true);
+		this.adminsError.set(null);
+
+		try {
+			const admins = await firstValueFrom(
+				this.http.get<AdminUser[]>(this.globals.database + 'admin_auth/list_admins', {
+					headers: this.createAuthHeaders()
+				})
+			);
+			this.admins.set(admins);
+		} catch (error) {
+			this.admins.set([]);
+			this.adminsError.set(this.readErrorMessage(error, 'Couldn\'t load admin list.'));
+		} finally {
+			this.loadingAdmins.set(false);
+		}
 	}
 
 	async loadPosts(): Promise<void> {
@@ -132,7 +164,7 @@ export class Admin implements OnInit {
 			const posts = await firstValueFrom(this.http.get<BlogPost[]>(this.globals.database + 'blog/read'));
 			this.blogPosts.set(posts);
 		} catch (error) {
-			this.submitError.set(this.readErrorMessage(error, 'Nie udalo sie zaladowac postow.'));
+			this.submitError.set(this.readErrorMessage(error, 'Couldn\'t load blog posts list.'));
 		} finally {
 			this.loadingPosts.set(false);
 		}
