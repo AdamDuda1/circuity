@@ -3,7 +3,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Globals } from '../globals';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 interface BlogPost {
 	title: string;
@@ -16,6 +17,11 @@ interface LoginResponse {
 	token: string;
 }
 
+type ApiErrorPayload = {
+	error?: string;
+	message?: string;
+};
+
 @Component({
 	selector: 'app-admin',
 	imports: [ReactiveFormsModule, CommonModule, RouterLink],
@@ -26,7 +32,7 @@ interface LoginResponse {
 export class Admin implements OnInit {
 	private readonly formBuilder = inject(FormBuilder);
 	private readonly globals = inject(Globals);
-	private readonly http = inject(HttpClient);
+	private readonly http: HttpClient = inject(HttpClient);
 	protected readonly window = window;
 
 	readonly isSubmitting = signal(false);
@@ -62,42 +68,31 @@ export class Admin implements OnInit {
 	}
 
 	async createBlogPost(post: BlogPost): Promise<void> {
-		const token = localStorage.getItem('adminToken') ?? '';
-		const response = await fetch(this.globals.database + 'blog/create', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				...(token ? { Authorization: `Bearer ${token}` } : {})
-			},
-			body: JSON.stringify(post)
-		});
-
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
+		await firstValueFrom(
+			this.http.post<void>(this.globals.database + 'blog/create', post, {
+				headers: this.createAuthHeaders()
+			})
+		);
 	}
 
 	protected readonly loadingPosts = signal(true);
 	protected readonly blogPosts = signal([] as BlogPost[]);
 
-	login() {
+	async login(): Promise<void> {
 		const login = this.window.document.querySelector<HTMLInputElement>('#adminLogin')?.value.trim() ?? '';
 		const password = this.window.document.querySelector<HTMLInputElement>('#adminPassword')?.value ?? '';
+		if (!login || !password) return;
 
 		try {
-			this.http.post<LoginResponse>(this.globals.database + 'admin_auth/login', { login, password })
-				.subscribe({
-					next: (res) => {
-						localStorage.setItem('adminToken', res.token);
-						alert('welcome!');
-						window.location.reload();
-					},
-					error: (error: unknown) => {
-						alert(error instanceof Error ? error.message : 'Login failed.');
-					}
-				});
+			const response = await firstValueFrom(
+				this.http.post<LoginResponse>(this.globals.database + 'admin_auth/login', {login, password})
+			);
+
+			localStorage.setItem('adminToken', response.token);
+			alert('Welcome!');
+			window.location.reload();
 		} catch (error: unknown) {
-			alert(error instanceof Error ? error.message : 'Unexpected error.');
+			alert(this.readErrorMessage(error, 'Login failed.'));
 		}
 	}
 
@@ -106,38 +101,24 @@ export class Admin implements OnInit {
 		window.location.reload();
 	}
 
-	newAdmin() {
+	async newAdmin(): Promise<void> {
 		const login = this.window.document.querySelector<HTMLInputElement>('#newAdminLogin')?.value.trim() ?? '';
 		const password = this.window.document.querySelector<HTMLInputElement>('#newAdminPassword')?.value ?? '';
+		if (!login || !password) return;
 
-		const token = localStorage.getItem('adminToken') ?? '';
-		const headers: Record<string, string> = {
-			'Content-Type': 'application/json',
-			...(token ? { Authorization: `Bearer ${token}` } : {})
-		};
+		try {
+			const response = await firstValueFrom(
+				this.http.post<{ message?: string }>(
+					this.globals.database + 'admin_auth/register',
+					{login, password},
+					{headers: this.createAuthHeaders()}
+				)
+			);
 
-		this.http.post(
-			this.globals.database + 'admin_auth/register',
-			{ login, password },
-			{ headers, responseType: 'text' as const }
-		).subscribe({
-			next: (res) => {
-				alert(res);
-			},
-			error: (error: unknown) => {
-				const message =
-					typeof error === 'object' &&
-					error !== null &&
-					'error' in error &&
-					typeof (error as { error: unknown }).error === 'string'
-						? (error as { error: string }).error
-						: error instanceof Error
-							? error.message
-							: 'Operation failed.';
-
-				alert(message);
-			}
-		});
+			alert(response.message ?? 'User created');
+		} catch (error: unknown) {
+			alert(this.readErrorMessage(error, 'Operation failed.'));
+		}
 	}
 
 	ngOnInit() {
@@ -148,17 +129,43 @@ export class Admin implements OnInit {
 		this.loadingPosts.set(true);
 
 		try {
-			const response = await fetch(this.globals.database + 'blog/read', {});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			const posts = (await response.json()) as BlogPost[];
+			const posts = await firstValueFrom(this.http.get<BlogPost[]>(this.globals.database + 'blog/read'));
 			this.blogPosts.set(posts);
+		} catch (error) {
+			this.submitError.set(this.readErrorMessage(error, 'Nie udalo sie zaladowac postow.'));
 		} finally {
 			this.loadingPosts.set(false);
 		}
+	}
+
+	private createAuthHeaders(): HttpHeaders {
+		const token = localStorage.getItem('adminToken') ?? '';
+		return token
+			? new HttpHeaders({Authorization: `Bearer ${token}`})
+			: new HttpHeaders();
+	}
+
+	private readErrorMessage(error: unknown, fallbackMessage: string): string {
+		if (!(error instanceof HttpErrorResponse)) {
+			return error instanceof Error ? error.message : fallbackMessage;
+		}
+
+		if (typeof error.error === 'string' && error.error.trim()) {
+			return error.error;
+		}
+
+		if (typeof error.error === 'object' && error.error !== null) {
+			const payload = error.error as ApiErrorPayload;
+			if (typeof payload.error === 'string' && payload.error.trim()) {
+				return payload.error;
+			}
+
+			if (typeof payload.message === 'string' && payload.message.trim()) {
+				return payload.message;
+			}
+		}
+
+		return error.message || fallbackMessage;
 	}
 
 	protected readonly localStorage = localStorage;
