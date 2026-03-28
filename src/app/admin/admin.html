@@ -34,6 +34,8 @@
 	<nav style="margin-top: 40px">
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_new']">New blog entry</button>
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_manage']">Manage blog</button>
+		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'admins']">Manage admins</button>
+		<button class="btn btn-dark btn-outline-danger" style="color: white" type="button" (click)="logout()">Logout</button>
 	</nav>
 
 	@if (window.location.href.includes('blog_new')) {
@@ -159,6 +161,39 @@
 						<!--(click)="deletePost(post.id)"  ,	 post.id-->
 					</div>
 				</div>
+			</div>
+		</div>
+	}
+
+	@if (window.location.href.includes('admins')) {
+		<div class="container mt-5">
+			<h1 class="mb-4">Manage Admins</h1>
+
+			<div class="card" style="padding: 10px">
+				<div class="mb-3" style="display: flex; justify-content: space-between;">
+					<div style="width: 49%">
+						<label for="newAdminLogin" class="form-label">Login</label>
+						<input
+							id="newAdminLogin"
+							type="text"
+							class="form-control"
+							autocomplete="username"
+							required
+						/>
+					</div>
+					<div style="width: 49%">
+						<label for="newAdminPassword" class="form-label">Password</label>
+						<input
+							id="newAdminPassword"
+							type="password"
+							class="form-control"
+							autocomplete="current-password"
+							required
+						/>
+					</div>
+				</div>
+
+				<button class="btn btn-outline-dark w-100 m-0" (click)="newAdmin()">Create new one</button>
 			</div>
 		</div>
 	}

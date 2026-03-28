@@ -62,10 +62,12 @@ export class Admin implements OnInit {
 	}
 
 	async createBlogPost(post: BlogPost): Promise<void> {
+		const token = localStorage.getItem('adminToken') ?? '';
 		const response = await fetch(this.globals.database + 'blog/create', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				...(token ? { Authorization: `Bearer ${token}` } : {})
 			},
 			body: JSON.stringify(post)
 		});
@@ -99,6 +101,45 @@ export class Admin implements OnInit {
 		}
 	}
 
+	logout() {
+		localStorage.removeItem('adminToken');
+		window.location.reload();
+	}
+
+	newAdmin() {
+		const login = this.window.document.querySelector<HTMLInputElement>('#newAdminLogin')?.value.trim() ?? '';
+		const password = this.window.document.querySelector<HTMLInputElement>('#newAdminPassword')?.value ?? '';
+
+		const token = localStorage.getItem('adminToken') ?? '';
+		const headers: Record<string, string> = {
+			'Content-Type': 'application/json',
+			...(token ? { Authorization: `Bearer ${token}` } : {})
+		};
+
+		this.http.post(
+			this.globals.database + 'admin_auth/register',
+			{ login, password },
+			{ headers, responseType: 'text' as const }
+		).subscribe({
+			next: (res) => {
+				alert(res);
+			},
+			error: (error: unknown) => {
+				const message =
+					typeof error === 'object' &&
+					error !== null &&
+					'error' in error &&
+					typeof (error as { error: unknown }).error === 'string'
+						? (error as { error: string }).error
+						: error instanceof Error
+							? error.message
+							: 'Operation failed.';
+
+				alert(message);
+			}
+		});
+	}
+
 	ngOnInit() {
 		this.loadPosts();
 	}
@@ -121,5 +162,4 @@ export class Admin implements OnInit {
 	}
 
 	protected readonly localStorage = localStorage;
-	protected readonly event = event;
 }
