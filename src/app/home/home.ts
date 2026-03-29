@@ -5,6 +5,7 @@ import { Palette } from '../palette/palette';
 import { Canvas } from '../canvas/canvas';
 import { Tutorial } from '../tutorial/tutorial';
 import { SavePanel } from '../simulation-controls/save-panel/save-panel';
+import { Settings } from '../simulation-controls/settings/settings';
 
 @Component({
 	selector: 'app-home',
@@ -19,6 +20,7 @@ import { SavePanel } from '../simulation-controls/save-panel/save-panel';
 		</div>
 
 		<app-save-panel/>
+		<app-settings/>
 
 		<app-tutorial/>
 	`,
@@ -31,7 +33,7 @@ import { SavePanel } from '../simulation-controls/save-panel/save-panel';
 		}
 
 	`],
-	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel],
+	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		class: 'contents',

@@ -1,39 +1,4 @@
 <div class="flex flex-row-reverse flex-wrap">
-
-	<!--	<div class="settings-button select-none cursor-pointer">-->
-	<!--		<span class="material-symbols-outlined">browse</span>-->
-	<!--	</div>-->
-
-	<!--	<div class="settings-button select-none cursor-pointer">-->
-	<!--		<span class="material-symbols-outlined">book_ribbon</span>-->
-	<!--	</div>-->
-
-	<!--	<div class="settings-button select-none cursor-pointer">-->
-	<!--		<span class="material-symbols-outlined">settings</span>-->
-	<!--	</div>-->
-
-	<div class="settings-button select-none cursor-pointer">
-		<span class="material-symbols-outlined" (click)="this.globals.savePanel_open.set(true)">save</span>
-	</div>
-
-	<div class="settings-button select-none cursor-pointer">
-		<span class="material-symbols-outlined">file_open</span>
-	</div>
-
-	<!--	<div class="settings-button select-none cursor-pointer">-->
-	<!--		<span class="material-symbols-outlined">apps</span>-->
-	<!--		<div class="menu">-->
-	<!--			<div class="menu-item">-->
-	<!--				<span class="material-symbols-outlined">save</span>-->
-	<!--				save-->
-	<!--			</div>-->
-	<!--			<div class="menu-item">-->
-	<!--				<span class="material-symbols-outlined">save</span>-->
-	<!--				export-->
-	<!--			</div>-->
-	<!--		</div>-->
-	<!--	</div>-->
-
 	<div class="button select-none"
 		 [style.background]="isHovered() ? (this.globals.simulation.running() ? '#a13f3f' : '#367c39') : (this.globals.simulation.running() ? '#b54747' : '#4CAF50')"
 		 (mouseenter)="isHovered.set(true)"
@@ -44,4 +9,11 @@
 		<span class="shortcut">{{ this.globals.constants.translations.simulationControls.keyboardShortcut }}</span>
 	</div>
 
+	<div class="settings-button select-none cursor-pointer" (click)="this.globals.settingsPanel_open.set(true)" style="margin-right: 10px">
+		<span class="material-symbols-outlined">settings</span>
+	</div>
+
+	<div class="settings-button select-none cursor-pointer">
+		<span class="material-symbols-outlined" (click)="this.globals.savePanel_open.set(true)"><!--save-->folder_open</span>
+	</div>
 </div>

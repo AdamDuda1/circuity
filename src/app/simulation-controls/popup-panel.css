@@ -1,4 +1,4 @@
-.savePanelBox {
+.panelBox {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -10,7 +10,7 @@
 	justify-content: center;
 }
 
-.savePanel {
+.panel {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -24,6 +24,12 @@
 	justify-content: space-between;
 }
 
+.panel h2 {
+	width: 100%;
+	text-align: center;
+	font-size: 21px;
+	font-weight: 500;
+}
 
 .buttonRow {
 	width: 100%;
@@ -60,4 +66,16 @@
 
 .done-button:hover {
 	background: rgba(203, 213, 253, 0.66);
+}
+
+
+.form-check-label {	max-width: 70%; }
+.form-check-label, .form-switch, .form-check-input { cursor: pointer; }
+.form-switch { position: relative; left: 5px; }
+.form-switch:hover > .form-check-label { color: #245075; }
+
+.todo-actions-cell {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
 }

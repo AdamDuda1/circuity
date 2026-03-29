@@ -7,13 +7,13 @@
 			}
 		</div>
 		<div class="flex justify-between">
-			<a href="#" (click)="prevPage()" class="p-[10px]"
+			<a href="#" (click)="prevPage()" class="p-2.5 btn"
 			   [style.visibility]="this.globals.tutorial_page() == 0 ? 'hidden' : 'visible'">
 				<span class="material-symbols-outlined l">arrow_back</span>
 				{{ this.globals.constants.translations.tutorial.prev }}
 			</a>
 
-			<a href="#" (click)="nextPage()" class="p-[10px]">
+			<a href="#" (click)="nextPage()" class="p-2.5 btn">
 				{{ this.globals.tutorial_page() == this.pages - 1 ? this.globals.constants.translations.tutorial.close : this.globals.constants.translations.tutorial.next }}
 				<span class="material-symbols-outlined">
 					{{ this.globals.tutorial_page() == this.pages - 1 ? 'done_all' : 'arrow_forward' }}

@@ -5,7 +5,7 @@ import { Globals } from '../../globals';
 	selector: 'app-save-panel',
 	imports: [],
 	templateUrl: './save-panel.html',
-	styleUrl: './save-panel.css'
+	styleUrl: '../popup-panel.css'
 })
 export class SavePanel {
 	constructor(public globals: Globals) {}
