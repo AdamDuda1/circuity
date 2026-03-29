@@ -7,6 +7,7 @@ interface BlogPost {
 	id: number;
 	title: string;
 	text: string;
+	media_type: string;
 	media_link: string;
 	created_at: string;
 

@@ -50,7 +50,8 @@ export class Admin implements OnInit {
 		title: ['', [Validators.required, Validators.minLength(3)]],
 		text: ['', [Validators.required, Validators.minLength(10)]],
 		media_type: ['none'],
-		media_link: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
+		// media_link is validated conditionally (only required when media_type !== 'none')
+		media_link: [''],
 		created_at: ['']
 	});
 
@@ -67,7 +68,7 @@ export class Admin implements OnInit {
 		try {
 			await this.createBlogPost(this.blogForm.getRawValue());
 			this.submitSuccess.set(true);
-			this.blogForm.reset({title: '', text: '', media_link: ''});
+			this.blogForm.reset({title: '', text: '', media_type: 'none', media_link: '', created_at: ''});
 		} catch (error) {
 			this.submitError.set(error instanceof Error ? error.message : 'Nie udalo sie utworzyc posta.');
 		} finally {

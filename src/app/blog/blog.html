@@ -1,32 +1,53 @@
-<div class="blog-container">
+<div class="container py-4 blog-container">
+	<br><br><br>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="display-6 fw-light m-0">Blog</h1>
+	</div>
+
 	@if (isLoading()) {
-		<div class="loading-container">
-			<div class="spinner"></div>
+		<div class="d-flex justify-content-center py-5" aria-live="polite">
+			<div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+			<span class="visually-hidden">Loading...</span>
 		</div>
 	}
 
 	@if (error()) {
-		<div class="error-container">
-			<p class="error-message">Error: {{ error() }}</p>
+		<div class="alert alert-danger" role="alert" aria-live="assertive">
+			Error: {{ error() }}
 		</div>
 	}
 
 	@if (!isLoading() && !error()) {
 		@if (posts().length > 0) {
-			<div class="posts-grid">
+			<div class="row" style="row-gap:4rem; column-gap:4rem;">
 				@for (post of posts().slice().reverse(); track post.id) {
-					<article class="post-card">
-						<h2>{{ post.title }}</h2>
-						<p class="post-date">{{ post.created_at | date: 'mediumDate' }}</p>
-						<p class="post-content">{{ post.text }}</p>
-						@if (post.media_link != null && post.media_link != '' && post.media_link) {
-							<img [src]="post.media_link" alt="" height="100px" class="post-image">
-						}
+					<article class="col-12 col-md-6 col-lg-4 px-4 d-flex justify-content-center"
+					         aria-labelledby="post-title-{{post.id}}" style="margin-bottom:2.5rem; width: fit-content">
+						<div class="card h-100 shadow-sm" style="width:40vw !important;">
+							<div class="card-body d-flex flex-column">
+								<h2 id="post-title-{{post.id}}" class="display-1 card-title mb-4"
+								    style="font-size:2rem; font-weight:300; line-height:1.05;">{{ post.title }}</h2>
+								<p class="card-text text-muted mb-0">{{ post.text }}</p>
+							</div>
+
+							@if (post.media_type == 'image') {
+								<img [src]="post.media_link" class="card-img-bottom" alt="{{ post.title }}">
+							} @else if (post.media_type == 'video') {
+								<div class="ratio ratio-16x9 mt-3">
+									<video controls class="w-100" aria-label="{{ post.title }}">
+										<source [src]="post.media_link" type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+							}
+						</div>
 					</article>
 				}
 			</div>
 		} @else {
-			<p class="no-posts">No blog posts found.</p>
+			<div class="text-center py-5">
+				<p class="lead mb-0">No blog posts found.</p>
+			</div>
 		}
 	}
 </div>

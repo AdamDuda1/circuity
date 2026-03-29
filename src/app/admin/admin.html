@@ -107,8 +107,6 @@
 										<option value="video">video</option>
 										<option value="image">image</option>
 									</select>
-
-<!--									<label for="floatingSelect">Media type</label>-->
 								</div>
 
 								<input
@@ -116,17 +114,9 @@
 									class="form-control"
 									id="mediaInput"
 									formControlName="media_link"
-									[class.is-invalid]="blogForm.get('media_link')?.invalid && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none'"
 									placeholder="https://example.com/image.jpg"
-									required
 								/>
 							</div>
-							@if (blogForm.get('media_link')?.errors?.['required'] && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none') {
-								<div class="invalid-feedback d-block">Media link is required</div>
-							}
-							@if (blogForm.get('media_link')?.errors?.['pattern'] && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none') {
-								<div class="invalid-feedback d-block">Please enter a valid URL</div>
-							}
 						</div>
 
 						<button
