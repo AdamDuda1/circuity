@@ -5,6 +5,10 @@
 	justify-content: center;
 }
 
+h1 {
+	font-size: xx-large !important;
+	font-weight: bold !important;
+}
 
 .btn {
 	margin: 2px;

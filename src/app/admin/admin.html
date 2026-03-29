@@ -30,7 +30,9 @@
 			</div>
 		</div>
 	</div>
-} @else {
+}
+
+@else {
 	<nav style="margin-top: 40px">
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_new']">New blog entry</button>
 		<button class="btn btn-dark" type="button" [routerLink]="['/admin', 'blog_manage']">Manage blog</button>
@@ -96,22 +98,34 @@
 						</div>
 
 						<div class="mb-3">
-							<label for="mediaInput" class="form-label">Media Link (URL)</label>
-							<input
-								type="url"
-								class="form-control"
-								id="mediaInput"
-								formControlName="media_link"
-								[class.is-invalid]="blogForm.get('media_link')?.invalid && blogForm.get('media_link')?.touched"
-								placeholder="https://example.com/image.jpg"
-								required
-							/>
-							@if (blogForm.get('media_link')?.errors?.['required'] && blogForm.get('media_link')?.touched) {
+							<label for="mediaInput" class="form-label">Media Link</label>
+
+							<div class="flex gap-2">
+								<div class="w-75">
+									<select class="form-select w-100" formControlName="media_type">
+										<option value="none" selected>none</option>
+										<option value="video">video</option>
+										<option value="image">image</option>
+									</select>
+
+<!--									<label for="floatingSelect">Media type</label>-->
+								</div>
+
+								<input
+									type="url"
+									class="form-control"
+									id="mediaInput"
+									formControlName="media_link"
+									[class.is-invalid]="blogForm.get('media_link')?.invalid && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none'"
+									placeholder="https://example.com/image.jpg"
+									required
+								/>
+							</div>
+							@if (blogForm.get('media_link')?.errors?.['required'] && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none') {
 								<div class="invalid-feedback d-block">Media link is required</div>
 							}
-							@if (blogForm.get('media_link')?.errors?.['pattern'] && blogForm.get('media_link')?.touched) {
-								<div class="invalid-feedback d-block">Please enter a valid URL (http:// or https://)
-								</div>
+							@if (blogForm.get('media_link')?.errors?.['pattern'] && blogForm.get('media_link')?.touched && blogForm.get('media_type')?.value !== 'none') {
+								<div class="invalid-feedback d-block">Please enter a valid URL</div>
 							}
 						</div>
 

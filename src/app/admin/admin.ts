@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 interface BlogPost {
 	title: string;
 	text: string;
+	media_type: string;
 	media_link: string;
 	created_at: string;
 }
@@ -48,6 +49,7 @@ export class Admin implements OnInit {
 	readonly blogForm = this.formBuilder.nonNullable.group({
 		title: ['', [Validators.required, Validators.minLength(3)]],
 		text: ['', [Validators.required, Validators.minLength(10)]],
+		media_type: ['none'],
 		media_link: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
 		created_at: ['']
 	});
