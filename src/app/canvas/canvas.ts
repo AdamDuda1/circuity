@@ -81,8 +81,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		const tick = () => {
 			const now = performance.now();
-			this.globals.frame.update((v) => ({...v, dt: now - last}));
-			this.globals.frame.update((v) => ({...v, fps: this.globals.frame().dt > 0 ? 1000 / this.globals.frame().dt : 0}));
+			const dt = now - last;
+			this.globals.frame.update((v) => ({...v, dt, fps: dt > 0 ? 1000 / dt : 0}));
 			last = now;
 
 			const v = this.globals.view();
@@ -91,7 +91,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 				this.globals.view.update((prev) => ({...prev, z: nextZ}));
 			}
 
-			this.globals.simulation.simulate();
+			if (this.globals.simulation.running()) {
+				this.globals.simulation.simulate();
+			}
 			this.draw(this.ctx);
 			this.globals.canvasCursor = this.globals.canvasCursorCandidate;
 
@@ -103,38 +105,37 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	draw(ctx: CanvasRenderingContext2D) {
-		const {w, h, dpr} = this.globals.view();
+		const view = this.globals.view();
+		const {w, h, dpr} = view;
+		const components = this.globals.simulation.circuitComponents();
 
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, w, h);
 		this.drawer.drawGrid(ctx);
-		this.drawer.drawWorld(this.ctx, this.globals.simulation);
+		this.drawer.drawWorld(ctx, this.globals.simulation);
 		this.drawer.drawDebug(ctx);
 
 		if (this.isConnecting()) {
 			const pos1 = this.connectingToOrFrom();
+			const cursor = this.globals.cursor();
 			ctx.save();
 			if (pos1.type == 'in') {
-				drawWire(ctx, this.globals.view(),
-					{x: this.globals.cursor().x, y: this.globals.cursor().y},
+				drawWire(ctx, view,
+					{x: cursor.x, y: cursor.y},
 					{
-						x: this.globals.simulation.circuitComponents()[pos1.component].x +
-							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].x,
-						y: this.globals.simulation.circuitComponents()[pos1.component].y +
-							this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].y
+						x: components[pos1.component].x + components[pos1.component].ins[pos1.index].x,
+						y: components[pos1.component].y + components[pos1.component].ins[pos1.index].y
 					},
 					false,
 					false
 				);
 			} else {
-				drawWire(ctx, this.globals.view(),
+				drawWire(ctx, view,
 					{
-						x: this.globals.simulation.circuitComponents()[pos1.component].x +
-							this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].x,
-						y: this.globals.simulation.circuitComponents()[pos1.component].y +
-							this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].y
+						x: components[pos1.component].x + components[pos1.component].outs[pos1.index].x,
+						y: components[pos1.component].y + components[pos1.component].outs[pos1.index].y
 					},
-					{x: this.globals.cursor().x, y: this.globals.cursor().y},
+					{x: cursor.x, y: cursor.y},
 					false,
 					false
 				);
@@ -264,15 +265,19 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	onPointerMove(event: PointerEvent) {
 		const rect = this.canvasRef().nativeElement.getBoundingClientRect();
+		const components = this.globals.simulation.circuitComponents();
+		const view = this.globals.view();
 
 		if (this.globals.isPanning() && !this.isConnecting()) {
-			this.moved_amt++;
 			const last = this.lastPointer();
-			const z = this.globals.view().z;
+			if (event.clientX !== last.x || event.clientY !== last.y) {
+				this.moved_amt++;
+			}
+			const z = view.z;
 
 			if (this.globals.selected != -1) {
 				if (!this.globals.isDragging()) this.globals.isDragging.set(true);
-				this.globals.simulation.circuitComponents()[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
+				components[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
 				//console.log(this.globals.simulation.circuitComponents());
 			} else {
 				this.globals.view.update((v) => ({
@@ -287,22 +292,23 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		const mouseX = event.clientX - rect.left;
 		const mouseY = event.clientY - rect.top;
+		const nextView = this.globals.view();
 
 		this.globals.cursor.update(() => ({
-			x: (mouseX - this.globals.view().w / 2) / this.globals.view().z - this.globals.view().x,
-			y: -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y
+			x: (mouseX - nextView.w / 2) / nextView.z - nextView.x,
+			y: -(mouseY - nextView.h / 2) / nextView.z + nextView.y
 		}));
 
 		// SETTING CURSOR
 		let candidate = 'default';
-		for (const component of this.globals.simulation.circuitComponents()) {
+		for (const component of components) {
 			if (component.mouseOverComponent()) {
 				candidate = 'pointer';
 				break;
 			}
 		}
 
-		if (!this.globals.simulation.running()) for (const component of this.globals.simulation.circuitComponents()) {
+		if (!this.globals.simulation.running()) for (const component of components) {
 			if (component.mouseOverPin().index != -1) {
 				candidate = 'crosshair';
 				break;
@@ -416,6 +422,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		const dpr = window.devicePixelRatio || 1;
 		const width = Math.max(1, Math.floor(rect.width * dpr));
 		const height = Math.max(1, Math.floor(rect.height * dpr));
+		const currentView = this.globals.view();
+
+		if (currentView.w === rect.width && currentView.h === rect.height && currentView.dpr === dpr && canvas.width === width && canvas.height === height) {
+			return;
+		}
 
 		if (canvas.width !== width || canvas.height !== height) {
 			canvas.width = width;

@@ -8,8 +8,8 @@
 			<label for="darkModeSwitch" class="mb-0 form-check-label">Dark more</label>
 			<div class="form-check form-switch m-0">
 				<input class="form-check-input" type="checkbox" id="darkModeSwitch" #darkModeSwitch
-					   (load)="darkModeSwitch.checked = localStorage.getItem('darkMode') === 'true'"
-					   (change)="localStorage.setItem('darkMode', darkModeSwitch.checked ? 'true' : 'false'); setDarkMode();">
+					   [checked]="localStorage.getItem('darkMode') === 'true'"
+					   (change)="localStorage.setItem('darkMode', darkModeSwitch.checked ? 'true' : 'false'); globals.setDarkMode();">
 			</div>
 		</div>
 	</div>

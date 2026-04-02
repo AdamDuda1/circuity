@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Menu } from './menu/menu';
+import { Globals } from './globals';
 
 @Component({
 	selector: 'app-root',
@@ -10,5 +11,9 @@ import { Menu } from './menu/menu';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+	constructor(public globals: Globals) {}
 
+	ngOnInit() {
+		this.globals.setDarkMode();
+	}
 }

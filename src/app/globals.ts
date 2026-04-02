@@ -10,6 +10,11 @@ import { LED } from './components/led';
 import { XOR } from './components/xor';
 import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
+import {
+	enable as enableDarkMode,
+	disable as disableDarkMode,
+	//auto as followSystemColorScheme TODO??
+} from 'darkreader';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 
@@ -60,4 +65,20 @@ export class Globals {
 	private nextID = 0;
 
 	public getNextID() { return this.nextID++; }
+
+	setDarkMode() {
+		if (localStorage.getItem('darkMode') === 'true') {
+			enableDarkMode({
+				brightness: 90,
+				contrast: 100,
+				sepia: 20,
+			});
+		} else disableDarkMode();
+
+		//followSystemColorScheme();
+	}
+
+	ngOnInit() {
+		this.setDarkMode();
+	}
 }
