@@ -15,6 +15,7 @@ import {
 	disable as disableDarkMode,
 	//auto as followSystemColorScheme TODO??
 } from 'darkreader';
+import { Buzzer } from './components/buzzer';
 // import * as bootstrap from 'bootstrap';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
@@ -41,6 +42,10 @@ export class Globals {
 	public readonly savePanel_open = signal(false);
 	public readonly settingsPanel_open = signal(false);
 
+	public darkMode: boolean = false;
+	public snap: boolean = false;
+	public snapStep: number = 0;
+
 	public data = new Data(this);
 	// public toast = new Toast();
 	public tutorial = new Tutorial(this);
@@ -55,6 +60,7 @@ export class Globals {
 		['NOT', (g, id, x, y) => new NOT(g, id, x, y)],
 		['Switch', (g, id, x, y) => new Switch(g, id, x, y)],
 		['LED', (g, id, x, y) => new LED(g, id, x, y)],
+		['Buzzer', (g, id, x, y) => new Buzzer(g, id, x, y)],
 		['XOR', (g, id, x, y) => new XOR(g, id, x, y)]
 	]);
 
@@ -67,8 +73,14 @@ export class Globals {
 
 	public getNextID() { return this.nextID++; }
 
+	fetchSettings() {
+		this.darkMode = localStorage.getItem('darkMode') === 'true';
+		this.snap = localStorage.getItem('snap') === 'true';
+		this.snapStep = localStorage.getItem('snapStep') ? Number(localStorage.getItem('snapStep')) : 30;
+	}
+
 	setDarkMode() {
-		if (localStorage.getItem('darkMode') === 'true') {
+		if (this.darkMode) {
 			enableDarkMode({
 				brightness: 90,
 				contrast: 100,
@@ -76,10 +88,11 @@ export class Globals {
 			});
 		} else disableDarkMode();
 
-		//followSystemColorScheme();
+		//followSystemColorScheme(); TODO!
 	}
 
-	ngOnInit() {
+	init() { // should not require a reload, if it needs to, change dependencies
+		this.fetchSettings();
 		this.setDarkMode();
 	}
 }

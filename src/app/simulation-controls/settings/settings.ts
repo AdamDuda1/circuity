@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Globals } from '../../globals';
 
-
 @Component({
   selector: 'app-settings',
   imports: [],

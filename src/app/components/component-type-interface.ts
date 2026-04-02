@@ -82,11 +82,6 @@ export abstract class ElectricalComponent {
 		this.condition();
 	}
 
-	/*updatePos(x: number, y: number, snap?: boolean) {
-		this.x += x;
-		this.y += y;
-		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
-	}*/
 	updatePos(x: number, y: number, snap?: boolean) {
 		if (snap) {
 			if (this.snapRawX === null || this.snapRawY === null) {
@@ -98,13 +93,13 @@ export abstract class ElectricalComponent {
 			this.snapRawY += y;
 
 			// const snapStep = Math.pow(5, Math.floor(Math.log10(500 / this.globals.view().z))) / this.globals.view().z;
-			const snapStep = 10;
+			const snapStep = this.globals.snapStep;
 
 			const centerX = this.snapRawX + this.w / 2;
 			const centerY = this.snapRawY + this.h / 2;
 
-			const snappedCenterX = Math.round(centerX / snapStep) * snapStep;
-			const snappedCenterY = Math.round(centerY / snapStep) * snapStep;
+			const snappedCenterX = Math.round((centerX) / snapStep) * snapStep;
+			const snappedCenterY = Math.round((centerY) / snapStep) * snapStep;
 
 			this.x = snappedCenterX - this.w / 2;
 			this.y = snappedCenterY - this.h / 2;

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Globals } from '../globals';
+import { Buzzer } from '../components/buzzer';
 
 @Component({
 	selector: 'category',
@@ -40,4 +41,25 @@ export class ComponentProperties {
 	change_x(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].x = Number((event.target as HTMLInputElement).value); }
 
 	change_y(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].y = Number((event.target as HTMLInputElement).value); }
+
+	selectedBuzzer(): Buzzer | null {
+		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		return selected instanceof Buzzer ? selected : null;
+	}
+
+	buzzer_setFrequency(event: Event) {
+		const selected = this.selectedBuzzer();
+		if (!selected) return;
+		selected.frequency = (event.target as HTMLInputElement).valueAsNumber;
+	}
+
+	buzzer_setVolume(event: Event) {
+		const selected = this.selectedBuzzer();
+		if (!selected) return;
+		const val = Number((event.target as HTMLInputElement).value);
+		if (Number.isNaN(val)) return;
+		selected.setVolume(val);
+	}
+
+	protected readonly Buzzer = Buzzer;
 }

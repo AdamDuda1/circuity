@@ -14,6 +14,6 @@ export class App {
 	constructor(public globals: Globals) {}
 
 	ngOnInit() {
-		this.globals.setDarkMode();
+		this.globals.init();
 	}
 }

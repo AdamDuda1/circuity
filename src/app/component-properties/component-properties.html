@@ -30,18 +30,41 @@
 
 		<div class="input-group">
 			<label class="input-group-text" for="posX">x</label>
-			<input type="number" class="form-control" placeholder="coordinate" aria-label="Username" id="posX"
+			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posX"
 			       value="{{globals.simulation.circuitComponents()[globals.selected].x}}"
 			       (input)="change_x($event)">
 		</div>
 
 		<div class="input-group">
 			<label class="input-group-text" for="posY">y</label>
-			<input type="number" class="form-control" placeholder="coordinate" aria-label="Username" id="posY"
+			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posY"
 			       value="{{globals.simulation.circuitComponents()[globals.selected].y}}"
 			       (input)="change_y($event)">
 		</div>
 
 		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
+
+		@if (selectedBuzzer(); as buzzer) {
+			<div class="input-group">
+				<label class="input-group-text" for="frequency">Hz</label>
+				<input type="number" class="form-control" placeholder="frequency" aria-label="-"
+				       id="frequency" (input)="buzzer_setFrequency($event)"
+				       value="{{buzzer.frequency}}">
+			</div>
+
+			<div class="flex gap-2">
+				Volume:
+				<input type="range" id="volume" min="0" max="1" step="0.01" style="width: stretch;"
+				       value="{{buzzer.volume}}" (input)="buzzer_setVolume($event)" aria-label="Volume slider">
+			</div>
+
+			<div class="input-group" style="align-items: center; gap: 6px;">
+				<div class="input-group">
+					<label class="input-group-text" for="volume">%</label>
+					<input type="number" class="form-control" id="volumeNumber" min="0" max="1" step="0.01"
+					       value="{{buzzer.volume}}" (input)="buzzer_setVolume($event)" aria-label="Volume value">
+				</div>
+			</div>
+		}
 	}
 </div>

@@ -1,4 +1,4 @@
-<div class="panelBox" (click)="this.globals.settingsPanel_open.set(false)"
+<div class="panelBox" (click)="this.globals.settingsPanel_open.set(false); globals.init();"
      [style.display]="this.globals.settingsPanel_open() ? 'flex' : 'none'">
 	<div class="panel p-10" style="justify-content: start !important;" (click)="$event.stopPropagation()">
 

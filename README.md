@@ -14,9 +14,13 @@
 <div align="center">
 	<img alt="Angular" src="https://img.shields.io/badge/Angular-v20%2B-DD0031?logo=angular&logoColor=white" />
 	<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white" />
- 	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> (+backend)</div>
-	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />
-	<img alt="Railway" src="https://img.shields.io/badge/Deploy-Railway-000?logo=railway&logoColor=white" />
+ 	<img alt="GitHub deployments" src="https://img.shields.io/github/deployments/AdamDuda1/circuity/Production?logo=vercel&label=frontend">
+	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> (+backend)</div>
+	
+[//]: # (	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />)
+
+[//]: # (	<img alt="Railway" src="https://img.shields.io/badge/Deploy-Railway-000?logo=railway&logoColor=white" />)
+
 </div>
 
 A little project I'm working on... I'm too lazy to write the readme at the moment, so just try it out (https://circuity.vercel.app or https://circuity.deltos.space for production) :) Readme coming soon...
@@ -30,11 +34,14 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
+- [ ] Add a buzzer component (with pitch and custom audio)
 
 
   **OTHER:**
 
-- [ ] Add tutorials (general + for each component)
+- [ ] Components right after spawn (by dragging or dropping) have huge decimal points (arent rounded up)
+- [ ] Make the components actually snap TO THE GRID
+- [ ] Add tutorials (~~general~~ + for each component)
 - [ ] Do we need canvas.focus every tick??/?
 - [ ] Add a gradient color when simulating on wires (HI or LO): <== keep??
 - [ ] Add custom context menu
