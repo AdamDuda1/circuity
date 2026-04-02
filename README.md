@@ -15,8 +15,8 @@
 	<img alt="Angular" src="https://img.shields.io/badge/Angular-v20%2B-DD0031?logo=angular&logoColor=white" />
 	<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white" />
  	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> (+backend)</div>
-	<a href="https://circuity.vercel.app" title="Vercel deployment (open)"><img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" /></a>
-	<a href="https://railway.app/" title="Railway dashboard (open)"><img alt="Railway" src="https://img.shields.io/badge/Deploy-Railway-000?logo=railway&logoColor=white" /></a>
+	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />
+	<img alt="Railway" src="https://img.shields.io/badge/Deploy-Railway-000?logo=railway&logoColor=white" />
 </div>
 
 A little project I'm working on... I'm too lazy to write the readme at the moment, so just try it out (https://circuity.vercel.app or https://circuity.deltos.space for production) :) Readme coming soon...
@@ -51,62 +51,3 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 Also here is the command to generate a new component in Angular on windows if you have the env variables broken that I can't remember:
 
 `npx --package @angular/cli ng g c palette`
-
----
-
-## Features at a Glance
-
-- Interactive circuit design canvas
-- Mobile + desktop support
-- Reusable component palette
-- Simulation workflow for logic behavior
-- PWA-friendly setup (manifest + service worker config)
-
-## Project Tech
-
-- `Angular` front-end app
-- `TypeScript` codebase
-- Static assets in `public/`
-- App code in `src/app/`
-
-## Project Structure Snapshot
-
-```text
-src/
-  app/
-    canvas/
-    palette/
-    simulation-controls/
-    tutorial/
-public/
-  icons/
-  tutorial/
-```
-
-## Getting Started
-
-```bash
-npm install
-npm start
-```
-
-Then open `http://localhost:4200`.
-
-## Component Generator Note
-
-Windows fallback command from above, repeated here for convenience:
-
-```bash
-npx --package @angular/cli ng g c palette
-```
-
-## Screenshots / Tutorial GIFs
-
-You already have tutorial media under `public/tutorial/`:
-
-- `public/tutorial/1.gif`
-- `public/tutorial/2.gif`
-- `public/tutorial/3.gif`
-
-You can embed them later as inline previews when you are ready.
-

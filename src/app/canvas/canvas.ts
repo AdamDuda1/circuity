@@ -213,6 +213,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (this.globals.isDragging()) {
 			const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
+			selectedComponent.updatePos(0, 0, this.isSnapEnabled());
 			selectedComponent.x = Math.round(selectedComponent.x * 100) / 100;
 			selectedComponent.y = Math.round(selectedComponent.y * 100) / 100;
 			this.globals.isDragging.set(false);
@@ -270,15 +271,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (this.globals.isPanning() && !this.isConnecting()) {
 			const last = this.lastPointer();
-			if (event.clientX !== last.x || event.clientY !== last.y) {
-				this.moved_amt++;
-			}
+			if (event.clientX !== last.x || event.clientY !== last.y) this.moved_amt++;
 			const z = view.z;
 
 			if (this.globals.selected != -1) {
 				if (!this.globals.isDragging()) this.globals.isDragging.set(true);
-				components[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z);
-				//console.log(this.globals.simulation.circuitComponents());
+
+				components[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z, this.isSnapEnabled());
 			} else {
 				this.globals.view.update((v) => ({
 					...v,
@@ -447,5 +446,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private clamp(value: number, min: number, max: number) { // c++ :)
 		return Math.min(max, Math.max(min, value));
+	}
+
+	private isSnapEnabled(): boolean {
+		return localStorage.getItem('snap') === 'true';
 	}
 }

@@ -15,6 +15,7 @@ import {
 	disable as disableDarkMode,
 	//auto as followSystemColorScheme TODO??
 } from 'darkreader';
+// import * as bootstrap from 'bootstrap';
 
 type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
 

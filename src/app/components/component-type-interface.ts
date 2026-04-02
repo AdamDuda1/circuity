@@ -2,7 +2,11 @@ import { Globals } from '../globals';
 import { drawWire } from './wire';
 
 export abstract class ElectricalComponent {
-	protected constructor(public globals: Globals) {}
+	protected constructor(public globals: Globals) {
+	}
+
+	private snapRawX: number | null = null;
+	private snapRawY: number | null = null;
 
 	abstract id: number;
 	abstract name: string;
@@ -39,9 +43,11 @@ export abstract class ElectricalComponent {
 
 	hoveredOverPin: { index: number, type: 'in' | 'out' } = {index: -1, type: 'in'};
 
-	clickInSimulation() {}
+	clickInSimulation() {
+	}
 
-	condition() {}
+	condition() {
+	}
 
 	setPinDefaults() { // TODO!!!
 		const d = {component: -1, pin: -1};
@@ -76,9 +82,39 @@ export abstract class ElectricalComponent {
 		this.condition();
 	}
 
-	updatePos(x: number, y: number) {
+	/*updatePos(x: number, y: number, snap?: boolean) {
 		this.x += x;
 		this.y += y;
+		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
+	}*/
+	updatePos(x: number, y: number, snap?: boolean) {
+		if (snap) {
+			if (this.snapRawX === null || this.snapRawY === null) {
+				this.snapRawX = this.x;
+				this.snapRawY = this.y;
+			}
+
+			this.snapRawX += x;
+			this.snapRawY += y;
+
+			// const snapStep = Math.pow(5, Math.floor(Math.log10(500 / this.globals.view().z))) / this.globals.view().z;
+			const snapStep = 10;
+
+			const centerX = this.snapRawX + this.w / 2;
+			const centerY = this.snapRawY + this.h / 2;
+
+			const snappedCenterX = Math.round(centerX / snapStep) * snapStep;
+			const snappedCenterY = Math.round(centerY / snapStep) * snapStep;
+
+			this.x = snappedCenterX - this.w / 2;
+			this.y = snappedCenterY - this.h / 2;
+		} else {
+			this.x += x;
+			this.y += y;
+			this.snapRawX = this.x;
+			this.snapRawY = this.y;
+		}
+
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
 	}
 
@@ -91,7 +127,13 @@ export abstract class ElectricalComponent {
 		return this.globals.selected === this.id && this.globals.selected != -1;
 	}
 
-	render(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any) {
+	render(ctx: CanvasRenderingContext2D, view?: {
+		x: number,
+		y: number,
+		z: number,
+		w?: number,
+		h?: number
+	}, properties?: any) {
 		if (!ctx || this.deleted) return;
 		if (!view) {
 			const defaultView = this.globals.view();
@@ -128,7 +170,13 @@ export abstract class ElectricalComponent {
 		this.drawLabel(ctx);
 	}
 
-	abstract drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }, properties?: any): void;
+	abstract drawShape(ctx: CanvasRenderingContext2D, view?: {
+		x: number,
+		y: number,
+		z: number,
+		w?: number,
+		h?: number
+	}, properties?: any): void;
 
 	drawPinDots(ctx: CanvasRenderingContext2D) {
 		const view = this.globals.view();
@@ -207,7 +255,13 @@ export abstract class ElectricalComponent {
 		ctx.restore();
 	}
 
-	drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
+	drawSelectionIndicator(ctx: CanvasRenderingContext2D, view?: {
+		x: number,
+		y: number,
+		z: number,
+		w?: number,
+		h?: number
+	}) {
 		if (!this.isSelected()) return;
 
 		const viewW = view?.w ?? this.globals.view().w;
