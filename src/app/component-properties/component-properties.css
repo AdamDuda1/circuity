@@ -1,7 +1,8 @@
 .container {
 	background: white;
-	box-shadow: 0 0 12px 0 #00000073,
-	inset 0 0 30px 13px #0000000d;
+	/*box-shadow: 0 0 12px 0 #00000073,
+	inset 0 0 30px 13px #0000000d;*/
+	box-shadow: 0 0 12px 0 #00000073, inset 0 0 7px 4px #0000000d;
 	margin: 4px 2px;
 	border: none;
 	padding: 10px 10px; /* gora, boki */
@@ -22,18 +23,6 @@ input#componentName {
 
 input#componentName::selection {
 	border: 1px solid #ccc;
-}
-
-#displayLabel {
-	width: 10px;
-}
-
-label[for = "displayLabel"] {
-	font-size: 14px;
-	position: relative;
-	top: -1px;
-	left: 2px;
-	color: gray;
 }
 
 #color {

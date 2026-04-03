@@ -5,12 +5,11 @@ export function drawWire(ctx: CanvasRenderingContext2D, view: { x: number, y: nu
 	const screenY2 = (-(p2.y) + view.y) * view.z + view.h / 2;
 
 	ctx.save();
-	active = false;
 	if (active) {
 		const gradient = ctx.createLinearGradient(screenX1, screenY1, screenX2, screenY2);
 		gradient.addColorStop(0, 'black');
-		gradient.addColorStop(.2, high ? 'red' : 'blue');
-		gradient.addColorStop(.8, high ? 'red' : 'blue');
+		gradient.addColorStop(.3, high ? 'red' : '#083f9e');
+		gradient.addColorStop(.7, high ? 'red' : '#083f9e');
 		gradient.addColorStop(1, 'black');
 		ctx.strokeStyle = gradient;
 	} else ctx.strokeStyle = 'black';

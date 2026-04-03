@@ -12,11 +12,20 @@
 			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
 			   (input)="change_name($event)" style="text-align: center">
 
-		<div>
-			<input type="checkbox" name="displayLabel" id="displayLabel"
-				   [checked]="globals.simulation.circuitComponents()[globals.selected].showLabel"
-				   (input)="change_showLabel($event)">
-			<label for="displayLabel" class="select-none">display label</label>
+<!--		<div>-->
+<!--			<input type="checkbox" name="displayLabel" id="displayLabel"-->
+<!--				   [checked]="globals.simulation.circuitComponents()[globals.selected].showLabel"-->
+<!--				   (input)="change_showLabel($event)">-->
+<!--			<label for="displayLabel" class="select-none">display label</label>-->
+<!--		</div>-->
+
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" id="displayLabel"
+			       [checked]="globals.simulation.circuitComponents()[globals.selected].showLabel"
+			       (input)="change_showLabel($event)">
+			<label class="form-check-label" for="displayLabel">
+				display label
+			</label>
 		</div>
 
 		<div class="inline-flex">
@@ -45,6 +54,12 @@
 		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
 
 		@if (selectedBuzzer(); as buzzer) {
+			<div class="flex gap-2">
+				Frequency:
+				<input type="range" id="volume" min="10" max="2000" step="5" style="width: stretch;"
+				       value="{{buzzer.frequency}}" (input)="buzzer_setFrequency($event)" aria-label="Frequency slider">
+			</div>
+
 			<div class="input-group">
 				<label class="input-group-text" for="frequency">Hz</label>
 				<input type="number" class="form-control" placeholder="frequency" aria-label="-"

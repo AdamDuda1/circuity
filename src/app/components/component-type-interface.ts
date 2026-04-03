@@ -155,7 +155,7 @@ export abstract class ElectricalComponent {
 				drawWire(ctx, this.globals.view(),
 					{x: this.x + fromPin.x, y: this.y + fromPin.y},
 					{x: targetComponent.x + toPin.x, y: targetComponent.y + toPin.y},
-					this.globals.simulation.running(),
+					this.globals.simulation.running() && this.globals.indicationOnWires,
 					this.outStates[outIndex]
 				);
 			}
