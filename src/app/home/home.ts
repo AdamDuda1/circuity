@@ -13,7 +13,7 @@ import { Settings } from '../simulation-controls/settings/settings';
 		<div class="flex h-full w-full">
 			<div id="tr" class="absolute top-2.5 right-2.5 flex flex-row">
 				<app-simulation-controls/>
-				<app-component-properties class="absolute top-[75px] right-[5px]" />
+				<app-component-properties class="absolute top-18.75 right-1.25" />
 			</div>
 			<app-palette/>
 			<app-canvas/>
@@ -25,13 +25,11 @@ import { Settings } from '../simulation-controls/settings/settings';
 		<app-tutorial/>
 	`,
 	styles: [`
-
 		app-palette {
-			width: 200px;
+			width: 250px;
 			box-shadow: -1px 0 24px 0 black;
 			border-radius: 0 15px 15px 0;
 		}
-
 	`],
 	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings],
 	changeDetection: ChangeDetectionStrategy.OnPush,

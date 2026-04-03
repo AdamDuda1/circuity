@@ -15,7 +15,7 @@
 	<img alt="Angular" src="https://img.shields.io/badge/Angular-v20%2B-DD0031?logo=angular&logoColor=white" />
 	<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white" />
  	<img alt="GitHub deployments" src="https://img.shields.io/github/deployments/AdamDuda1/circuity/Production?logo=vercel&label=frontend">
-	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> <img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=%20backend" /></div>
+	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> <img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=plus backend" /></div>
 	
 [//]: # (	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />)
 
