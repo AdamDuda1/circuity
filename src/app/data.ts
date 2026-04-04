@@ -10,28 +10,36 @@ interface SavedState {
 export class Data {
 	constructor(public globals: Globals) {}
 
-	save() {
-		const state: SavedState = {
+	loadLast(): boolean {
+		const json = localStorage.getItem('save');
+		if (!json) {
+			_Toast.error("couldn't load last design :(");
+			return false;
+		}
+		this.loadJSON(JSON.parse(json));
+		_Toast.success("Loaded last design!");
+		return true;
+	}
+
+	saveLast() {
+		localStorage.setItem('save', JSON.stringify(this.getCurrentDesignJSON()));
+		_Toast.success("Saved last!");
+	}
+
+	getCurrentDesignJSON() {
+		return {
 			components: this.globals.simulation.circuitComponents().map(c => c.getComponentJSON()),
 			view: {
 				x: this.globals.view().x,
 				y: this.globals.view().y,
 				z: this.globals.view().z
 			}
-		};
-		localStorage.setItem('simulationData', JSON.stringify(state));
-
-		_Toast.success("Saved!");
+		} as SavedState;
 	}
 
-	// TODO: getJSON(): record... ,  loadJSON(record...)
-
-	load(): boolean {
-		const json = localStorage.getItem('simulationData');
-		if (!json) return false;
-
+	loadJSON(json: SavedState) {
 		try {
-			const state: SavedState = JSON.parse(json);
+			const state: SavedState = json;
 
 			this.globals.simulation.circuitComponents.set([]);
 

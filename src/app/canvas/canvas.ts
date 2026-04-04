@@ -54,7 +54,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
 		this.resizeObserver.observe(canvas.parentElement!);
 
-		if (!this.globals.data.load()) {
+		if (!this.globals.data.loadLast()) {
 			this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
 			this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
@@ -346,10 +346,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		}
 
 		if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-			console.log("asdada");
 			event.preventDefault();
-			console.log("asdad12a");
-			this.globals.data.save();
+			this.globals.data.saveLast();
 		}
 	}
 
