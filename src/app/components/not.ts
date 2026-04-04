@@ -10,7 +10,7 @@ export class NOT extends ElectricalComponent {
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.input;
+		this.category = this.globals.constants.categoryName.basicLogicGates;
 	}
 
 	id;

@@ -29,7 +29,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 ## TODO:
 
-<sub></sub>
+<sub>done items are removed</sub>
 
 **IMPORTANT (in order):**
 
@@ -40,6 +40,8 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] hackatime backend badge doesnt work on github
+- [ ] components: flip-flops, multiplexers, decoders, signal emitters/receivers
 - [ ] Do something with the {-1, -1}, {-1, -1}, {.. pin initialization!
 - [ ] Make the buzzer look better
 - [ ] Add revert button (to default setting) in component properties like in davinci resolve

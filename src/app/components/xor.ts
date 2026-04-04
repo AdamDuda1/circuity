@@ -10,7 +10,7 @@ export class XOR extends ElectricalComponent {
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.input;
+		this.category = this.globals.constants.categoryName.derivedLogicGates;
 	}
 
 	id;

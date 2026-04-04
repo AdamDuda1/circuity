@@ -24,6 +24,8 @@ export class Data {
 		_Toast.success("Saved!");
 	}
 
+	// TODO: getJSON(): record... ,  loadJSON(record...)
+
 	load(): boolean {
 		const json = localStorage.getItem('simulationData');
 		if (!json) return false;
