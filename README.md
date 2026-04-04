@@ -40,6 +40,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] Do something with the {-1, -1}, {-1, -1}, {.. pin initialization!
 - [ ] Make the buzzer look better
 - [ ] Add revert button (to default setting) in component properties like in davinci resolve
 - [ ] Components right after spawn (by dragging or dropping) have huge decimal points (arent rounded up)

@@ -1,9 +1,24 @@
 import { Globals } from '../globals';
 import { drawWire } from './wire';
-import { inject } from '@angular/core';
+
+export interface SerializedPinRef {
+	component: number;
+	pin: number;
+}
+
+export interface SerializedElectricalComponent {
+	name: string;
+	color: string;
+	x: number;
+	y: number;
+	showLabel: boolean;
+	inFrom: SerializedPinRef[];
+	outTo: SerializedPinRef[][];
+	custom?: Record<string, unknown>;
+}
 
 export abstract class ElectricalComponent {
-	globals = inject(Globals);
+	protected constructor(protected readonly globals: Globals) {}
 	// constructor(data: any) {
 	//
 	// }
@@ -46,11 +61,52 @@ export abstract class ElectricalComponent {
 
 	hoveredOverPin: { index: number, type: 'in' | 'out' } = {index: -1, type: 'in'};
 
-	clickInSimulation() {
+	spawnComponentFromJSON(data: SerializedElectricalComponent) {
+		this.x = data.x;
+		this.y = data.y;
+		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
+		this.showLabel = data.showLabel;
+
+		if (this.canSetColor()) {
+			this.color = data.color;
+		}
+
+		this.inFrom = data.inFrom.map((item) => ({...item}));
+		this.outTo = data.outTo.map((arr) => arr.map((item) => ({...item})));
+		this.applyCustomPropsFromJSON(data.custom);
 	}
 
-	condition() {
+	getComponentJSON(): SerializedElectricalComponent {
+		const custom = this.getCustomPropsJSON();
+
+		return {
+			name: this.name,
+			color: this.color,
+			x: this.x,
+			y: this.y,
+			showLabel: this.showLabel,
+			inFrom: this.inFrom.map((item) => ({...item})),
+			outTo: this.outTo.map((arr) => arr.map((item) => ({...item}))),
+			...(custom ? {custom} : {})
+		};
 	}
+
+	protected getCustomPropsJSON(): Record<string, unknown> | undefined {
+		return undefined;
+	}
+
+	protected applyCustomPropsFromJSON(_custom?: Record<string, unknown>) {}
+
+	private canSetColor(): boolean {
+		const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), 'color');
+		if (!descriptor) return true;
+		if (descriptor.set) return true;
+		return !descriptor.get;
+	}
+
+	clickInSimulation() {}
+
+	condition() {}
 
 	setPinDefaults() { // TODO!!!
 		const d = {component: -1, pin: -1};

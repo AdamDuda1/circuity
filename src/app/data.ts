@@ -1,18 +1,9 @@
 import { Globals } from './globals';
 import { _Toast } from './toasts';
-
-interface SavedComponent {
-	name: string;
-	color: string;
-	x: number;
-	y: number;
-	showLabel: boolean;
-	inFrom: { component: number; pin: number }[];
-	outTo: { component: number; pin: number }[][];
-}
+import { SerializedElectricalComponent } from './components/component-type-interface'; // type ( .. ????
 
 interface SavedState {
-	components: SavedComponent[];
+	components: SerializedElectricalComponent[];
 	view: { x: number; y: number; z: number };
 }
 
@@ -21,15 +12,7 @@ export class Data {
 
 	save() {
 		const state: SavedState = {
-			components: this.globals.simulation.circuitComponents().map(c => ({
-				name: c.name,
-				color: c.color,
-				x: c.x,
-				y: c.y,
-				showLabel: c.showLabel,
-				inFrom: c.inFrom,
-				outTo: c.outTo
-			})),
+			components: this.globals.simulation.circuitComponents().map(c => c.getComponentJSON()),
 			view: {
 				x: this.globals.view().x,
 				y: this.globals.view().y,
@@ -51,20 +34,15 @@ export class Data {
 			this.globals.simulation.circuitComponents.set([]);
 
 			for (const comp of state.components) {
-				this.globals.simulation.spawnComponent(comp.name, comp.x, comp.y);
-			}
+				const factory = this.globals.componentRegistry.get(comp.name);
+				if (!factory) {
+					console.error(`Unknown component type while loading: ${comp.name}`);
+					return false;
+				}
 
-			const components = this.globals.simulation.circuitComponents();
-			for (let i = 0; i < components.length; i++) {
-				const component = components[i];
-				const savedComp = state.components[i];
-
-				component.color = savedComp.color;
-				component.showLabel = savedComp.showLabel;
-
-				component.inFrom = savedComp.inFrom.map(item => ({...item}));
-
-				component.outTo = savedComp.outTo.map(arr => arr.map(item => ({...item})));
+				const component = factory(true, comp.x, comp.y);
+				component.spawnComponentFromJSON(comp);
+				this.globals.simulation.circuitComponents().push(component);
 			}
 
 			if (state.view) {

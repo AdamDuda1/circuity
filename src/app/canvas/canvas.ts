@@ -55,8 +55,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.resizeObserver.observe(canvas.parentElement!);
 
 		if (!this.globals.data.load()) {
-			this.globals.simulation.circuitComponents().push(new LED(true, 10, 0));
-			this.globals.simulation.circuitComponents().push(new Switch(true, -30, 0));
+			this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
+			this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
 			this.globals.view().z = 1;
 			setTimeout(() => this.targetZ.set(2), 50);

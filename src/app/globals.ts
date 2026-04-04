@@ -63,13 +63,13 @@ export class Globals {
 	public readonly blog_loaded = signal(false);
 
 	public readonly componentRegistry = new Map<string, ComponentFactory>([
-		['AND',     (id, x, y) => new AND(id, x, y)],
-		['OR',      (id, x, y) => new OR(id, x, y)],
-		['NOT',     (id, x, y) => new NOT(id, x, y)],
-		['Switch',  (id, x, y) => new Switch (id, x, y)],
-		['LED',     (id, x, y) => new LED(id, x, y)],
-		['Buzzer',  (id, x, y) => new Buzzer(id, x, y)],
-		['XOR',     (id, x, y) => new XOR(id, x, y)]
+		['AND',     (id, x, y) => new AND(this, id, x, y)],
+		['OR',      (id, x, y) => new OR(this, id, x, y)],
+		['NOT',     (id, x, y) => new NOT(this, id, x, y)],
+		['Switch',  (id, x, y) => new Switch(this, id, x, y)],
+		['LED',     (id, x, y) => new LED(this, id, x, y)],
+		['Buzzer',  (id, x, y) => new Buzzer(this, id, x, y)],
+		['XOR',     (id, x, y) => new XOR(this, id, x, y)]
 	]);
 
 	public readonly palette = [...this.componentRegistry.values()]

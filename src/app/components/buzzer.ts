@@ -2,8 +2,8 @@ import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
 export class Buzzer extends ElectricalComponent {
-	constructor(giveID: boolean, _x: number, _y: number) {
-		super();
+	constructor(globals: Globals, giveID: boolean, _x: number, _y: number) {
+		super(globals);
 		this.x = _x;
 		this.y = _y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
@@ -61,9 +61,20 @@ export class Buzzer extends ElectricalComponent {
 	public setVolume(vol: number) {
 		this.volume = Math.max(0, Math.min(1, vol));
 		if (this.gainNode && this.audioCtx) {
-			const isOn = !!this.inStates[0] && this.globals.simulation.running();
+			const isOn = (this.inStates[0] ?? false) && this.globals.simulation.running();
 			this.gainNode.gain.setTargetAtTime(isOn ? this.volume : 0, this.audioCtx.currentTime, 0.02);
 		}
+	}
+
+	protected override getCustomPropsJSON() {
+		return { frequency: this.frequency, volume: this.volume };
+	}
+
+	protected override applyCustomPropsFromJSON(custom?: Record<string, unknown>) {
+		if (!custom) return;
+		const frequency = custom['frequency'], volume = custom['volume'];
+		if (typeof frequency === 'number' && Number.isFinite(frequency) && frequency > 0) this.frequency = frequency;
+		if (typeof volume === 'number' && Number.isFinite(volume)) this.setVolume(volume);
 	}
 
 	drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
