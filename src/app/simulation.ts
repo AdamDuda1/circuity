@@ -20,7 +20,7 @@ export class Simulation {
 		const factory = this.globals.componentRegistry.get(name);
 		if (!factory) return;
 
-		const component = factory(this.globals, true, x, y);
+		const component = factory(true, x, y);
 
 		if (thoseWereCenterCoordinates) {
 			component.updatePos(-component.w / 2, -component.h / 2);

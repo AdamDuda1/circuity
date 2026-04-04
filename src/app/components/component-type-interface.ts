@@ -1,9 +1,12 @@
 import { Globals } from '../globals';
 import { drawWire } from './wire';
+import { inject } from '@angular/core';
 
 export abstract class ElectricalComponent {
-	protected constructor(public globals: Globals) {
-	}
+	globals = inject(Globals);
+	// constructor(data: any) {
+	//
+	// }
 
 	private snapRawX: number | null = null;
 	private snapRawY: number | null = null;

@@ -29,16 +29,18 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
 ## TODO:
 
+<sub></sub>
+
 **IMPORTANT (in order):**
 
 - [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
-- [ ] Add a buzzer component (with pitch and custom audio)
 
 
   **OTHER:**
 
+- [ ] Make the buzzer look better
 - [ ] Add revert button (to default setting) in component properties like in davinci resolve
 - [ ] Components right after spawn (by dragging or dropping) have huge decimal points (arent rounded up)
 - [ ] Make the components actually snap TO THE GRID

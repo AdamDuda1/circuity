@@ -2,15 +2,15 @@ import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
 export class AND extends ElectricalComponent {
-	constructor(public override globals: Globals, giveID: boolean, _x: number, _y: number) {
-		super(globals);
+	constructor(giveID: boolean, _x: number, _y: number) {
+		super();
 		this.x = _x;
 		this.y = _y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.basicLogicGates;
+		this.category = this.globals.constants.categoryName.input;
 	}
 
 	id;

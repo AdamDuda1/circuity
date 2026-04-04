@@ -10,15 +10,11 @@ import { LED } from './components/led';
 import { XOR } from './components/xor';
 import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
-import {
-	enable as enableDarkMode,
-	disable as disableDarkMode,
-	//auto as followSystemColorScheme TODO??
-} from 'darkreader';
+import { disable as disableDarkMode, enable as enableDarkMode } from 'darkreader';
 import { Buzzer } from './components/buzzer';
 // import * as bootstrap from 'bootstrap';
 
-type ComponentFactory = (globals: Globals, giveID: boolean, x: number, y: number) => ElectricalComponent;
+type ComponentFactory = (giveID: boolean, x: number, y: number) => ElectricalComponent;
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +23,18 @@ export class Globals {
 	// public readonly database: string = 'http://localhost:2137/v1/'; // <- for local (clone /circuity-backend)
 	public readonly database: string = 'https://circuity-backend-production.up.railway.app/v1/';
 
-	public readonly view = signal({x: 0, y: 0, z: 1, w: 0, h: 0, dpr: 1, maxWorldX: 0, minWorldX: 0, maxWorldY: 0, minWorldY: 0});
+	public readonly view = signal({
+		x: 0,
+		y: 0,
+		z: 1,
+		w: 0,
+		h: 0,
+		dpr: 1,
+		maxWorldX: 0,
+		minWorldX: 0,
+		maxWorldY: 0,
+		minWorldY: 0
+	});
 	public readonly isPanning = signal(false);
 	public readonly isDragging = signal(false);
 	public readonly cursor = signal({x: 0, y: 0});
@@ -56,23 +63,25 @@ export class Globals {
 	public readonly blog_loaded = signal(false);
 
 	public readonly componentRegistry = new Map<string, ComponentFactory>([
-		['AND', (g, id, x, y) => new AND(g, id, x, y)],
-		['OR', (g, id, x, y) => new OR(g, id, x, y)],
-		['NOT', (g, id, x, y) => new NOT(g, id, x, y)],
-		['Switch', (g, id, x, y) => new Switch(g, id, x, y)],
-		['LED', (g, id, x, y) => new LED(g, id, x, y)],
-		['Buzzer', (g, id, x, y) => new Buzzer(g, id, x, y)],
-		['XOR', (g, id, x, y) => new XOR(g, id, x, y)]
+		['AND',     (id, x, y) => new AND(id, x, y)],
+		['OR',      (id, x, y) => new OR(id, x, y)],
+		['NOT',     (id, x, y) => new NOT(id, x, y)],
+		['Switch',  (id, x, y) => new Switch (id, x, y)],
+		['LED',     (id, x, y) => new LED(id, x, y)],
+		['Buzzer',  (id, x, y) => new Buzzer(id, x, y)],
+		['XOR',     (id, x, y) => new XOR(id, x, y)]
 	]);
 
 	public readonly palette = [...this.componentRegistry.values()]
-	.map(factory => factory(this, false, -1, -1));
+		.map(factory => factory(false, -1, -1));
 
 	public debug = false;
 
 	private nextID = 0;
 
-	public getNextID() { return this.nextID++; }
+	public getNextID() {
+		return this.nextID++;
+	}
 
 	fetchSettings() {
 		this.darkMode = localStorage.getItem('darkMode') === 'true';
@@ -86,7 +95,7 @@ export class Globals {
 			enableDarkMode({
 				brightness: 90,
 				contrast: 100,
-				sepia: 20,
+				sepia: 20
 			});
 		} else disableDarkMode();
 

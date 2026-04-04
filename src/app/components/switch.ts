@@ -2,8 +2,8 @@ import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
 export class Switch extends ElectricalComponent {
-	constructor(public override globals: Globals, giveID: boolean, _x: number, _y: number) {
-		super(globals);
+	constructor(giveID: boolean, _x: number, _y: number) {
+		super();
 		this.x = _x;
 		this.y = _y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
