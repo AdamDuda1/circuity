@@ -27,11 +27,21 @@ export class Data {
 	}
 
 	getCurrentDesignJSON() {
+		let minX = 1e7, maxX = -1e7, minY = 1e7, maxY = -1e7;
+		this.globals.simulation.circuitComponents().forEach((element) => {
+			minX = Math.min(minX, element.x);
+			maxX = Math.max(maxX, element.x);
+			minY = Math.min(minY, element.y);
+			maxY = Math.max(maxY, element.y);
+		});
+
+		console.log(minX, maxX, minY, maxY);
+
 		return {
 			components: this.globals.simulation.circuitComponents().map(c => c.getComponentJSON()),
 			view: {
-				x: this.globals.view().x,
-				y: this.globals.view().y,
+				x: -(minX + maxX) / 2,
+				y: (minY + maxY) / 2,
 				z: this.globals.view().z
 			}
 		} as SavedState;

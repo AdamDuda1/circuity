@@ -40,6 +40,11 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] component list window?
+- [ ] fix savedDesign.view -- (??) calculate the zoom so all components are in the view, (??) make it avg of (x, y) of the components, not the center if one component is far away
+- [ ] unselect when confirmation canceled <-- newDesign() in save panel
+- [ ] implements isSaved to not asked user is design is saved
+- [ ] the toast for blog fetching is still glitched
 - [ ] hackatime backend badge doesnt work on github
 - [ ] components: flip-flops, multiplexers, decoders, signal emitters/receivers
 - [ ] Do something with the {-1, -1}, {-1, -1}, {.. pin initialization!
@@ -48,10 +53,9 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Components right after spawn (by dragging or dropping) have huge decimal points (arent rounded up)
 - [ ] Make the components actually snap TO THE GRID
 - [ ] Add tutorials (~~general~~ + for each component)
-- [ ] Do we need canvas.focus every tick??/?
 - [ ] Add a gradient color when simulating on wires (HI or LO): <== keep??
 - [ ] Add custom context menu
-- [ ] dark mode
+- [ ] dark mode custom css
 - [ ] (??) Add separate methods for mouseOverComponent and Pin in general (not only for each component)
 - [ ] Pick color for the selection indicator
 - [ ] Add alignment guides and step snapping setting

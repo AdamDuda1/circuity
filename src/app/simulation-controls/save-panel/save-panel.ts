@@ -10,22 +10,28 @@ import { Globals } from '../../globals';
 export class SavePanel {
 	constructor(public globals: Globals) {}
 
-	selectedMethod = signal<string>('local-copy');
-
-	onMethodChange(event: Event) {
-		const target = event.target as HTMLSelectElement;
-		this.selectedMethod.set(target.value);
-	}
+	// selectedMethod = signal<string>('local-copy');
+	//
+	// onMethodChange(event: Event) {
+	// 	const target = event.target as HTMLSelectElement;
+	// 	this.selectedMethod.set(target.value);
+	// }
 
 	getButtonText() {
 		return this.globals.constants.translations.simulationControls.savePanel.doneButtonText[0];
 	}
 
-	getButtonIcon() {
-		if (this.selectedMethod() === 'local-copy') return 'content_copy';
-		else if (this.selectedMethod() === 'cloud-public') return 'cloud_upload';
-		else return 'save';
+	newDesign() { // TODO unselect when confirmation canceled!!
+		if (confirm('This will clear your current design. If it wasn\'t saved it will be lost.')) {
+
+		}
 	}
+
+	// getButtonIcon() {
+	// 	if (this.selectedMethod() === 'local-copy') return 'content_copy';
+	// 	else if (this.selectedMethod() === 'cloud-public') return 'cloud_upload';
+	// 	else return 'save';
+	// }
 
 	execute() {
 
