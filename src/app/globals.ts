@@ -20,8 +20,8 @@ type ComponentFactory = (giveID: boolean, x: number, y: number) => ElectricalCom
 	providedIn: 'root'
 })
 export class Globals {
-	// public readonly database: string = 'http://localhost:2137/v1/'; // <- for local (clone /circuity-backend)
-	public readonly database: string = 'https://circuity-backend-production.up.railway.app/v1/';
+	public readonly database: string = 'http://localhost:2137/v1/'; // <- for local (clone /circuity-backend)
+	// public readonly database: string = 'https://circuity-backend-production.up.railway.app/v1/';
 
 	public readonly view = signal({
 		x: 0,

@@ -14,6 +14,13 @@ interface BlogPost {
 	[key: string]: unknown;
 }
 
+interface BlogComment {
+	id: number;
+	author: string;
+	text: string;
+	created_at: string;
+}
+
 @Component({
 	selector: 'app-blog',
 	templateUrl: './blog.html',
@@ -28,6 +35,9 @@ export class Blog implements OnInit {
 	posts = signal<BlogPost[]>([]);
 	isLoading = signal(true);
 	error = signal<string | null>(null);
+	comments = signal<Record<number, BlogComment[]>>({});
+
+	private nextCommentId = 1;
 
 	ngOnInit() {
 		let q = _Toast.loading('Fetching blog posts...');
@@ -55,4 +65,31 @@ export class Blog implements OnInit {
 			this.isLoading.set(false);
 		}
 	}
+
+	getComments(postId: number): BlogComment[] {
+		return this.comments()[postId] ?? [];
+	}
+
+	addComment(postId: number, author: string, text: string): void {
+		const trimmed = String(text ?? '').trim();
+		if (!trimmed) return;
+
+		const a = (author ?? '').trim() || 'Anonymous';
+		const comment: BlogComment = {
+			id: this.nextCommentId++,
+			author: a,
+			text: trimmed,
+			created_at: new Date().toISOString()
+		};
+
+		this.comments.update(map => {
+			const existing = map[postId] ? [...map[postId]] : [];
+			existing.unshift(comment);
+			return { ...map, [postId]: existing };
+		});
+	}
+
+	protected readonly _Toast = _Toast;
+	protected readonly navigator = navigator;
+	protected readonly location = location;
 }
