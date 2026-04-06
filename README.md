@@ -40,6 +40,7 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 
   **OTHER:**
 
+- [ ] add a keyboard shortcut to open the save panel and make esc close all popups
 - [ ] component list window?
 - [ ] fix savedDesign.view -- (??) calculate the zoom so all components are in the view, (??) make it avg of (x, y) of the components, not the center if one component is far away
 - [ ] unselect when confirmation canceled <-- newDesign() in save panel

@@ -1,85 +1,85 @@
 <div class="panelBox" (click)="this.globals.savePanel_open.set(false)"
 	 [style.display]="this.globals.savePanel_open() ? 'flex' : 'none'">
 	<div class="panel" #panel (click)="$event.stopPropagation()">
+		<div class="panelContent">
+			<div class="btn-group ml-auto mr-auto" style="margin-left: auto; margin-right: auto" role="group">
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" #save checked>
+				<label class="btn btn-outline-dark" for="btnradio1">Save</label>
 
-		<div class="btn-group ml-auto mr-auto" style="margin-left: auto; margin-right: auto" role="group">
-			<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" #save checked>
-			<label class="btn btn-outline-dark" for="btnradio1">Save</label>
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio2" #load autocomplete="off">
+				<label class="btn btn-outline-dark" for="btnradio2">Load</label>
 
-			<input type="radio" class="btn-check" name="btnradio" id="btnradio2" #load autocomplete="off">
-			<label class="btn btn-outline-dark" for="btnradio2">Load</label>
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio3" (click)="newDesign()" autocomplete="off">
+				<label class="btn btn-outline-dark" for="btnradio3">New design</label>
+			</div>
 
-			<input type="radio" class="btn-check" name="btnradio" id="btnradio3" (click)="newDesign()" autocomplete="off">
-			<label class="btn btn-outline-dark" for="btnradio3">New design</label>
+			@if (save!.checked) {
+				<div class="top">
+					<label for="method"><b>Method</b></label>
+
+					<select class="form-select" name="method" #saveMethod>
+						<option value="localStorage">Save to localStorage</option>
+						<option value="JSON">Export JSON</option>
+						<option value="cloud-private">Save privately on cloud</option>
+						<option value="cloud-public">Share publicly to cloud</option>
+					</select>
+				</div>
+
+				<div>
+					<!--				@switch (selectedMethod()) {-->
+					<!--					@case ('local-copy') {-->
+
+					<!--					}-->
+					<!--					@case ('export') {-->
+
+					<!--					}-->
+					<!--					@case ('cloud-private') {-->
+
+					<!--					}-->
+					<!--					@case ('cloud-public') {-->
+					<div class="alert alert-danger flex p-2" role="alert">
+						<p>
+							<span class="material-symbols-outlined" style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
+							Your design will be uploaded to our server but you will be able to access it only with your secret key.
+						</p>
+					</div>
+					<!--					}-->
+					<!--				}-->
+				</div>
+			}
+			@else {
+				<div class="top">
+					<label for="method"><b>Method</b></label>
+
+					<select class="form-select" name="method" #loadMethod>
+						<option value="load-localStorage">Load from localStorage</option>
+						<option value="load-JSON">Load from JSON</option>
+						<option value="load-cloud">Load from cloud</option>
+					</select>
+				</div>
+
+				<div>
+					<!--				@switch (selectedMethod()) {-->
+					<!--					@case ('local') {-->
+
+					<!--					}-->
+					<!--					@case ('cloud') {-->
+
+					<!--					}-->
+					<!--				}-->
+				</div>
+			}
 		</div>
 
-		@if (save!.checked) {
-
-			<div class="top">
-				<label for="method"><b>Save:</b></label>
-
-				<select class="form-select" name="method" #saveMethod>
-					<option value="local-copy">Save a copy locally</option>
-					<option value="export">Export JSON</option>
-					<option value="cloud-private">Save privately on cloud</option>
-					<option value="cloud-public">Share publicly to cloud</option>
-				</select>
-			</div>
-
-			<div>
-<!--				@switch (selectedMethod()) {-->
-<!--					@case ('local-copy') {-->
-
-<!--					}-->
-<!--					@case ('export') {-->
-
-<!--					}-->
-<!--					@case ('cloud-private') {-->
-
-<!--					}-->
-<!--					@case ('cloud-public') {-->
-<!--						<div class="alert alert-danger" role="alert">-->
-<!--							<span class="material-symbols-outlined">warning</span>-->
-<!--							<p>-->
-<!--								Your design will be uploaded to our server but you will be able to access it only with your secret key.-->
-<!--							</p>-->
-<!--						</div>-->
-<!--					}-->
-<!--				}-->
-			</div>
-
-			<div class="buttonRow">
-				<button class="done-button" (click)="execute()">
-					{{ getButtonText() }}
-<!--					<span class="material-symbols-outlined">{{ getButtonIcon() }}</span>-->
-				</button>
-				<button class="cancel-button" (click)="this.globals.savePanel_open.set(false)">
-					{{ this.globals.constants.translations.common.cancel }}
-					<span class="material-symbols-outlined">cancel</span>
-				</button>
-			</div>
-		}
-		@else {
-
-		<div class="top">
-				<label for="method"><b>Load:</b></label>
-
-				<select name="method" #loadMethod>
-					<option value="local">Load from local</option>
-					<option value="cloud">Load from cloud</option>
-				</select>
-			</div>
-
-			<div>
-<!--				@switch (selectedMethod()) {-->
-<!--					@case ('local') {-->
-
-<!--					}-->
-<!--					@case ('cloud') {-->
-
-<!--					}-->
-<!--				}-->
-			</div>
-		}
+		<div class="buttonRow">
+			<button class="done-button" (click)="execute()">
+				{{ getButtonText() }}
+				<span class="material-symbols-outlined">save</span>
+			</button>
+			<button class="cancel-button" (click)="this.globals.savePanel_open.set(false)">
+				{{ this.globals.constants.translations.common.cancel }}
+				<span class="material-symbols-outlined">cancel</span>
+			</button>
+		</div>
 	</div>
 </div>

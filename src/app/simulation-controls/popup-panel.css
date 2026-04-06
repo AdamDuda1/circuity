@@ -24,6 +24,14 @@
 	justify-content: space-between;
 }
 
+.panelContent {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 7px;
+	width: 100%;
+}
+
 .panel h2 {
 	width: 100%;
 	text-align: center;

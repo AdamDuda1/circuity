@@ -27,12 +27,6 @@ export class SavePanel {
 		}
 	}
 
-	// getButtonIcon() {
-	// 	if (this.selectedMethod() === 'local-copy') return 'content_copy';
-	// 	else if (this.selectedMethod() === 'cloud-public') return 'cloud_upload';
-	// 	else return 'save';
-	// }
-
 	execute() {
 
 	}
