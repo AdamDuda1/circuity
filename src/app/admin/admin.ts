@@ -70,7 +70,7 @@ export class Admin implements OnInit {
 			this.submitSuccess.set(true);
 			this.blogForm.reset({title: '', text: '', media_type: 'none', media_link: '', created_at: ''});
 		} catch (error) {
-			this.submitError.set(error instanceof Error ? error.message : 'Nie udalo sie utworzyc posta.');
+			this.submitError.set(error instanceof Error ? error.message : 'Error with no message :(\nTry logging out and back in.');
 		} finally {
 			this.isSubmitting.set(false);
 		}

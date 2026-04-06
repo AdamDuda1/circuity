@@ -85,3 +85,19 @@
 	padding: 2rem;
 }
 
+.card-details {
+	gap: 5px;
+}
+
+.card-footer .material-symbols-outlined {
+	width: 26px;
+}
+
+.card-footer button {
+	position: relative;
+	top: 4px;
+	left: 4px;
+	cursor: pointer;
+}
+
+
