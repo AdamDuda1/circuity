@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="https://www.google.com/schemas/sitemap-image/1.1">
-    <url>
-        <loc>https://circuity.deltos.space/</loc>
-        <lastmod>2026-02-21</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-        <image:image>
-            <image:loc>https://circuity.deltos.space/icons/icon-512x512.png</image:loc>
-            <image:title>Circuity Logo</image:title>
-        </image:image>
-    </url>
+		xmlns:image="https://www.google.com/schemas/sitemap-image/1.1">
+
+	<!-- Home -->
+	<url>
+		<loc>https://circuity.deltos.space/</loc>
+		<lastmod>2026-04-06</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>1.00</priority>
+		<image:image>
+			<image:loc>https://circuity.deltos.space/icons/icon-512x512.png</image:loc>
+			<image:title>Circuity Logo</image:title>
+		</image:image>
+	</url>
+
+	<!-- Browse -->
+	<url>
+		<loc>https://circuity.deltos.space/browse</loc>
+		<lastmod>2026-04-06</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.80</priority>
+	</url>
+
+	<!-- Play -->
+	<url>
+		<loc>https://circuity.deltos.space/play</loc>
+		<lastmod>2026-04-06</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.80</priority>
+	</url>
+
+	<!-- Blog -->
+	<url>
+		<loc>https://circuity.deltos.space/blog</loc>
+		<lastmod>2026-04-06</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.70</priority>
+	</url>
+
+	<!-- Admin (single entry) -->
+	<url>
+		<loc>https://circuity.deltos.space/admin</loc>
+		<lastmod>2026-04-06</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.60</priority>
+	</url>
 </urlset>
 
