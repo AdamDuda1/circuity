@@ -9,7 +9,8 @@
 				<input type="radio" class="btn-check" name="btnradio" id="btnradio2" #load autocomplete="off">
 				<label class="btn btn-outline-dark" for="btnradio2">Load</label>
 
-				<input type="radio" class="btn-check" name="btnradio" id="btnradio3" (click)="newDesign()" autocomplete="off">
+				<input type="radio" class="btn-check" name="btnradio" id="btnradio3" (click)="newDesign()"
+					   autocomplete="off">
 				<label class="btn btn-outline-dark" for="btnradio3">New design</label>
 			</div>
 
@@ -39,15 +40,16 @@
 					<!--					@case ('cloud-public') {-->
 					<div class="alert alert-danger flex p-2" role="alert">
 						<p>
-							<span class="material-symbols-outlined" style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
-							Your design will be uploaded to our server but you will be able to access it only with your secret key.
+							<span class="material-symbols-outlined"
+								  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
+							Your design will be uploaded to our server but you will be able to access it only with your
+							secret key.
 						</p>
 					</div>
 					<!--					}-->
 					<!--				}-->
 				</div>
-			}
-			@else {
+			} @else {
 				<div class="top">
 					<label for="method"><b>Method</b></label>
 
@@ -73,8 +75,14 @@
 
 		<div class="buttonRow">
 			<button class="done-button" (click)="execute()">
-				{{ getButtonText() }}
-				<span class="material-symbols-outlined">save</span>
+<!--				{{ getButtonText() }}-->
+				@if (save!.checked) {
+					save
+					<span class="material-symbols-outlined">save</span>
+				} @else {
+					load
+					<span class="material-symbols-outlined">folder_open</span>
+				}
 			</button>
 			<button class="cancel-button" (click)="this.globals.savePanel_open.set(false)">
 				{{ this.globals.constants.translations.common.cancel }}

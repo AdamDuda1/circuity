@@ -10,12 +10,19 @@ import { Globals } from '../../globals';
 export class SavePanel {
 	constructor(public globals: Globals) {}
 
-	// selectedMethod = signal<string>('local-copy');
-	//
+	selectedMethod = signal<string>('local-copy');
+
 	// onMethodChange(event: Event) {
 	// 	const target = event.target as HTMLSelectElement;
 	// 	this.selectedMethod.set(target.value);
 	// }
+
+	execute() {
+		switch (this.selectedMethod()) {
+
+		}
+		this.exportJSON();
+	}
 
 	getButtonText() {
 		return this.globals.constants.translations.simulationControls.savePanel.doneButtonText[0];
@@ -27,7 +34,19 @@ export class SavePanel {
 		}
 	}
 
-	execute() {
+	exportJSON() {
+		const json = JSON.stringify(this.globals.data.getCurrentDesignJSON());
+		const blob = new Blob([json], {type: 'application/json'});
+
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'circuity-design' /*+ new Date("DD-MM-YYYY")*/ + '.json'; // TODO filename?
+		a.click();
+		URL.revokeObjectURL(url);
+	}
+
+	loadJSON() {
 
 	}
 }

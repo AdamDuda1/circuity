@@ -10,11 +10,19 @@ export const routes: Routes = [
 		loadComponent: () => import('./browse/browse').then(m => m.Browse),
 	},
 	{
+		path: 'browse/:project_id',
+		loadComponent: () => import('./browse/browse').then(m => m.Browse),
+	},
+	{
 		path: 'play',
 		loadComponent: () => import('./play/play').then(m => m.Play),
 	},
 	{
 		path: 'blog',
+		loadComponent: () => import('./blog/blog').then(m => m.Blog),
+	},
+	{
+		path: 'blog/:post_id',
 		loadComponent: () => import('./blog/blog').then(m => m.Blog),
 	},
 	{

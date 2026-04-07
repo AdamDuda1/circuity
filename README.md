@@ -15,7 +15,7 @@
 	<img alt="Angular" src="https://img.shields.io/badge/Angular-v20%2B-DD0031?logo=angular&logoColor=white" />
 	<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white" />
  	<img alt="GitHub deployments" src="https://img.shields.io/github/deployments/AdamDuda1/circuity/Production?logo=vercel&label=frontend">
-	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> <img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=plus backend" /></div>
+	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> <img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=plus_backend" /></div>
 	
 [//]: # (	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />)
 
@@ -36,10 +36,13 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Add ctrl+z
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
+- [ ] add multi-select (shift + click, ctrl + click, right click??)
 
 
   **OTHER:**
 
+- [ ] notifications for the admins when anything is posted by a user
+- [ ] ask the user if ctrl+S should save in save_last (localStorage) or open the save panel (or save in the last chosen location?????)
 - [ ] add a keyboard shortcut to open the save panel and make esc close all popups
 - [ ] component list window?
 - [ ] fix savedDesign.view -- (??) calculate the zoom so all components are in the view, (??) make it avg of (x, y) of the components, not the center if one component is far away
