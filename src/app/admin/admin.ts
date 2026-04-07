@@ -46,6 +46,12 @@ export class Admin implements OnInit {
 	readonly submitSuccess = signal(false);
 	readonly submitError = signal<string | null>(null);
 
+	protected readonly loadingPosts = signal(true);
+	protected readonly loadingAdmins = signal(true);
+	protected readonly blogPosts = signal([] as BlogPost[]);
+	protected readonly admins = signal([] as AdminUser[]);
+	protected readonly adminsError = signal<string | null>(null);
+
 	readonly blogForm = this.formBuilder.nonNullable.group({
 		title: ['', [Validators.required, Validators.minLength(3)]],
 		text: ['', [Validators.required, Validators.minLength(10)]],
@@ -83,12 +89,6 @@ export class Admin implements OnInit {
 			})
 		);
 	}
-
-	protected readonly loadingPosts = signal(true);
-	protected readonly loadingAdmins = signal(true);
-	protected readonly blogPosts = signal([] as BlogPost[]);
-	protected readonly admins = signal([] as AdminUser[]);
-	protected readonly adminsError = signal<string | null>(null);
 
 	async login(): Promise<void> {
 		const login = this.window.document.querySelector<HTMLInputElement>('#adminLogin')?.value.trim() ?? '';

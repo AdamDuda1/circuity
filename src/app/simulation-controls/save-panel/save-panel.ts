@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Globals } from '../../globals';
+import { SaveLoad } from './save-load';
 
 @Component({
 	selector: 'app-save-panel',
@@ -8,9 +9,12 @@ import { Globals } from '../../globals';
 	styleUrl: '../popup-panel.css'
 })
 export class SavePanel {
-	constructor(public globals: Globals) {}
+	constructor(public globals: Globals) {
+		this.saveLoad = new SaveLoad(this.globals);
+	}
 
-	selectedMethod = signal<string>('local-copy');
+	chosenSaveMethod = signal<string>('localStorage');
+	saveLoad!: SaveLoad;
 
 	// onMethodChange(event: Event) {
 	// 	const target = event.target as HTMLSelectElement;
@@ -18,10 +22,22 @@ export class SavePanel {
 	// }
 
 	execute() {
-		switch (this.selectedMethod()) {
-
+		switch (this.chosenSaveMethod()) {
+			case 'localStorage':
+				break;
+			case 'JSON':
+				this.saveLoad.exportJSON();
+				break;
+			case 'cloud-public':
+				this.saveLoad.cloudUpload(true);
+				break;
+			case 'cloud-private':
+				this.saveLoad.cloudUpload(false);
+				break;
+			default:
+				alert('Unknown save method:' + this.chosenSaveMethod());
+				break;
 		}
-		this.exportJSON();
 	}
 
 	getButtonText() {
@@ -32,21 +48,5 @@ export class SavePanel {
 		if (confirm('This will clear your current design. If it wasn\'t saved it will be lost.')) {
 
 		}
-	}
-
-	exportJSON() {
-		const json = JSON.stringify(this.globals.data.getCurrentDesignJSON());
-		const blob = new Blob([json], {type: 'application/json'});
-
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = 'circuity-design' /*+ new Date("DD-MM-YYYY")*/ + '.json'; // TODO filename?
-		a.click();
-		URL.revokeObjectURL(url);
-	}
-
-	loadJSON() {
-
 	}
 }

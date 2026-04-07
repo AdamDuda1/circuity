@@ -15,10 +15,11 @@
 			</div>
 
 			@if (save!.checked) {
-				<div class="top">
+				<div class="top" style="width: 100%; display: flex; gap: 5px; align-items: center;">
 					<label for="method"><b>Method</b></label>
 
-					<select class="form-select" name="method" #saveMethod>
+					<select class="form-select" name="method" #saveMethod
+							(change)="chosenSaveMethod.set(saveMethod.value)">
 						<option value="localStorage">Save to localStorage</option>
 						<option value="JSON">Export JSON</option>
 						<option value="cloud-private">Save privately on cloud</option>
@@ -27,6 +28,25 @@
 				</div>
 
 				<div>
+					@switch (saveMethod.value) {
+						@case ('JSON') {
+							<div class="alert alert-secondary flex p-2" role="alert"><p>
+								<span class="material-symbols-outlined"
+									  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">info</span>
+								This will export a JSON file for you to download. You will be able to load it, edit the design and export it again. File size: {{ saveLoad.getCurrentDesignSizeLabel() }}
+							</p></div>
+						}
+						@case ('cloud-private') {
+							<div class="alert alert-primary flex p-2" role="alert"><p>
+								<span class="material-symbols-outlined"
+									  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
+								Your design will be uploaded to our server but you will be able to access it with your secret key.
+							</p></div>
+						}
+						@default {
+						}
+					}
+
 					<!--				@switch (selectedMethod()) {-->
 					<!--					@case ('local-copy') {-->
 
@@ -38,14 +58,6 @@
 
 					<!--					}-->
 					<!--					@case ('cloud-public') {-->
-					<div class="alert alert-danger flex p-2" role="alert">
-						<p>
-							<span class="material-symbols-outlined"
-								  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
-							Your design will be uploaded to our server but you will be able to access it only with your
-							secret key.
-						</p>
-					</div>
 					<!--					}-->
 					<!--				}-->
 				</div>
@@ -75,7 +87,7 @@
 
 		<div class="buttonRow">
 			<button class="done-button" (click)="execute()">
-<!--				{{ getButtonText() }}-->
+				<!--				{{ getButtonText() }}-->
 				@if (save!.checked) {
 					save
 					<span class="material-symbols-outlined">save</span>
