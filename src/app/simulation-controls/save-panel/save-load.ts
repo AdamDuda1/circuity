@@ -1,7 +1,18 @@
 import { Globals } from '../../globals';
 import { firstValueFrom } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
+
+type Visibility = 'public' | 'private';
+
+interface CreateProjectPayload {
+	content: string;
+	author: string;
+	name: string;
+	description: string;
+	secret: string;
+	visibility?: Visibility;
+}
 
 export class SaveLoad {
 	constructor(public globals: Globals) {}
@@ -35,29 +46,52 @@ export class SaveLoad {
 		return `${(kilobytes / 1024).toFixed(2)} MB`;
 	}
 
-	loadJSON() {
+	async createCloudProject(payload: Omit<CreateProjectPayload, 'content'>) {
+		const body: CreateProjectPayload = {
+			...payload,
+			content: JSON.stringify(this.globals.data.getCurrentDesignJSON())
+		};
 
+		return await firstValueFrom(
+			this.http.post<{
+				status: 'success';
+				project: {
+					id: number;
+					content: string;
+					author: string;
+					name: string;
+					description: string;
+					visibility: Visibility;
+				};
+			}>(
+				this.globals.database + 'projects/create',
+				body
+			)
+		);
 	}
 
-	async cloudUpload(is_public: boolean) {
-		try {
-			const body = {
-				content: JSON.stringify(this.globals.data.getCurrentDesignJSON()),
-				author: 'authr',
-				visibility: is_public ? 'public' : 'private',
-				secret: 'secret',
-			};
+	async loadCloudProject(secret: string) {
+		const response = await firstValueFrom(
+			this.http.post<{
+				status: 'success';
+				project: {
+					id: number;
+					name: string;
+					content: string;
+					created_at: string;
+				};
+			}>(
+				this.globals.database + 'projects/single-project',
+				{secret}
+			)
+		);
 
-			const response = await firstValueFrom(
-				this.http.post<{ message?: string }>(
-					this.globals.database + 'projects/create',
-					body
-				)
-			);
+		const content = JSON.parse(response.project.content);
+		const loaded = this.globals.data.loadJSON(content);
 
-			alert(response.message ?? 'ok');
-		} catch (error: unknown) {
-			alert(error);
-		}
+		return {
+			loaded,
+			name: response.project.name
+		};
 	}
 }

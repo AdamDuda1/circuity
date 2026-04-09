@@ -48,20 +48,40 @@
 							</p></div>
 						}
 						@case ('cloud-private') {
-							<div class="alert alert-primary flex p-2" role="alert"><p>
-								<span class="material-symbols-outlined"
-									  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
-								Your design will be uploaded to our server but you will be able to access it with your
-								secret key.
-							</p></div>
+							<form [formGroup]="cloudSaveForm" class="d-flex flex-column gap-2">
+								<div class="alert alert-primary flex p-2" role="alert"><p>
+									<span class="material-symbols-outlined"
+										  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
+									Your design will be uploaded to our server but you will be able to access it with your
+									secret key.
+								</p></div>
+								<input class="form-control" type="text" formControlName="author" placeholder="Author">
+								<input class="form-control" type="text" formControlName="name" placeholder="Project name">
+								<textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+								<div class="input-group">
+									<input class="form-control" type="text" formControlName="secret" [disabled]="true">
+									<button class="btn btn-outline-secondary" type="button" (click)="generateSecret()">Generate</button>
+									<button class="btn btn-outline-secondary" type="button" (click)="copySecret()">Copy</button>
+								</div>
+							</form>
 						}
 						@case ('cloud-public') {
-							<div class="alert alert-primary flex p-2" role="alert"><p>
-								<span class="material-symbols-outlined"
-									  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
-								Your design will be uploaded to our server and publicly visible. You will still need to
-								provide the secret key for this project if you will want to edit or delete it.
-							</p></div>
+							<form [formGroup]="cloudSaveForm" class="d-flex flex-column gap-2">
+								<div class="alert alert-primary flex p-2" role="alert"><p>
+									<span class="material-symbols-outlined"
+										  style="font-size: larger; position: relative; top: 4px; left: 0; margin-right: 4px;">warning</span>
+									Your design will be uploaded to our server and publicly visible. You will still need to
+									provide the secret key for this project if you will want to edit or delete it.
+								</p></div>
+								<input class="form-control" type="text" formControlName="author" placeholder="Author">
+								<input class="form-control" type="text" formControlName="name" placeholder="Project name">
+								<textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+								<div class="input-group">
+									<input class="form-control" type="text" formControlName="secret" [disabled]="true">
+									<button class="btn btn-outline-secondary" type="button" (click)="generateSecret()">Generate</button>
+									<button class="btn btn-outline-secondary" type="button" (click)="copySecret()">Copy</button>
+								</div>
+							</form>
 						}
 						@default {
 						}
@@ -90,7 +110,10 @@
 							</div>
 						}
 						@case ('load-cloud') {
-
+							<form [formGroup]="cloudLoadForm" class="d-flex flex-column gap-2" style="width: 100%; display: flex; gap: 5px; align-items: center;">
+								<label for="load-cloud-secret"><b>Secret key</b></label>
+								<input id="load-cloud-secret" class="form-control" type="text" formControlName="secret" placeholder="Paste your secret key">
+							</form>
 						}
 					}
 				</div>
