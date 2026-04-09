@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { Globals } from '../../globals';
 import { SaveLoad } from './save-load';
+import { _Toast } from '../../toasts';
 
 @Component({
 	selector: 'app-save-panel',
@@ -13,7 +14,8 @@ export class SavePanel {
 		this.saveLoad = new SaveLoad(this.globals);
 	}
 
-	chosenSaveMethod = signal<string>('localStorage');
+	chosenSaveMethod = signal<string>('JSON');
+	saveOrLoad = signal<'save' | 'load'>('save');
 	saveLoad!: SaveLoad;
 
 	// onMethodChange(event: Event) {
@@ -21,7 +23,7 @@ export class SavePanel {
 	// 	this.selectedMethod.set(target.value);
 	// }
 
-	execute() {
+	executeSave() {
 		switch (this.chosenSaveMethod()) {
 			case 'localStorage':
 				break;
@@ -40,13 +42,38 @@ export class SavePanel {
 		}
 	}
 
-	getButtonText() {
-		return this.globals.constants.translations.simulationControls.savePanel.doneButtonText[0];
+	executeLoad() {
+		switch (this.chosenSaveMethod()) {
+			case 'load-JSON':
+				this.saveLoad.exportJSON();
+				break;
+			case 'load-cloud':
+				this.saveLoad.cloudUpload(true);
+				break;
+			default:
+				alert('Unknown load method:' + this.chosenSaveMethod());
+				break;
+		}
 	}
 
-	newDesign() { // TODO unselect when confirmation canceled!!
-		if (confirm('This will clear your current design. If it wasn\'t saved it will be lost.')) {
+	newDesign(event: Event) {
+		const shouldClear = confirm('This will clear your current design. If it wasn\'t saved it will be lost.');
 
+		if (!shouldClear) {
+			const currentButton = event.target as HTMLInputElement | null;
+			if (currentButton) currentButton.checked = false;
+
+			const fallbackId = this.saveOrLoad() === 'save' ? 'btnradio1' : 'btnradio2';
+			const fallbackButton = document.getElementById(fallbackId) as HTMLInputElement | null;
+			if (fallbackButton) fallbackButton.checked = true;
+			return;
 		}
+
+		if (this.globals.simulation.running()) this.globals.simulation.switch();
+
+		this.globals.selected = -1;
+		this.globals.simulation.circuitComponents.set([]);
+		this.globals.savePanel_open.set(false);
+		_Toast.success('Old design cleared!');
 	}
 }

@@ -6,26 +6,31 @@
 </p>
 
 <p align="center">
-  <a href="https://circuity.vercel.app">Live App</a>
+  <a href="https://circuity.adamd.pl.eu.org">Live App</a>
+  ·
+  <a href="#contributing">Info andContributing</a>
   ·
   <a href="#todo">Roadmap</a>
 </p>
 
 <div align="center">
+ 	<img alt="frontend status" src="https://img.shields.io/website?logo=vercel&label=frontend&url=https%3A%2F%2Fcircuity.adamd.pl.eu.org" />
+ 	<img alt="backend status" src="https://img.shields.io/website?logo=railway&label=backend&url=https%3A%2F%2Fapi.circuity.adamd.pl.eu.org" />
+ 	<img alt="GitHub deployments" src="https://img.shields.io/github/deployments/AdamDuda1/circuity/Production?logo=vercel&label=deployment">
+	<div>
+		<img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" />
+		<img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=plus_backend" />
+		<img alt="GitHub" src="https://imagecount.pythonanywhere.com/img?id=6dvQ4OTW4hSJNRKMqce_xw" />
+	</div>
 	<img alt="Angular" src="https://img.shields.io/badge/Angular-v20%2B-DD0031?logo=angular&logoColor=white" />
 	<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white" />
- 	<img alt="GitHub deployments" src="https://img.shields.io/github/deployments/AdamDuda1/circuity/Production?logo=vercel&label=frontend">
-	<div><img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity?color=darkgreen" /> <img alt="hackatime" src="https://hackatime-badge.hackclub.com/U0AAK0EB2LE/circuity-backend?color=darkgreen&label=plus_backend" /></div>
-	
-[//]: # (	<img alt="Vercel" src="https://img.shields.io/badge/Deploy-Vercel-000?logo=vercel&logoColor=white" />)
-
-[//]: # (	<img alt="Railway" src="https://img.shields.io/badge/Deploy-Railway-000?logo=railway&logoColor=white" />)
-
 </div>
 
-A little project I'm working on... I'm too lazy to write the readme at the moment, so just try it out (https://circuity.vercel.app or https://circuity.deltos.space for production) :) Readme coming soon...
+A ~~little~~ project I'm working on... I'm too lazy to write the readme at the moment, so just try it out at https://circuity.adamd.pl.eu (also available at https://circuity.vercel.app and https://circuity.deltos.space <-- might not be soon because the domain expires. Try and see what happens when you add `dev-` to the URL!) :) Readme coming soon...
 
 ---
+
+## Contributing
 
 ## TODO:
 
@@ -37,9 +42,12 @@ A little project I'm working on... I'm too lazy to write the readme at the momen
 - [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
 - [ ] add multi-select (shift + click, ctrl + click, right click??)
+- [ ] delay in the simulation (ie buzzer)
+- [ ] auto save
 
 
   **OTHER:**
+
 
 - [ ] notifications for the admins when anything is posted by a user
 - [ ] ask the user if ctrl+S should save in save_last (localStorage) or open the save panel (or save in the last chosen location?????)

@@ -8,6 +8,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
 }
 
 .panel {
@@ -15,7 +16,7 @@
 	flex-direction: column;
 	align-items: flex-start;
 	z-index: 3;
-	width: 500px;
+	width: min(90vw, 650px);
 	height: 500px;
 	background-color: white;
 	border-radius: 6px;
@@ -27,7 +28,7 @@
 .panelContent {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
 	gap: 7px;
 	width: 100%;
 }
@@ -86,4 +87,14 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
+}
+
+
+.custom-file-button input[type=file] { margin-left: -2px !important; }
+.custom-file-button input[type=file]::-webkit-file-upload-button { display: none; }
+.custom-file-button input[type=file]::file-selector-button { display: none; }
+
+.custom-file-button:hover label {
+	background-color: #dde0e3;
+	cursor: pointer;
 }

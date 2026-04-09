@@ -2,6 +2,7 @@ import { Component, computed, viewChild, ElementRef, inject } from '@angular/cor
 import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
+import { Globals } from '../globals';
 
 @Component({
 	selector: 'app-menu',
@@ -15,6 +16,8 @@ import { map } from 'rxjs';
 	},
 })
 export class Menu {
+	constructor(public globals: Globals) {}
+
 	private router = inject(Router);
 	private url = toSignal(this.router.events.pipe(map(() => this.router.url)), {
 		initialValue: this.router.url,
