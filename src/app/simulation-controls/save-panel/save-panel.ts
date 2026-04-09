@@ -22,9 +22,9 @@ export class SavePanel {
 	saveOrLoad = signal<'save' | 'load'>('save');
 	saveLoad!: SaveLoad;
 	readonly cloudSaveForm = this.formBuilder.nonNullable.group({
-		author: ['', Validators.required],
+		author: [''],
 		name: ['', Validators.required],
-		description: ['', Validators.required],
+		description: [''],
 		secret: [this.generateSecretValue(), Validators.required]
 	});
 	readonly cloudLoadForm = this.formBuilder.nonNullable.group({
@@ -107,16 +107,18 @@ export class SavePanel {
 	private async executeCloudSave(visibility: 'public' | 'private') {
 		if (this.cloudSaveForm.invalid) {
 			this.cloudSaveForm.markAllAsTouched();
-			_Toast.warning('Fill in all cloud save fields.');
+			_Toast.warning('Fill in all required cloud save fields.');
 			return;
 		}
 
 		try {
 			const form = this.cloudSaveForm.getRawValue();
+			const author = form.author.trim() || 'anonymous';
+			const description = form.description.trim() || 'no description';
 			await this.saveLoad.createCloudProject({
-				author: form.author,
+				author,
 				name: form.name,
-				description: form.description,
+				description,
 				secret: form.secret,
 				visibility
 			});
