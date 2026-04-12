@@ -106,6 +106,10 @@ export abstract class ElectricalComponent {
 
 	clickInSimulation() {}
 
+	pointerDownInSimulation() {}
+
+	pointerUpInSimulation() {}
+
 	condition() {}
 
 	setPinDefaults() { // TODO!!!

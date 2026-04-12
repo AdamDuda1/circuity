@@ -20,9 +20,13 @@ export class Switch extends ElectricalComponent {
 	type = '';
 
 	isOn = false;
+	mode: 'switch' | 'button' = 'switch';
+	buttonReleaseDelayMs = 0;
+
+	private releaseTimer?: ReturnType<typeof setTimeout>;
 
 	get color() {
-		return this.isOn ? 'lime' : 'black'; // only for selection indicator (bg color is hardcoded)
+		return this.isOn ? 'lime' : 'black';
 	}
 
 	x = 0;
@@ -42,11 +46,66 @@ export class Switch extends ElectricalComponent {
 	}
 
 	override clickInSimulation() {
-		this.toggle();
+		if (this.mode === 'switch') this.toggle();
+	}
+
+	override pointerDownInSimulation() {
+		if (this.mode !== 'button') return;
+		this.clearReleaseTimer();
+		this.isOn = true;
+	}
+
+	override pointerUpInSimulation() {
+		if (this.mode !== 'button') return;
+
+		this.clearReleaseTimer();
+		const delay = Math.max(0, Math.floor(this.buttonReleaseDelayMs));
+		if (delay === 0) {
+			this.isOn = false;
+			return;
+		}
+
+		this.releaseTimer = setTimeout(() => {
+			this.isOn = false;
+			this.releaseTimer = undefined;
+		}, delay);
 	}
 
 	toggle() {
 		this.isOn = !this.isOn;
+	}
+
+	setMode(mode: 'switch' | 'button') {
+		this.mode = mode;
+		if (mode !== 'button') this.clearReleaseTimer();
+	}
+
+	setButtonReleaseDelayMs(value: number) {
+		if (!Number.isFinite(value)) return;
+		this.buttonReleaseDelayMs = Math.max(0, Math.floor(value));
+	}
+
+	protected override getCustomPropsJSON() {
+		return {
+			mode: this.mode,
+			buttonReleaseDelayMs: this.buttonReleaseDelayMs
+		};
+	}
+
+	protected override applyCustomPropsFromJSON(custom?: Record<string, unknown>) {
+		if (!custom) return;
+
+		const mode = custom['mode'];
+		const buttonReleaseDelayMs = custom['buttonReleaseDelayMs'];
+
+		if (mode === 'switch' || mode === 'button') this.mode = mode;
+		if (typeof buttonReleaseDelayMs === 'number') this.setButtonReleaseDelayMs(buttonReleaseDelayMs);
+	}
+
+	private clearReleaseTimer() {
+		if (!this.releaseTimer) return;
+		clearTimeout(this.releaseTimer);
+		this.releaseTimer = undefined;
 	}
 
 	drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {

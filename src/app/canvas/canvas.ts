@@ -173,7 +173,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
 		if (this.globals.simulation.running()) {
-			// component.clickInSimulation
+			for (const component of this.globals.simulation.circuitComponents()) {
+				if (component.mouseOverComponent()) component.pointerDownInSimulation();
+			}
 		} else {
 			this.globals.selected = -1;
 			for (const component of this.globals.simulation.circuitComponents()) {
@@ -228,6 +230,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.moved_amt = 0;
 
 		if (this.globals.simulation.running()) {
+			for (const component of this.globals.simulation.circuitComponents()) {
+				component.pointerUpInSimulation();
+			}
+
 			if (click) {
 				for (const component of this.globals.simulation.circuitComponents())
 					if (component.mouseOverComponent()) component.clickInSimulation();

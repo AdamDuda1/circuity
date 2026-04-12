@@ -53,6 +53,24 @@
 
 		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
 
+		@if (selectedSwitch(); as switchComp) {
+			<div class="input-group">
+				<label class="input-group-text" for="switchMode">Mode</label>
+				<select id="switchMode" class="form-select" (change)="switch_setMode($event)">
+					<option value="switch" [selected]="switchComp.mode === 'switch'">Switch (toggle)</option>
+					<option value="button" [selected]="switchComp.mode === 'button'">Button (hold)</option>
+				</select>
+			</div>
+
+			@if (switchComp.mode === 'button') {
+				<div class="input-group">
+					<label class="input-group-text" for="buttonDelay">Release delay (ms)</label>
+					<input type="number" class="form-control" id="buttonDelay" min="0" step="1"
+					       value="{{switchComp.buttonReleaseDelayMs}}" (input)="switch_setButtonReleaseDelayMs($event)">
+				</div>
+			}
+		}
+
 		@if (selectedBuzzer(); as buzzer) {
 			<div class="flex gap-2">
 				Frequency:

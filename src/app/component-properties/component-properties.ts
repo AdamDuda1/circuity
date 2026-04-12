@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Globals } from '../globals';
 import { Buzzer } from '../components/buzzer';
+import { Switch } from '../components/switch';
 
 @Component({
 	selector: 'category',
@@ -47,6 +48,11 @@ export class ComponentProperties {
 		return selected instanceof Buzzer ? selected : null;
 	}
 
+	selectedSwitch(): Switch | null {
+		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		return selected instanceof Switch ? selected : null;
+	}
+
 	buzzer_setFrequency(event: Event) {
 		const selected = this.selectedBuzzer();
 		if (!selected) return;
@@ -59,6 +65,20 @@ export class ComponentProperties {
 		const val = Number((event.target as HTMLInputElement).value);
 		if (Number.isNaN(val)) return;
 		selected.setVolume(val);
+	}
+
+	switch_setMode(event: Event) {
+		const selected = this.selectedSwitch();
+		if (!selected) return;
+
+		const mode = (event.target as HTMLSelectElement).value;
+		if (mode === 'switch' || mode === 'button') selected.setMode(mode);
+	}
+
+	switch_setButtonReleaseDelayMs(event: Event) {
+		const selected = this.selectedSwitch();
+		if (!selected) return;
+		selected.setButtonReleaseDelayMs((event.target as HTMLInputElement).valueAsNumber);
 	}
 
 	protected readonly Buzzer = Buzzer;
