@@ -217,6 +217,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			selectedComponent.x = Math.round(selectedComponent.x * 100) / 100;
 			selectedComponent.y = Math.round(selectedComponent.y * 100) / 100;
 			this.globals.isDragging.set(false);
+			this.globals.simulation.saveState();
 		}
 
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
@@ -343,6 +344,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
 			//this.globals.data.load();
+			this.globals.simulation.undo();
 		}
 
 		if (event.key === 's' && (event.ctrlKey || event.metaKey)) {

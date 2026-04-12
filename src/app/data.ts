@@ -47,7 +47,7 @@ export class Data {
 		} as SavedState;
 	}
 
-	loadJSON(json: SavedState) {
+	loadJSON(json: SavedState, resetHistory = true) {
 		try {
 			const state: SavedState = json;
 
@@ -67,6 +67,11 @@ export class Data {
 
 			if (state.view) {
 				this.globals.view.update(v => ({...v, ...state.view}));
+			}
+
+			if (resetHistory) {
+				this.globals.simulation.history.set([JSON.stringify(state)]);
+				this.globals.simulation.currentVersion.set(0);
 			}
 
 			return true;
