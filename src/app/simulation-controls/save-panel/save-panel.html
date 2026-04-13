@@ -55,9 +55,9 @@
 									Your design will be uploaded to our server but you will be able to access it with your
 									secret key.
 								</p></div>
-								<input class="form-control" type="text" formControlName="author" placeholder="Author">
+								<input class="form-control" type="text" formControlName="author" placeholder="Author (optional, defaults to anonymous)">
 								<input class="form-control" type="text" formControlName="name" placeholder="Project name">
-								<textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+								<textarea class="form-control" formControlName="description" placeholder="Description (optional, defaults to no description)"></textarea>
 								<div class="input-group">
 									<input class="form-control" type="text" formControlName="secret" [disabled]="true">
 									<button class="btn btn-outline-secondary" type="button" (click)="generateSecret()">Generate</button>
@@ -73,9 +73,9 @@
 									Your design will be uploaded to our server and publicly visible. You will still need to
 									provide the secret key for this project if you will want to edit or delete it.
 								</p></div>
-								<input class="form-control" type="text" formControlName="author" placeholder="Author">
+								<input class="form-control" type="text" formControlName="author" placeholder="Author (optional, defaults to anonymous)">
 								<input class="form-control" type="text" formControlName="name" placeholder="Project name">
-								<textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+								<textarea class="form-control" formControlName="description" placeholder="Description (optional, defaults to no description)"></textarea>
 								<div class="input-group">
 									<input class="form-control" type="text" formControlName="secret" [disabled]="true">
 									<button class="btn btn-outline-secondary" type="button" (click)="generateSecret()">Generate</button>

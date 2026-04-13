@@ -53,6 +53,7 @@ export class Globals {
 	public snap: boolean = false;
 	public snapStep: number = 0;
 	public indicationOnWires: boolean = false;
+	public historyMax: number = 10;
 
 	public data = new Data(this);
 	// public toast = new Toast();
@@ -83,11 +84,16 @@ export class Globals {
 		return this.nextID++;
 	}
 
+	public resetNextID(startAt = 0) {
+		this.nextID = startAt;
+	}
+
 	fetchSettings() {
 		this.darkMode = localStorage.getItem('darkMode') === 'true';
 		this.snap = localStorage.getItem('snap') === 'true';
 		this.snapStep = localStorage.getItem('snapStep') ? Number(localStorage.getItem('snapStep')) : 30;
 		this.indicationOnWires = localStorage.getItem('indicationOnWires') === 'true';
+		this.historyMax = localStorage.getItem('historyMax') ? Number(localStorage.getItem('historyMax')) : 10;
 	}
 
 	setDarkMode() {

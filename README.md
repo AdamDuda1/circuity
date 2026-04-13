@@ -38,10 +38,8 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 **IMPORTANT (in order):**
 
-- [ ] Add ctrl+z
-- [ ] Add component inspection pa
 - [ ] Sort elements in the design by ViewOrder (last selected desc)
-- [ ] add multi-select (shift + click, ctrl + click, right click??)
+- [ ] add multi-select (shift + click, ctrl + click, right click & drag??)
 - [ ] delay in the simulation (ie buzzer)
 - [ ] auto save
 

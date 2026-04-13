@@ -1,6 +1,6 @@
 import { Globals } from './globals';
 import { _Toast } from './toasts';
-import { SerializedElectricalComponent } from './components/component-type-interface'; // type ( .. ????
+import { ElectricalComponent, SerializedElectricalComponent } from './components/component-type-interface'; // type ( .. ????
 
 interface SavedState {
 	components: SerializedElectricalComponent[];
@@ -10,13 +10,21 @@ interface SavedState {
 export class Data {
 	constructor(public globals: Globals) {}
 
+	clearDesign() {
+
+	}
+
 	loadLast(): boolean {
 		const json = localStorage.getItem('save');
 		if (!json) {
 			_Toast.error("couldn't load last design :(");
 			return false;
 		}
-		this.loadJSON(JSON.parse(json));
+		const loaded = this.loadJSON(JSON.parse(json));
+		if (!loaded) {
+			_Toast.error("couldn't load last design :(");
+			return false;
+		}
 		_Toast.success("Loaded last design!");
 		return true;
 	}
@@ -47,11 +55,13 @@ export class Data {
 		} as SavedState;
 	}
 
-	loadJSON(json: SavedState) {
+	loadJSON(json: SavedState, resetHistory = true, changeView = true) {
 		try {
 			const state: SavedState = json;
+			this.globals.selected = -1;
+			this.globals.resetNextID(0);
 
-			this.globals.simulation.circuitComponents.set([]);
+			const loadedComponents: ElectricalComponent[] = [];
 
 			for (const comp of state.components) {
 				const factory = this.globals.componentRegistry.get(comp.name);
@@ -62,11 +72,20 @@ export class Data {
 
 				const component = factory(true, comp.x, comp.y);
 				component.spawnComponentFromJSON(comp);
-				this.globals.simulation.circuitComponents().push(component);
+				loadedComponents.push(component);
 			}
 
-			if (state.view) {
+			this.globals.simulation.circuitComponents.set(loadedComponents);
+
+			if (state.view && changeView) {
+				//let currZ = this.globals.view().z;
 				this.globals.view.update(v => ({...v, ...state.view}));
+				//this.globals.view.update(v => ({...v, ...{z: currZ}}));
+			}
+
+			if (resetHistory) {
+				this.globals.simulation.history.set([JSON.stringify(state)]);
+				this.globals.simulation.currentVersion.set(0);
 			}
 
 			return true;
