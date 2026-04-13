@@ -9,7 +9,6 @@ export class Simulation {
 
 	public circuitComponents = signal<ElectricalComponent[]>([]);
 	public running = signal(false);
-	readonly MAX_HISTORY: number = 10; // lol cant be const cuz in class?
 	history = signal<string[]>([]);
 	currentVersion = signal<number>(0); // 0 is newest
 
@@ -27,7 +26,7 @@ export class Simulation {
 		}
 
 		const parsedSnapshot: unknown = JSON.parse(snapshot);
-		const loaded = this.globals.data.loadJSON(parsedSnapshot as Parameters<typeof this.globals.data.loadJSON>[0], false);
+		const loaded = this.globals.data.loadJSON(parsedSnapshot as Parameters<typeof this.globals.data.loadJSON>[0], false, false);
 		if (!loaded) {
 			_Toast.error('Failed to undo.');
 			return;
@@ -51,7 +50,7 @@ export class Simulation {
 		}
 
 		const parsedSnapshot: unknown = JSON.parse(snapshot);
-		const loaded = this.globals.data.loadJSON(parsedSnapshot as Parameters<typeof this.globals.data.loadJSON>[0], false);
+		const loaded = this.globals.data.loadJSON(parsedSnapshot as Parameters<typeof this.globals.data.loadJSON>[0], false, false);
 		if (!loaded) {
 			_Toast.error('Failed to redo.');
 			return;
@@ -67,7 +66,8 @@ export class Simulation {
 		const snapshot = JSON.stringify(this.globals.data.getCurrentDesignJSON());
 		this.history.update(prev => {
 			const branchBase = this.currentVersion() > 0 ? prev.slice(this.currentVersion()) : prev;
-			return [snapshot, ...branchBase.slice(0, this.MAX_HISTORY - 1)];
+			const max = Math.max(1, Math.floor(this.globals.historyMax));
+			return [snapshot, ...branchBase.slice(0, max - 1)];
 		});
 		this.currentVersion.set(0);
 	}

@@ -33,7 +33,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	protected readonly isConnecting = signal(false);
 	protected readonly connectingToOrFrom = signal({component: -1, type: 'in', index: -1});
-	private readonly targetZ = signal(1);
+	private readonly targetZ = signal(2 );
 	private readonly lastPointer = signal({x: 0, y: 0});
 	private lastPinchDist = 0;
 
@@ -58,8 +58,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
 			this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
-			this.globals.view().z = 1;
-			setTimeout(() => this.targetZ.set(2), 50);
+			//this.globals.view().z = 1;
+			//setTimeout(() => this.targetZ.set(2), 50);
 		}
 
 		canvas.focus();
@@ -213,6 +213,12 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (this.globals.isDragging()) {
 			const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
+			if (!selectedComponent) {
+				this.globals.selected = -1;
+				this.globals.isDragging.set(false);
+				return;
+			}
+
 			selectedComponent.updatePos(0, 0, this.isSnapEnabled());
 			selectedComponent.x = Math.round(selectedComponent.x * 100) / 100;
 			selectedComponent.y = Math.round(selectedComponent.y * 100) / 100;
@@ -277,8 +283,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 			if (this.globals.selected != -1) {
 				if (!this.globals.isDragging()) this.globals.isDragging.set(true);
+				const selectedComponent = components[this.globals.selected];
+				if (!selectedComponent) {
+					this.globals.selected = -1;
+					this.globals.isDragging.set(false);
+					return;
+				}
 
-				components[this.globals.selected].updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z, this.isSnapEnabled());
+				selectedComponent.updatePos((event.clientX - last.x) / z, -(event.clientY - last.y) / z, this.isSnapEnabled());
 			} else {
 				this.globals.view.update((v) => ({
 					...v,
@@ -345,6 +357,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
 			//this.globals.data.load();
 			this.globals.simulation.undo();
+		}
+
+		if (event.key === 'y' && (event.ctrlKey || event.metaKey)) {
+			this.globals.simulation.redo();
 		}
 
 		if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
