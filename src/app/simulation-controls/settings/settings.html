@@ -1,5 +1,5 @@
 <div class="panelBox" (click)="this.globals.settingsPanel_open.set(false); globals.init();"
-     [style.display]="this.globals.settingsPanel_open() ? 'flex' : 'none'">
+	 [style.display]="this.globals.settingsPanel_open() ? 'flex' : 'none'">
 	<div class="panel p-10" style="justify-content: start !important;" (click)="$event.stopPropagation()">
 
 		<h2>Settings</h2>
@@ -26,7 +26,8 @@
 		</div>
 
 		<div class="form-check form-switch switch-full d-flex align-items-center justify-content-between p-0">
-			<label for="indicationOnWires" class="mb-0 form-check-label contents">Show power indication on wires (in simulation)</label>
+			<label for="indicationOnWires" class="mb-0 form-check-label contents">Show power indication on wires (in
+				simulation)</label>
 			<div class="form-check form-switch m-0">
 				<input class="form-check-input" type="checkbox" id="indicationOnWires" #indicationOnWires
 					   [checked]="localStorage.getItem('indicationOnWires') === 'true'"
@@ -35,14 +36,37 @@
 		</div>
 
 
-		<div class="form-group switch-full d-flex align-items-center justify-content-between p-0" style="position: relative; left: 5px;">
+		<div class="form-group switch-full d-flex align-items-center justify-content-between p-0"
+			 style="position: relative; left: 5px;">
 			<label for="historyMax" class="mb-0 form-check-label contents">History size</label>
-			<div style="width: 120px; height: 24px; position: relative; left: 5px;">
+			<div style="width: 80px; height: 24px; position: relative; left: 5px;">
 				<input type="number" id="historyMax" #historyMax class="form-control" min="1" max="100"
-				       [value]="localStorage.getItem('historyMax') ? localStorage.getItem('historyMax') : '10'"
-				       (change)="localStorage.setItem('historyMax', historyMax.value); globals.fetchSettings();"
-						style="height: inherit;">
+					   [value]="localStorage.getItem('historyMax') ? localStorage.getItem('historyMax') : '10'"
+					   (change)="localStorage.setItem('historyMax', historyMax.value); globals.fetchSettings();"
+					   style="height: inherit;">
 			</div>
+		</div>
+
+		<div class="form-check form-switch switch-full d-flex align-items-center justify-content-between p-0">
+			<label for="enableAutoSave" class="mb-0 form-check-label contents">Enable auto-save (to localStorage, like <kbd>ctrl</kbd>+<kbd>S</kbd>)</label>
+			<div class="form-check form-switch m-0">
+				<input class="form-check-input" type="checkbox" id="enableAutoSave" #enableAutoSave
+					   [checked]="localStorage.getItem('enableAutoSave') === 'true'"
+					   (change)="localStorage.setItem('enableAutoSave', enableAutoSave.checked ? 'true' : 'false'); globals.fetchSettings();">
+			</div>
+		</div>
+
+
+		<div class="form-group switch-full d-flex align-items-center justify-content-between p-0"
+			 style="position: relative; left: 5px;">
+			<label for="autoSaveInterval" class="mb-0 form-check-label contents">Auto-save interval every</label>
+			<div style="width: 80px; height: 24px; position: relative; left: 5px;">
+				<input type="number" id="autoSaveInterval" #autoSaveInterval class="form-control" min=".25" max="100"
+					   [value]="localStorage.getItem('autoSaveInterval') ? localStorage.getItem('autoSaveInterval') : '.25'"
+					   (change)="localStorage.setItem('autoSaveInterval', autoSaveInterval.value); globals.fetchSettings();"
+					   style="height: inherit;" step=".25">
+			</div>
+			<span style="position: relative; left: 10px;">minutes</span>
 		</div>
 
 	</div>

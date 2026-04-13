@@ -21,9 +21,11 @@ export class Data {
 		return true;
 	}
 
-	saveLast() {
+	saveLast(silent = false) {
 		localStorage.setItem('save', JSON.stringify(this.getCurrentDesignJSON()));
-		_Toast.success("Saved last!");
+		if (!silent) {
+			_Toast.success("Saved last!");
+		} else _Toast.info("Saved last (but silent)!");
 	}
 
 	getCurrentDesignJSON() {

@@ -6,7 +6,8 @@ import {
 	OnDestroy,
 	signal,
 	viewChild,
-	inject
+	inject,
+	effect
 } from '@angular/core';
 import { CanvasDraw } from './canvas-draw-misc';
 import { Globals } from '../globals';
@@ -27,7 +28,12 @@ import { _Toast } from '../toasts';
 	}
 })
 export class Canvas implements AfterViewInit, OnDestroy {
-	constructor(public globals: Globals) {}
+	constructor(public globals: Globals) {
+		effect(() => {
+			this.globals.settingsVersion();
+			this.refreshAutoSaveSchedule();
+		});
+	}
 
 	private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
@@ -44,6 +50,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	public ctx!: CanvasRenderingContext2D;
 	private animationRef = 0;
 	private resizeObserver?: ResizeObserver;
+	private autoSaveTimer?: ReturnType<typeof setInterval>;
+	private readonly viewOrder = new Map<number, number>();
+	private viewOrderCounter = 0;
 
 	private drawer = inject(CanvasDraw);
 
@@ -73,6 +82,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	ngOnDestroy() {
 		cancelAnimationFrame(this.animationRef);
 		this.resizeObserver?.disconnect();
+		this.clearAutoSaveTimer();
 	}
 
 	private startLoop(canvas: HTMLCanvasElement) {
@@ -108,12 +118,15 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	draw(ctx: CanvasRenderingContext2D) {
 		const view = this.globals.view();
 		const {w, h, dpr} = view;
-		const components = this.globals.simulation.circuitComponents();
+		const componentsDesc = this.getComponentsByViewOrderDesc();
+		const components = [...componentsDesc].reverse();
 
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, w, h);
 		this.drawer.drawGrid(ctx);
-		this.drawer.drawWorld(ctx, this.globals.simulation);
+		ctx.save();
+		components.forEach((component) => component.render(ctx, view));
+		ctx.restore();
 		this.drawer.drawDebug(ctx);
 
 		if (this.isConnecting()) {
@@ -124,8 +137,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 				drawWire(ctx, view,
 					{x: cursor.x, y: cursor.y},
 					{
-						x: components[pos1.component].x + components[pos1.component].ins[pos1.index].x,
-						y: components[pos1.component].y + components[pos1.component].ins[pos1.index].y
+						x: componentsDesc.find((c) => c.id === pos1.component)?.x ?? this.globals.simulation.circuitComponents()[pos1.component].x + this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].x,
+						y: componentsDesc.find((c) => c.id === pos1.component)?.y ?? this.globals.simulation.circuitComponents()[pos1.component].y + this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].y
 					},
 					false,
 					false
@@ -133,8 +146,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			} else {
 				drawWire(ctx, view,
 					{
-						x: components[pos1.component].x + components[pos1.component].outs[pos1.index].x,
-						y: components[pos1.component].y + components[pos1.component].outs[pos1.index].y
+						x: this.globals.simulation.circuitComponents()[pos1.component].x + this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].x,
+						y: this.globals.simulation.circuitComponents()[pos1.component].y + this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].y
 					},
 					{x: cursor.x, y: cursor.y},
 					false,
@@ -174,19 +187,20 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
 
 		if (this.globals.simulation.running()) {
-			for (const component of this.globals.simulation.circuitComponents()) {
+			for (const component of this.getComponentsByViewOrderDesc()) {
 				if (component.mouseOverComponent()) component.pointerDownInSimulation();
 			}
 		} else {
 			this.globals.selected = -1;
-			for (const component of this.globals.simulation.circuitComponents()) {
+			for (const component of this.getComponentsByViewOrderDesc()) {
 				if (component.mouseOverComponent()) {
 					this.globals.selected = component.id;
+					this.bringToFront(component.id);
 					break;
 				}
 			}
 
-			for (const component of this.globals.simulation.circuitComponents()) {
+			for (const component of this.getComponentsByViewOrderDesc()) {
 				const ans = component.mouseOverPin();
 				if (ans.index != -1) { // if is over pin
 					this.isConnecting.set(true);
@@ -245,13 +259,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			}
 
 			if (click) {
-				for (const component of this.globals.simulation.circuitComponents())
+				for (const component of this.getComponentsByViewOrderDesc()) {
 					if (component.mouseOverComponent()) component.clickInSimulation();
+				}
 			}
 		} else if (this.isConnecting()) {
 			this.isConnecting.set(false);
 
-			for (const component of this.globals.simulation.circuitComponents()) {
+			for (const component of this.getComponentsByViewOrderDesc()) {
 				const ans = component.mouseOverPin();
 				if (ans.index != -1) {
 					const to = {component: component.id, type: ans.type, index: ans.index};
@@ -296,6 +311,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	onPointerMove(event: PointerEvent) {
 		const rect = this.canvasRef().nativeElement.getBoundingClientRect();
 		const components = this.globals.simulation.circuitComponents();
+		const componentsByViewOrder = this.getComponentsByViewOrderDesc();
 		const view = this.globals.view();
 
 		if (this.globals.isPanning() && !this.isConnecting()) {
@@ -335,14 +351,14 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		// SETTING CURSOR
 		let candidate = 'default';
-		for (const component of components) {
+		for (const component of componentsByViewOrder) {
 			if (component.mouseOverComponent()) {
 				candidate = 'pointer';
 				break;
 			}
 		}
 
-		if (!this.globals.simulation.running()) for (const component of components) {
+		if (!this.globals.simulation.running()) for (const component of componentsByViewOrder) {
 			if (component.mouseOverPin().index != -1) {
 				candidate = 'crosshair';
 				break;
@@ -370,6 +386,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			selectedComponent.disconnect();
 			selectedComponent.deleted = true;
 			this.globals.selected = -1;
+
+			this.globals.simulation.saveState();
 		}
 
 		if (event.key == ' ') {
@@ -484,6 +502,56 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private clamp(value: number, min: number, max: number) { // c++ :)
 		return Math.min(max, Math.max(min, value));
+	}
+
+	private getComponentsByViewOrderDesc() {
+		const components = this.globals.simulation.circuitComponents();
+		for (const component of components) {
+			this.ensureViewOrder(component.id);
+		}
+
+		return [...components].sort((a, b) => this.getViewOrder(b.id) - this.getViewOrder(a.id));
+	}
+
+	private bringToFront(componentId: number) {
+		this.viewOrder.set(componentId, ++this.viewOrderCounter);
+	}
+
+	private ensureViewOrder(componentId: number) {
+		if (this.viewOrder.has(componentId)) {
+			return;
+		}
+
+		this.viewOrder.set(componentId, ++this.viewOrderCounter);
+	}
+
+	private getViewOrder(componentId: number): number {
+		this.ensureViewOrder(componentId);
+		return this.viewOrder.get(componentId)!;
+	}
+
+	private refreshAutoSaveSchedule() {
+		this.clearAutoSaveTimer();
+
+		if (!this.globals.enableAutoSave) {
+			return;
+		}
+
+		const intervalMs = Math.round(this.globals.autoSaveInterval * 60_000);
+		this.autoSaveTimer = setInterval(() => {
+			if (!this.globals.simulation.running()) {
+				this.globals.data.saveLast(true);
+			}
+		}, intervalMs);
+	}
+
+	private clearAutoSaveTimer() {
+		if (!this.autoSaveTimer) {
+			return;
+		}
+
+		clearInterval(this.autoSaveTimer);
+		this.autoSaveTimer = undefined;
 	}
 
 	private isSnapEnabled(): boolean {

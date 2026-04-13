@@ -56,6 +56,9 @@ export class Globals {
 	public snapStep: number = 0;
 	public indicationOnWires: boolean = false;
 	public historyMax: number = 10;
+	public enableAutoSave: boolean = false;
+	public autoSaveInterval: number = 0.25;
+	public readonly settingsVersion = signal(0);
 
 	public data = new Data(this);
 	// public toast = new Toast();
@@ -97,7 +100,21 @@ export class Globals {
 		this.snap = localStorage.getItem('snap') === 'true';
 		this.snapStep = localStorage.getItem('snapStep') ? Number(localStorage.getItem('snapStep')) : 30;
 		this.indicationOnWires = localStorage.getItem('indicationOnWires') === 'true';
-		this.historyMax = localStorage.getItem('historyMax') ? Number(localStorage.getItem('historyMax')) : 10;
+		this.historyMax = this.getNumericSetting('historyMax', 10, 1, 100);
+		this.enableAutoSave = localStorage.getItem('enableAutoSave') === 'true';
+		this.autoSaveInterval = this.getNumericSetting('autoSaveInterval', 0.25, 0.25, 100);
+		this.settingsVersion.update(v => v + 1);
+	}
+
+	private getNumericSetting(key: string, fallback: number, min: number, max: number): number {
+		const rawValue = localStorage.getItem(key);
+		const parsed = rawValue !== null ? Number(rawValue) : fallback;
+
+		if (!Number.isFinite(parsed)) {
+			return fallback;
+		}
+
+		return Math.min(max, Math.max(min, parsed));
 	}
 
 	setDarkMode() {
