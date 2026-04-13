@@ -10,21 +10,13 @@ interface SavedState {
 export class Data {
 	constructor(public globals: Globals) {}
 
-	clearDesign() {
-
-	}
-
 	loadLast(): boolean {
 		const json = localStorage.getItem('save');
 		if (!json) {
 			_Toast.error("couldn't load last design :(");
 			return false;
 		}
-		const loaded = this.loadJSON(JSON.parse(json));
-		if (!loaded) {
-			_Toast.error("couldn't load last design :(");
-			return false;
-		}
+		this.loadJSON(JSON.parse(json));
 		_Toast.success("Loaded last design!");
 		return true;
 	}
@@ -77,11 +69,7 @@ export class Data {
 
 			this.globals.simulation.circuitComponents.set(loadedComponents);
 
-			if (state.view && changeView) {
-				//let currZ = this.globals.view().z;
-				this.globals.view.update(v => ({...v, ...state.view}));
-				//this.globals.view.update(v => ({...v, ...{z: currZ}}));
-			}
+			if (state.view && changeView) this.globals.view.update(v => ({...v, ...state.view}));
 
 			if (resetHistory) {
 				this.globals.simulation.history.set([JSON.stringify(state)]);

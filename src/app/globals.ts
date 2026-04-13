@@ -12,6 +12,8 @@ import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
 import { disable as disableDarkMode, enable as enableDarkMode } from 'darkreader';
 import { Buzzer } from './components/buzzer';
+import { SignalSender } from './components/signal-sender';
+import { SignalReceiver } from './components/signal-receiver';
 // import * as bootstrap from 'bootstrap';
 
 type ComponentFactory = (giveID: boolean, x: number, y: number) => ElectricalComponent;
@@ -70,7 +72,9 @@ export class Globals {
 		['Switch',  (id, x, y) => new Switch(this, id, x, y)],
 		['LED',     (id, x, y) => new LED(this, id, x, y)],
 		['Buzzer',  (id, x, y) => new Buzzer(this, id, x, y)],
-		['XOR',     (id, x, y) => new XOR(this, id, x, y)]
+		['XOR',     (id, x, y) => new XOR(this, id, x, y)],
+		['Signal Sender', (id, x, y) => new SignalSender(this, id, x, y)],
+		['Signal Receiver', (id, x, y) => new SignalReceiver(this, id, x, y)]
 	]);
 
 	public readonly palette = [...this.componentRegistry.values()]

@@ -27,6 +27,7 @@ export class Buzzer extends ElectricalComponent {
 	private osc?: OscillatorNode;
 	private gainNode?: GainNode;
 	private lastIsOn = false;
+	private readonly gainTransitionSeconds = 0.005;
 
 	x = 0;
 	y = 0;
@@ -42,7 +43,7 @@ export class Buzzer extends ElectricalComponent {
 
 	private updateAudio(isOn: boolean) {
 		if (!this.audioCtx) {
-			this.audioCtx = new AudioContext();
+			this.audioCtx = new AudioContext({latencyHint: 'interactive'});
 			this.gainNode = this.audioCtx.createGain();
 			this.gainNode.connect(this.audioCtx.destination);
 			this.gainNode.gain.value = 0;
@@ -55,19 +56,25 @@ export class Buzzer extends ElectricalComponent {
 
 		if (this.audioCtx.state === 'suspended' && isOn) this.audioCtx.resume();
 
-		this.gainNode?.gain.setTargetAtTime(isOn ? this.volume : 0, this.audioCtx.currentTime, 0.02);
+		const now = this.audioCtx.currentTime;
+		if (this.gainNode) {
+			this.gainNode.gain.cancelScheduledValues(now);
+			this.gainNode.gain.setTargetAtTime(isOn ? this.volume : 0, now, this.gainTransitionSeconds);
+		}
 	}
 
 	public setVolume(vol: number) {
 		this.volume = Math.max(0, Math.min(1, vol));
 		if (this.gainNode && this.audioCtx) {
 			const isOn = (this.inStates[0] ?? false) && this.globals.simulation.running();
-			this.gainNode.gain.setTargetAtTime(isOn ? this.volume : 0, this.audioCtx.currentTime, 0.02);
+			const now = this.audioCtx.currentTime;
+			this.gainNode.gain.cancelScheduledValues(now);
+			this.gainNode.gain.setTargetAtTime(isOn ? this.volume : 0, now, this.gainTransitionSeconds);
 		}
 	}
 
 	protected override getCustomPropsJSON() {
-		return { frequency: this.frequency, volume: this.volume };
+		return {frequency: this.frequency, volume: this.volume};
 	}
 
 	protected override applyCustomPropsFromJSON(custom?: Record<string, unknown>) {

@@ -23,7 +23,7 @@ import { _Toast } from '../toasts';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		//'(contextmenu)': 'openContextMenu($event)',
-		'(document:keydown)': 'onKeyDown($event)',
+		'(document:keydown)': 'onKeyDown($event)'
 	}
 })
 export class Canvas implements AfterViewInit, OnDestroy {
@@ -33,12 +33,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	protected readonly isConnecting = signal(false);
 	protected readonly connectingToOrFrom = signal({component: -1, type: 'in', index: -1});
-	private readonly targetZ = signal(2 );
+	private readonly targetZ = signal(2);
 	private readonly lastPointer = signal({x: 0, y: 0});
 	private lastPinchDist = 0;
 
 	protected moved_amt = 0;
 	private selectedBeforeDrag = -1;
+	private startedConnectingExisting = false;
 
 	public ctx!: CanvasRenderingContext2D;
 	private animationRef = 0;
@@ -193,6 +194,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 					if (ans.type == 'out') {
 						this.connectingToOrFrom.set({component: component.id, type: 'out', index: ans.index});
+						this.startedConnectingExisting = true;
 					} else if (ans.type == 'in') {
 						if (component.inFrom[ans.index].component == -1) { // not already connected
 							this.connectingToOrFrom.set({component: component.id, type: 'in', index: ans.index});
@@ -202,6 +204,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 							this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
 							component.inFrom[ans.index] = {component: -1, pin: -1};
+							this.startedConnectingExisting = true;
 						}
 					}
 					break;
@@ -254,7 +257,11 @@ export class Canvas implements AfterViewInit, OnDestroy {
 					const to = {component: component.id, type: ans.type, index: ans.index};
 					const from = this.connectingToOrFrom();
 
-					if (to.component === from.component) break;
+					if (to.component === from.component) {
+						if ((from.type === 'in' && to.type === 'out') || (from.type === 'out' && to.type === 'in'))
+							_Toast.warning('Connecting in to out of the same component is... not allowed? idk or implementation defined imma let you for now');
+						// break;
+					}
 
 					if (from.type === 'out' && to.type === 'in') {
 						if (component.inFrom[to.index].component != -1) {
@@ -265,15 +272,24 @@ export class Canvas implements AfterViewInit, OnDestroy {
 						if (!this.globals.simulation.circuitComponents()[from.component].outTo[from.index])
 							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
 						this.globals.simulation.circuitComponents()[from.component].outTo[from.index].push({component: to.component, pin: to.index});
+
+						this.globals.simulation.saveState();
 					} else if (from.type === 'in' && to.type === 'out') {
 						this.globals.simulation.circuitComponents()[from.component].inFrom[from.index] = {component: to.component, pin: to.index};
 						if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
 							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
 						this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
-					} else _Toast.warning("You can only connect an output pin to an input pin and vice versa.");
+
+						this.globals.simulation.saveState();
+					} else _Toast.warning('You can only connect an output pin to an input pin and vice versa.');
 					break;
+				} else if (this.startedConnectingExisting) {
+					this.globals.simulation.saveState();
+					this.startedConnectingExisting = false;
 				}
 			}
+
+			this.startedConnectingExisting = false;
 		}
 	}
 
@@ -347,7 +363,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			const components = this.globals.simulation.circuitComponents();
 			const selectedComponent = components.find(c => c.id === selectedId);
 
-			_Toast.warning(selectedComponent!.name + " deleted.");
+			_Toast.warning(selectedComponent!.name + ' deleted.');
 
 			if (!selectedComponent) return; // for safety
 

@@ -2,15 +2,15 @@ import { signal } from '@angular/core';
 import { ElectricalComponent } from './components/component-type-interface';
 import { Globals } from './globals';
 import { _Toast } from './toasts';
-//import { min } from '@angular/forms/signals';
 
 export class Simulation {
 	constructor(public globals: Globals) {}
 
 	public circuitComponents = signal<ElectricalComponent[]>([]);
 	public running = signal(false);
+	private readonly channels = new Array<boolean>(10).fill(false);
 	history = signal<string[]>([]);
-	currentVersion = signal<number>(0); // 0 is newest
+	currentVersion = signal<number>(0);
 
 	undo() {
 		if (this.currentVersion() >= this.history().length - 1) {
@@ -62,6 +62,7 @@ export class Simulation {
 
 	saveState() {
 		if (this.running()) return;
+		_Toast.success('saveState');
 
 		const snapshot = JSON.stringify(this.globals.data.getCurrentDesignJSON());
 		this.history.update(prev => {
@@ -94,7 +95,100 @@ export class Simulation {
 	}
 
 	simulate() {
-		for (const component of this.circuitComponents()) component.simulate();
+		const components = this.circuitComponents();
+		const reachable = this.collectReachableFromSources(components);
+		this.channels.fill(false);
+
+		for (let index = 0; index < components.length; index++) {
+			const component = components[index];
+			if (component.deleted) continue;
+			if (this.isSignalReceiver(component)) continue;
+
+			if (reachable[index]) {
+				component.simulate();
+			} else {
+				this.resetSignals(component);
+			}
+		}
+
+		for (let index = 0; index < components.length; index++) {
+			const component = components[index];
+			if (component.deleted) continue;
+			if (!this.isSignalReceiver(component)) continue;
+
+			if (reachable[index]) {
+				component.simulate();
+			} else {
+				this.resetSignals(component);
+			}
+		}
+	}
+
+	writeChannel(channel: number, state: boolean) {
+		if (!state) return;
+		this.channels[this.clampChannel(channel)] = true;
+	}
+
+	readChannel(channel: number): boolean {
+		return this.channels[this.clampChannel(channel)];
+	}
+
+	private collectReachableFromSources(components: ElectricalComponent[]): boolean[] {
+		const visited = new Array<boolean>(components.length).fill(false);
+		const queue: number[] = [];
+
+		for (let index = 0; index < components.length; index++) {
+			const component = components[index];
+			if (component.deleted) continue;
+			if (component.noOfIns !== 0) continue;
+
+			visited[index] = true;
+			queue.push(index);
+		}
+
+		for (let head = 0; head < queue.length; head++) {
+			const fromIndex = queue[head];
+			const fromComponent = components[fromIndex];
+			if (!fromComponent || fromComponent.deleted) continue;
+
+			for (const connections of fromComponent.outTo) {
+				if (!connections) continue;
+
+				for (const connection of connections) {
+					const toIndex = connection.component;
+					if (toIndex < 0 || toIndex >= components.length) continue;
+					if (visited[toIndex]) continue;
+
+					const toComponent = components[toIndex];
+					if (!toComponent || toComponent.deleted) continue;
+
+					visited[toIndex] = true;
+					queue.push(toIndex);
+				}
+			}
+		}
+
+		return visited;
+	}
+
+	private resetSignals(component: ElectricalComponent) {
+		for (let i = 0; i < component.noOfIns; i++) {
+			component.inStates[i] = false;
+		}
+
+		for (let i = 0; i < component.noOfOuts; i++) {
+			component.outStates[i] = false;
+		}
+	}
+
+	private clampChannel(channel: number): number {
+		if (!Number.isFinite(channel)) return 0;
+		const normalized = Math.round(channel);
+		return Math.min(9, Math.max(0, normalized - 1));
+	}
+
+	private isSignalReceiver(component: ElectricalComponent): boolean {
+		return component.name === 'Signal Receiver';
 	}
 
 	stop() {
