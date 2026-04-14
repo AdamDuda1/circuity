@@ -16,6 +16,8 @@ export class AND extends ElectricalComponent {
 	id;
 	category = 'basicLogicGates';
 	name = 'AND';
+	override description = 'The output is only active when both inputs are active.';
+	override truthTable = 'A | B | Q\n0 | 0 | 0\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 1';
 
 	type = '';
 

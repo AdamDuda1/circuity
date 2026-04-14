@@ -45,6 +45,9 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 **OTHER:**
 
 
+- [ ] saveState after modifying properties
+- [ ] add previews in palette component details back
+- [ ] optimize the data by saving only changed component properties1!
 - [ ] notifications for the admins when anything is posted by a user
 - [ ] ask the user if ctrl+S should save in save_last (localStorage) or open the save panel (or save in the last chosen location?????)
 - [ ] add a keyboard shortcut to open the save panel and make esc close all popups

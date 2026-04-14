@@ -22,3 +22,7 @@
 // must be last
 @import "../node_modules/bootstrap/scss/utilities";
 @import "../node_modules/bootstrap/scss/utilities/api";
+
+//.form-check-label, .form-switch, .form-check-input { cursor: pointer; }
+//.form-switch:hover > .form-check-label, .nice-input:hover > .nice-input-label { color: #245075; }
+//:is(input, textarea, select):hover + label[for], :is(input, textarea, select):hover ~ label[for] { color: #245075; }

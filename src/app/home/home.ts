@@ -6,6 +6,7 @@ import { Canvas } from '../canvas/canvas';
 import { Tutorial } from '../tutorial/tutorial';
 import { SavePanel } from '../simulation-controls/save-panel/save-panel';
 import { Settings } from '../simulation-controls/settings/settings';
+import { PaletteComponentDetails } from '../palette/palette-component-details/palette-component-details';
 
 @Component({
 	selector: 'app-home',
@@ -16,6 +17,7 @@ import { Settings } from '../simulation-controls/settings/settings';
 				<app-component-properties class="absolute top-18.75 right-1.25" />
 			</div>
 			<app-palette/>
+			<app-palette-component-details/>
 			<app-canvas/>
 		</div>
 
@@ -26,12 +28,12 @@ import { Settings } from '../simulation-controls/settings/settings';
 	`,
 	styles: [`
 		app-palette {
-			width: 250px;
+			width: 250px !important;
 			box-shadow: -1px 0 24px 0 black;
 			border-radius: 0 15px 15px 0;
 		}
 	`],
-	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings],
+	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings, PaletteComponentDetails],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		class: 'contents',

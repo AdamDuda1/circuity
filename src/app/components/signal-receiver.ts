@@ -16,6 +16,7 @@ export class SignalReceiver extends ElectricalComponent {
 	id;
 	category;
 	name = 'Signal Receiver';
+	override description = 'qjgsdjhgkjfash.';
 	type = '';
 
 	color = '#32a852';

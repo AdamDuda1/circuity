@@ -16,6 +16,7 @@ export class Buzzer extends ElectricalComponent {
 	id;
 	category;
 	name = 'Buzzer';
+	override description = 'When powered, generates a sound at a constant frequency.';
 
 	type = '';
 

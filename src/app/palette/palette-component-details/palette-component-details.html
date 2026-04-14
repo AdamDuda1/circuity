@@ -1,4 +1,38 @@
-<div class="details">
-    <h3 class="name">{{ name() }}</h3>
-    {{ description() }}
-</div>
+@if (details(); as details) {
+	<div class="details">
+		<div class="title-row">
+<!--			<canvas #previewCanvas class="preview"-->
+<!--					width="120" height="90" style="width: 27px; height: 27px;"></canvas>-->
+			<div>
+				<h3 class="name">{{ details.component.name }}</h3>
+				<div class="category">{{ details.component.category }}</div>
+			</div>
+		</div>
+		<div class="description">{{ details.component.description }}</div>
+
+		@if (truthTableRows().length) {
+			<table class="truth-table">
+				<thead>
+				<tr>
+					@for (cell of truthTableHead(); track $index) {
+						<th>{{ cell }}</th>
+					}
+				</tr>
+				</thead>
+				<tbody>
+					@for (row of truthTableBody(); track $index) {
+						<tr>
+							@for (cell of row; track $index) {
+								<td>{{ cell }}</td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+
+		@if (details.component.gif) {
+			<img class="gif" [src]="details.component.gif" [alt]="details.component.name + ' preview'"/>
+		}
+	</div>
+}

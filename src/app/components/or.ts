@@ -16,6 +16,8 @@ export class OR extends ElectricalComponent {
 	id;
 	category;
 	name = 'OR';
+	override description = 'The output is active when at least one input is active.';
+	override truthTable = 'A | B | Q\n0 | 0 | 0\n0 | 1 | 1\n1 | 0 | 1\n1 | 1 | 1';
 
 	type = '';
 

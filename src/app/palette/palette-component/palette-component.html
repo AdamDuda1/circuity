@@ -1,7 +1,21 @@
 <div
-	class="select-none cursor-grab"
+	class="palette-item select-none cursor-grab"
+	[class.is-focused]="isFocused()"
+	[class.is-selected]="isSelected()"
+	role="button"
+	tabindex="0"
+	[attr.aria-label]="'Select component ' + component().name"
 	draggable="true"
+	(dragenter)="onHideDetails()"
+	(blur)="onHideDetails()"
+	(mouseleave)="onHideDetails()"
+	(dragend)="onShowDetails($event)"
+	(click)="onShowDetails($event)"
 	(dblclick)="onDoubleClick()"
+	(focus)="onShowDetails($event)"
+	(mouseenter)="onShowDetails($event)"
+	(keydown.enter)="onKeyboardSpawn($any($event))"
+	(keydown.space)="onKeyboardSpawn($any($event))"
 	(dragstart)="onDragStart($event)">
 	<canvas #canvas width="120" height="120" style="width: 27px; height: 27px;"></canvas>
 	<b>{{ component().name }}</b>

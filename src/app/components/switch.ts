@@ -16,6 +16,7 @@ export class Switch extends ElectricalComponent {
 	id;
 	category;
 	name = 'Switch';
+	override description = 'Manual signal source. Can function as a switch or button.';
 
 	type = '';
 

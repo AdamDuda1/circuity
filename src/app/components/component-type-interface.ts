@@ -9,6 +9,9 @@ export interface SerializedPinRef {
 export interface SerializedElectricalComponent {
 	name: string;
 	color: string;
+	description?: string;
+	truthTable?: string;
+	gif?: string;
 	x: number;
 	y: number;
 	showLabel: boolean;
@@ -35,6 +38,10 @@ export abstract class ElectricalComponent {
 	abstract y: number;
 	abstract w: number;
 	abstract h: number;
+
+	description = '';
+	truthTable = '';
+	gif = '';
 
 	showLabel: boolean = false;
 
@@ -66,6 +73,9 @@ export abstract class ElectricalComponent {
 		this.y = data.y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
 		this.showLabel = data.showLabel;
+		this.description = data.description ?? this.description;
+		this.truthTable = data.truthTable ?? this.truthTable;
+		this.gif = data.gif ?? this.gif;
 
 		if (this.canSetColor()) {
 			this.color = data.color;
@@ -82,6 +92,9 @@ export abstract class ElectricalComponent {
 		return {
 			name: this.name,
 			color: this.color,
+			description: this.description,
+			truthTable: this.truthTable,
+			gif: this.gif,
 			x: this.x,
 			y: this.y,
 			showLabel: this.showLabel,

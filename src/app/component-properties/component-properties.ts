@@ -106,4 +106,5 @@ export class ComponentProperties {
 	}
 
 	protected readonly Buzzer = Buzzer;
+	protected readonly localStorage = localStorage;
 }

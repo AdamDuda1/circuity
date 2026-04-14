@@ -17,6 +17,10 @@ import { SignalReceiver } from './components/signal-receiver';
 // import * as bootstrap from 'bootstrap';
 
 type ComponentFactory = (giveID: boolean, x: number, y: number) => ElectricalComponent;
+type PaletteComponentDetailsState = {
+	component: ElectricalComponent;
+	top: number;
+};
 
 @Injectable({
 	providedIn: 'root'
@@ -50,6 +54,7 @@ export class Globals {
 
 	public readonly savePanel_open = signal(false);
 	public readonly settingsPanel_open = signal(false);
+	public readonly paletteComponentDetails = signal<PaletteComponentDetailsState | null>(null);
 
 	public darkMode: boolean = false;
 	public snap: boolean = false;
@@ -67,6 +72,18 @@ export class Globals {
 	public constants = new Constants();
 
 	public readonly blog_loaded = signal(false);
+
+	showPaletteComponentDetails(component: ElectricalComponent, top: number) {
+		this.paletteComponentDetails.set({component, top});
+	}
+
+	hidePaletteComponentDetails(component?: ElectricalComponent) {
+		const current = this.paletteComponentDetails();
+		if (!current) return;
+		if (component && current.component !== component) return;
+
+		this.paletteComponentDetails.set(null);
+	}
 
 	public readonly componentRegistry = new Map<string, ComponentFactory>([
 		['AND',     (id, x, y) => new AND(this, id, x, y)],

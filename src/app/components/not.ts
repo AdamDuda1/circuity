@@ -16,6 +16,8 @@ export class NOT extends ElectricalComponent {
 	id;
 	category;
 	name = 'NOT';
+	override description = 'Reverses the input state to the opposite one.';
+	override truthTable = 'A | Q\n0 | 1\n1 | 0';
 
 	type = '';
 

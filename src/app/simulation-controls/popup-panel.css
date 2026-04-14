@@ -78,18 +78,16 @@
 }
 
 
-.form-check-label {	max-width: 70%; }
-.form-check-label, .form-switch, .form-check-input { cursor: pointer; }
-.form-switch { position: relative; left: 5px; }
-.form-switch:hover > .form-check-label { color: #245075; }
-
 .todo-actions-cell {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
 }
 
-
+.form-check-label {	max-width: 70%; }
+.form-switch { position: relative; left: 5px; }
+.form-check-label, .form-switch, .form-check-input { cursor: pointer; }
+.form-switch:hover > .form-check-label, .nice-input:hover > .nice-input-label { color: #245075; }
 .custom-file-button input[type=file] { margin-left: -2px !important; }
 .custom-file-button input[type=file]::-webkit-file-upload-button { display: none; }
 .custom-file-button input[type=file]::file-selector-button { display: none; }

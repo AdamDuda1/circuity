@@ -24,11 +24,36 @@ export class PaletteComponent implements AfterViewInit {
 		this.component().render(ctx, view());
 	}
 
+	isFocused(): boolean {
+		return this.globals.paletteComponentDetails()?.component === this.component();
+	}
+
+	isSelected(): boolean {
+		return this.component().isSelected();
+	}
+
+	onShowDetails(event: MouseEvent | FocusEvent): void {
+		const target = event.currentTarget;
+		if (!(target instanceof HTMLElement)) return;
+
+		this.globals.showPaletteComponentDetails(this.component(), target.getBoundingClientRect().top);
+	}
+
+	onHideDetails(): void {
+		this.globals.hidePaletteComponentDetails(this.component());
+	}
+
 	onDragStart(event: DragEvent): void {
 		if (!event.dataTransfer) return;
 
-		event.dataTransfer.effectAllowed = 'all'; // modify with event.dataTransfer.dropEffect in canvas.ts
+		event.dataTransfer.effectAllowed = 'all';
 		event.dataTransfer.setData('application/circuity-component', this.component().name);
+	}
+
+	onKeyboardSpawn(event: KeyboardEvent): void {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		this.globals.simulation.spawnComponent(this.component().name, -this.globals.view().x, this.globals.view().y, true);
 	}
 
 	onDoubleClick(): void {

@@ -16,6 +16,7 @@ export class LED extends ElectricalComponent {
 	id;
 	category;
 	name = 'LED';
+	override description = 'When powered creates a light with the set color. Visual indicator of the signal status at the input.';
 
 	type = '';
 
