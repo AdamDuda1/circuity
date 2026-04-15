@@ -36,10 +36,13 @@ export class PaletteComponent implements AfterViewInit {
 		const target = event.currentTarget;
 		if (!(target instanceof HTMLElement)) return;
 
+		this.globals.hoveredPaletteComponent.set(this.component());
+
 		this.globals.showPaletteComponentDetails(this.component(), target.getBoundingClientRect().top);
 	}
 
 	onHideDetails(): void {
+		this.globals.hoveredPaletteComponent.set(null);
 		this.globals.hidePaletteComponentDetails(this.component());
 	}
 

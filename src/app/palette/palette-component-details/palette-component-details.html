@@ -1,11 +1,15 @@
 @if (details(); as details) {
 	<div class="details">
+		@if (details.component.gif) {
+			<img class="gif" [src]="details.component.gif" [alt]="details.component.name + ' preview'"/>
+		}
+
 		<div class="title-row">
 <!--			<canvas #previewCanvas class="preview"-->
 <!--					width="120" height="90" style="width: 27px; height: 27px;"></canvas>-->
-			<div>
+			<div class="flex align-items-center">
 				<h3 class="name">{{ details.component.name }}</h3>
-				<div class="category">{{ details.component.category }}</div>
+				<div class="category" style="margin-left: 3px">{{ details.component.category }}</div>
 			</div>
 		</div>
 		<div class="description">{{ details.component.description }}</div>
@@ -30,9 +34,6 @@
 				</tbody>
 			</table>
 		}
-
-		@if (details.component.gif) {
-			<img class="gif" [src]="details.component.gif" [alt]="details.component.name + ' preview'"/>
-		}
+		<div class="category">Drag to use, <kbd style="position: relative; top: 3px; margin: 1px;">F</kbd> to favorite!</div>
 	</div>
 }

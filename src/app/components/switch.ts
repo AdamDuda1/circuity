@@ -17,6 +17,7 @@ export class Switch extends ElectricalComponent {
 	category;
 	name = 'Switch';
 	override description = 'Manual signal source. Can function as a switch or button.';
+	override gif = '/component-previews/button_led.gif';
 
 	type = '';
 

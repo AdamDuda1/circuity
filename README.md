@@ -45,6 +45,7 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 **OTHER:**
 
 
+- [ ] auto-saving [!!AND SAVING ALSO] doesnt seem to work sometimes...
 - [ ] saveState after modifying properties
 - [ ] add previews in palette component details back
 - [ ] optimize the data by saving only changed component properties1!

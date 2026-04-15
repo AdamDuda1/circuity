@@ -17,6 +17,7 @@ export class SignalSender extends ElectricalComponent {
 	category;
 	name = 'Signal Sender';
 	override description = 'qweqweqwe.';
+	override gif = '/component-previews/signal.gif';
 	type = '';
 
 	color = '#8a4fff';

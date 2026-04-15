@@ -18,6 +18,7 @@ export class NOT extends ElectricalComponent {
 	name = 'NOT';
 	override description = 'Reverses the input state to the opposite one.';
 	override truthTable = 'A | Q\n0 | 1\n1 | 0';
+	override gif = '/component-previews/not.gif';
 
 	type = '';
 

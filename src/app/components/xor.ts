@@ -18,6 +18,7 @@ export class XOR extends ElectricalComponent {
 	name = 'XOR';
 	override description = 'Exclusive OR. The output is only active when the inputs have different states.';
 	override truthTable = 'A | B | Q\n0 | 0 | 0\n0 | 1 | 1\n1 | 0 | 1\n1 | 1 | 0';
+	override gif = '/component-previews/xor.gif';
 
 	type = '';
 
