@@ -26,3 +26,15 @@
 //.form-check-label, .form-switch, .form-check-input { cursor: pointer; }
 //.form-switch:hover > .form-check-label, .nice-input:hover > .nice-input-label { color: #245075; }
 //:is(input, textarea, select):hover + label[for], :is(input, textarea, select):hover ~ label[for] { color: #245075; }
+
+.floating-panel {
+	background: rgba(255, 255, 255, 0.82);
+	backdrop-filter: blur(2px);
+	opacity: 1;
+	box-shadow: 0 0 12px 0 #00000073, inset 0 0 7px 4px #0000000d;
+	border-radius: 6px;
+	padding: 10px;
+	border: none;
+	display: flex;
+	flex-direction: column;
+}

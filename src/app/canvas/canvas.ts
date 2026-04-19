@@ -191,10 +191,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 				if (component.mouseOverComponent()) component.pointerDownInSimulation();
 			}
 		} else {
-			this.globals.selected = -1;
+			this.globals.clearSelected();
 			for (const component of this.getComponentsByViewOrderDesc()) {
 				if (component.mouseOverComponent()) {
-					this.globals.selected = component.id;
+					this.globals.setSelected(component.id);
 					this.bringToFront(component.id);
 					break;
 				}
@@ -231,9 +231,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.globals.isPanning.set(false);
 
 		if (this.globals.isDragging()) {
-			const selectedComponent = this.globals.simulation.circuitComponents()[this.globals.selected];
+			const selectedComponent = this.globals.simulation.circuitComponents().find(c => c.id === this.globals.selected);
 			if (!selectedComponent) {
-				this.globals.selected = -1;
+				this.globals.clearSelected();
 				this.globals.isDragging.set(false);
 				return;
 			}
@@ -247,9 +247,6 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
 		const click = this.moved_amt <= 5;
-		if (!click && this.selectedBeforeDrag !== this.globals.selected) {
-			this.globals.selected = -1;
-		}
 		this.selectedBeforeDrag = -1;
 		this.moved_amt = 0;
 
@@ -321,9 +318,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 			if (this.globals.selected != -1) {
 				if (!this.globals.isDragging()) this.globals.isDragging.set(true);
-				const selectedComponent = components[this.globals.selected];
+				const selectedComponent = components.find(c => c.id === this.globals.selected);
 				if (!selectedComponent) {
-					this.globals.selected = -1;
+					this.globals.clearSelected();
 					this.globals.isDragging.set(false);
 					return;
 				}
@@ -385,7 +382,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 			selectedComponent.disconnect();
 			selectedComponent.deleted = true;
-			this.globals.selected = -1;
+			this.globals.clearSelected();
 
 			this.globals.simulation.saveState();
 		}

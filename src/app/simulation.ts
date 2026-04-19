@@ -75,7 +75,7 @@ export class Simulation {
 
 	switch() {
 		if (this.running()) this.globals.simulation.stop();
-		else this.globals.selected = -1;
+		else this.globals.clearSelected();
 		this.running.set(!this.running());
 	}
 

@@ -195,7 +195,7 @@ export abstract class ElectricalComponent {
 	}
 
 	isSelected(): boolean {
-		return this.globals.selected === this.id && this.globals.selected != -1;
+		return this.id !== -1 && this.globals.isSelected(this.id);
 	}
 
 	render(ctx: CanvasRenderingContext2D, view?: {
@@ -350,15 +350,11 @@ export abstract class ElectricalComponent {
 
 		ctx.save();
 		ctx.shadowBlur = 20 * z;
-		ctx.shadowOffsetX = 5000 * z;
-		ctx.shadowOffsetY = 5000 * z;
-		ctx.beginPath();
-		ctx.arc(screenX + w / 2 - 5000 * z, screenY - h / 2 - 5000 * z, z * 10, 0, Math.PI * 2);
-		ctx.fillStyle = 'red';
-		//ctx.shadowColor = 'blue'; // TODO pick selection color
 		ctx.shadowColor = this.color;
-		ctx.fill();
-		ctx.restore();
+		ctx.shadowOffsetX = 0;
+		ctx.shadowOffsetY = 0;
+		ctx.beginPath();
+		ctx.arc(screenX + w / 2, screenY - h / 2, z * 10, 0, Math.PI * 2);
 	}
 
 	mouseOverComponent(): boolean {

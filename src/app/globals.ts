@@ -49,6 +49,7 @@ export class Globals {
 	public canvasCursor = 'default';
 	public canvasCursorCandidate = 'default';
 	public selected = -1;
+	public readonly selectedVersion = signal(0);
 
 	public readonly tutorial_open = signal(false);
 	public readonly tutorial_page = signal(0);
@@ -74,6 +75,20 @@ export class Globals {
 	public constants = new Constants();
 
 	public readonly blog_loaded = signal(false);
+
+	setSelected(id: number) {
+		if (this.selected === id) return;
+		this.selected = id;
+		this.selectedVersion.update(v => v + 1);
+	}
+
+	clearSelected() {
+		this.setSelected(-1);
+	}
+
+	isSelected(id: number): boolean {
+		return this.selected === id;
+	}
 
 	showPaletteComponentDetails(component: ElectricalComponent, top: number) {
 		this.paletteComponentDetails.set({component, top});

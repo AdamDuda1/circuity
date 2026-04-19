@@ -45,7 +45,9 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 **OTHER:**
 
 
+- [ ] do something with the debug info at the bottom left of canvas (currently hidden bahind the palette)
 - [ ] auto-saving [!!AND SAVING ALSO] doesnt seem to work sometimes...
+- [ ] (somehow) merge global_styles.scss and styles.css (in src/)
 - [ ] saveState after modifying properties
 - [ ] add previews in palette component details back
 - [ ] optimize the data by saving only changed component properties1!

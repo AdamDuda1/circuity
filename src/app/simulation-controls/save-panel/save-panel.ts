@@ -79,7 +79,7 @@ export class SavePanel {
 
 		if (this.globals.simulation.running()) this.globals.simulation.switch();
 
-		this.globals.selected = -1;
+		this.globals.clearSelected();
 		this.globals.simulation.circuitComponents.set([]);
 		this.globals.savePanel_open.set(false);
 		_Toast.success('Old design cleared!');
@@ -145,7 +145,7 @@ export class SavePanel {
 				return;
 			}
 
-			this.globals.selected = -1;
+			this.globals.clearSelected();
 			this.globals.savePanel_open.set(false);
 			_Toast.success(`Loaded cloud project: ${result.name}`);
 		} catch (error: unknown) {

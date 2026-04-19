@@ -52,7 +52,7 @@ export class Data {
 	loadJSON(json: SavedState, resetHistory = true, changeView = true) {
 		try {
 			const state: SavedState = json;
-			this.globals.selected = -1;
+			this.globals.clearSelected();
 			this.globals.resetNextID(0);
 
 			const loadedComponents: ElectricalComponent[] = [];

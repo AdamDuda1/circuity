@@ -4,6 +4,7 @@ import { Buzzer } from '../components/buzzer';
 import { Switch } from '../components/switch';
 import { SignalSender } from '../components/signal-sender';
 import { SignalReceiver } from '../components/signal-receiver';
+import { ElectricalComponent } from '../components/component-type-interface';
 
 @Component({
 	selector: 'category',
@@ -35,33 +36,58 @@ export class Category {}
 export class ComponentProperties {
 	constructor(public globals: Globals) {}
 
-	change_name(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].name = (event.target as HTMLInputElement).value; }
+	selectedComponent(): ElectricalComponent | null {
+		if (this.globals.selected === -1) return null;
+		return this.globals.simulation.circuitComponents().find(c => c.id === this.globals.selected) ?? null;
+	}
 
-	change_showLabel(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].showLabel = Boolean((event.target as HTMLInputElement).value); }
+	change_name(event: Event) {
+		const selected = this.selectedComponent();
+		if (!selected) return;
+		selected.name = (event.target as HTMLInputElement).value;
+	}
 
-	change_color(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].color = (event.target as HTMLInputElement).value; }
+	change_showLabel(event: Event) {
+		const selected = this.selectedComponent();
+		if (!selected) return;
+		selected.showLabel = (event.target as HTMLInputElement).checked;
+	}
 
-	change_x(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].x = Number((event.target as HTMLInputElement).value); }
+	change_color(event: Event) {
+		const selected = this.selectedComponent();
+		if (!selected) return;
+		selected.color = (event.target as HTMLInputElement).value;
+	}
 
-	change_y(event: Event) { this.globals.simulation.circuitComponents()[this.globals.selected].y = Number((event.target as HTMLInputElement).value); }
+	change_x(event: Event) {
+		const selected = this.selectedComponent();
+		if (!selected) return;
+		selected.x = Number((event.target as HTMLInputElement).value);
+	}
+
+	change_y(event: Event) {
+		const selected = this.selectedComponent();
+		if (!selected) return;
+		selected.y = Number((event.target as HTMLInputElement).value);
+	}
 
 	selectedBuzzer(): Buzzer | null {
-		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		const selected = this.selectedComponent();
 		return selected instanceof Buzzer ? selected : null;
 	}
 
 	selectedSwitch(): Switch | null {
-		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		const selected = this.selectedComponent();
 		return selected instanceof Switch ? selected : null;
 	}
 
 	selectedSignalSender(): SignalSender | null {
-		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		const selected = this.selectedComponent();
 		return selected instanceof SignalSender ? selected : null;
 	}
 
 	selectedSignalReceiver(): SignalReceiver | null {
-		const selected = this.globals.simulation.circuitComponents()[this.globals.selected];
+		const selected = this.selectedComponent();
 		return selected instanceof SignalReceiver ? selected : null;
 	}
 

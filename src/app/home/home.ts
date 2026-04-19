@@ -16,7 +16,7 @@ import { PaletteComponentDetails } from '../palette/palette-component-details/pa
 				<app-simulation-controls/>
 				<app-component-properties class="absolute top-18.75 right-1.25" />
 			</div>
-			<app-palette/>
+			<app-palette class="floating-panel" style="position: absolute"/>
 			<app-palette-component-details/>
 			<app-canvas/>
 		</div>
@@ -28,9 +28,12 @@ import { PaletteComponentDetails } from '../palette/palette-component-details/pa
 	`,
 	styles: [`
 		app-palette {
-			width: 250px !important;
-			box-shadow: -1px 0 24px 0 black;
-			border-radius: 0 15px 15px 0;
+			position: absolute;
+			height: calc(100vh - 20px);
+			left: 10px;
+			top: 10px;
+			padding: 2px;
+			width: 250px;
 		}
 	`],
 	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings, PaletteComponentDetails],

@@ -1,13 +1,12 @@
-<div class="container" id="properties" style="gap: 3px; width: 275px"
+<div class="container floating-panel" id="properties" style="gap: 3px; width: 275px"
 	 [style.visibility]="(globals.selected != -1 && !globals.isDragging()) ? 'visible' : 'hidden'">
 	@if (globals.selected == -1) {
 		<category>no component selected</category>
 	}
-	@if (globals.selected != -1) {
-		<!--else ??-->
-		<category>{{ this.globals.constants.translations.componentProperties.section1 }}</category>
+	@if (selectedComponent(); as selected) {
+		<category>{{ globals.constants.translations.componentProperties.section1 }}</category>
 		<input type="text" name="componentName" id="componentName"
-			   value="{{globals.simulation.circuitComponents()[globals.selected].name}}"
+			   [value]="selected.name"
 			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
 			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
 			   (input)="change_name($event)" style="text-align: center">
@@ -16,7 +15,7 @@
 			<label for="displayLabel" class="mb-0 form-check-label contents">Display label</label>
 			<div class="form-check form-switch m-0">
 				<input class="form-check-input" type="checkbox" id="displayLabel"
-					   [checked]="globals.simulation.circuitComponents()[globals.selected].showLabel"
+					   [checked]="selected.showLabel"
 					   (input)="change_showLabel($event)">
 			</div>
 		</div>
@@ -25,28 +24,28 @@
 			<label for="color" class="nice-input-label">Color: </label>
 			<div class="nice-input">
 				<input type="color" name="color" id="color" class="form-control form-control-color"
-					   value="{{globals.simulation.circuitComponents()[globals.selected].color}}"
+					   [value]="selected.color"
 					   (input)="change_color($event)" style="position: relative; top: 0; left: -5px;">
 			</div>
 		</div>
 
-		<category>{{ this.globals.constants.translations.componentProperties.section2 }}</category>
+		<category>{{ globals.constants.translations.componentProperties.section2 }}</category>
 
 		<div class="input-group">
 			<label class="input-group-text" for="posX">x</label>
 			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posX"
-				   value="{{globals.simulation.circuitComponents()[globals.selected].x}}"
+				   [value]="selected.x"
 				   (input)="change_x($event)">
 		</div>
 
 		<div class="input-group">
 			<label class="input-group-text" for="posY">y</label>
 			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posY"
-				   value="{{globals.simulation.circuitComponents()[globals.selected].y}}"
+				   [value]="selected.y"
 				   (input)="change_y($event)">
 		</div>
 
-		<category>{{ this.globals.constants.translations.componentProperties.section3 }}</category>
+		<category>{{ globals.constants.translations.componentProperties.section3 }}</category>
 
 		@if (selectedSwitch(); as switchComp) {
 			<div class="input-group">
@@ -69,30 +68,38 @@
 		@if (selectedBuzzer(); as buzzer) {
 			<div class="flex gap-2">
 				Frequency:
-				<input type="range" id="volume" min="10" max="2000" step="5" style="width: stretch;"
-					   value="{{buzzer.frequency}}" (input)="buzzer_setFrequency($event)" aria-label="Frequency slider">
+				<input type="range" id="buzzerFrequencyRange" min="10" max="5000" step="5" style="width: stretch;"
+					   [value]="buzzer.frequency" (input)="buzzer_setFrequency($event)" aria-label="Frequency slider">
 			</div>
 
 			<div class="input-group">
-				<label class="input-group-text" for="frequency">Hz</label>
+				<label class="input-group-text" for="buzzerFrequencyInput">Hz</label>
 				<input type="number" class="form-control" placeholder="frequency" aria-label="-"
-					   id="frequency" (input)="buzzer_setFrequency($event)"
-					   value="{{buzzer.frequency}}">
+					   id="buzzerFrequencyInput" (input)="buzzer_setFrequency($event)"
+					   [value]="buzzer.frequency">
 			</div>
 
 			<div class="flex gap-2">
 				Volume:
-				<input type="range" id="volume" min="0" max="1" step="0.01" style="width: stretch;"
-					   value="{{buzzer.volume}}" (input)="buzzer_setVolume($event)" aria-label="Volume slider">
+				<input type="range" id="buzzerVolumeRange" min="0" max="1" step="0.01" style="width: stretch;"
+					   [value]="buzzer.volume" (input)="buzzer_setVolume($event)" aria-label="Volume slider">
 			</div>
 
 			<div class="input-group" style="align-items: center; gap: 6px;">
 				<div class="input-group">
-					<label class="input-group-text" for="volume">%</label>
-					<input type="number" class="form-control" id="volumeNumber" min="0" max="1" step="0.01"
-						   value="{{buzzer.volume}}" (input)="buzzer_setVolume($event)" aria-label="Volume value">
+					<label class="input-group-text" for="buzzerVolumeInput">%</label>
+					<input type="number" class="form-control" id="buzzerVolumeInput" min="0" max="1" step="0.01"
+						   [value]="buzzer.volume" (input)="buzzer_setVolume($event)" aria-label="Volume value">
 				</div>
 			</div>
+
+			@if (buzzer.volume > 0.5) {
+				<div class="alert alert-warning py-1 px-2 mb-0" role="status" aria-live="polite">
+					<span class="material-symbols-outlined"
+						  style="font-size: larger; position: relative; top: 2px; left: 0; margin-right: 4px;">warning</span>
+					<b>Be carful!</b> 50% is already loud!
+				</div>
+			}
 		}
 
 		@if (selectedSignalSender(); as sender) {
