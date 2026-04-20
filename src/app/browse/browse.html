@@ -1,16 +1,37 @@
 <div class="container py-3">
-	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-		@for (project of projects(); track project.id) {
-			<div class="col" style="width: 400px;">
-				<div class="card h-100">
-					<div class="card-body">
-						<h5 class="card-title">{{ project.name }}</h5>
-						<h6 class="card-subtitle mb-2 text-muted">by {{ project.author }}</h6>
-						<p class="card-text">{{ project.description }}</p>
-						<a class="card-link" href="#">Open</a>
+	@if (isLoading()) {
+		<div aria-live="polite" class="d-flex justify-content-center py-5">
+			<div aria-hidden="true" class="spinner-border text-primary" role="status"></div>
+			<span class="visually-hidden">Loading projects...</span>
+		</div>
+	} @else if (error()) {
+		<div aria-live="assertive" class="alert alert-danger" role="alert">
+			Error: {{ error() }}
+		</div>
+	} @else if (projects().length === 0) {
+		<div class="text-center py-5">
+			<p class="lead mb-0">No public projects found on this installation.</p>
+		</div>
+	} @else {
+		<div
+			style="display: grid; width: 100%; max-width: 90vw; margin: 0 auto; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); justify-content: center; align-items: start;">
+			@for (project of projects(); track project.id) {
+				<div class="col" style="margin: .5rem; width: 350px">
+					<div class="card h-100">
+						<div class="card-body">
+							<h5 class="card-title"
+								style="font-weight: bold; margin-bottom: 2px; font-size: x-large;">{{ project.name }}</h5>
+							<h6 class="card-subtitle mb-2 text-muted"
+								style="margin-bottom: 2px !important; font-size: 12px">by {{ project.author }}</h6>
+							<p class="card-text"><i>{{ project.description }}</i></p>
+							<a class="card-link accent-blue-400 hover:underline" href="#" style="color: steelblue">
+								Open
+								<span class="material-symbols-outlined" style="font-size: larger; top: 4px;"> arrow_forward </span>
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
-		}
-	</div>
+			}
+		</div>
+	}
 </div>

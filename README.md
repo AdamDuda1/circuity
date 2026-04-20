@@ -36,25 +36,16 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 <sub>done items are removed</sub>
 
-**IMPORTANT (in order):**
-
-- [ ] Sort elements in the design by ViewOrder (last selected desc)
-- [ ] add multi-select (shift + click, ctrl + click, right click & drag??)
-
-
-**OTHER:**
-
-
-- [ ] do something with the debug info at the bottom left of canvas (currently hidden bahind the palette)
-- [ ] auto-saving [!!AND SAVING ALSO] doesnt seem to work sometimes...
-- [ ] (somehow) merge global_styles.scss and styles.css (in src/)
 - [ ] saveState after modifying properties
+- [ ] comment what was un/redid
+- [ ] add multi-select (shift + click, ctrl + click, right click & drag??)
+- [ ] do something with the debug info at the bottom left of canvas (currently hidden bahind the palette)
+- [ ] (somehow) merge global_styles.scss and styles.css (in src/)
 - [ ] add previews in palette component details back
 - [ ] optimize the data by saving only changed component properties1!
 - [ ] notifications for the admins when anything is posted by a user
 - [ ] ask the user if ctrl+S should save in save_last (localStorage) or open the save panel (or save in the last chosen location?????)
 - [ ] add a keyboard shortcut to open the save panel and make esc close all popups
-- [ ] component list window?
 - [ ] fix savedDesign.view -- (??) calculate the zoom so all components are in the view, (??) make it avg of (x, y) of the components, not the center if one component is far away
 - [ ] unselect when confirmation canceled <-- newDesign() in save panel
 - [ ] implements isSaved to not asked user is design is saved
@@ -69,13 +60,11 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 - [ ] Add tutorials (~~general~~ + for each component)
 - [ ] Add a gradient color when simulating on wires (HI or LO): <== keep??
 - [ ] Add custom context menu
-- [ ] dark mode custom css
 - [ ] (??) Add separate methods for mouseOverComponent and Pin in general (not only for each component)
 - [ ] Pick color for the selection indicator
 - [ ] Add alignment guides and step snapping setting
 - [ ] Move all constant strings to a constants file with array (=> translations possible)
 - [ ] Add component categories, favourites and info panels
-- [ ] Fix canvas clipping under palette (??, `background: white; z-index: 5;` + position relative)
 
 ---
 

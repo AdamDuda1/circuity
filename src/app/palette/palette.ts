@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, Signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, signal, inject, Signal } from '@angular/core';
 import { PaletteComponent } from './palette-component/palette-component';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
@@ -21,7 +21,7 @@ type Category = {
 		@if (viewMode() === 'list') {
 			<div class="scroll">
 				@for (component of designComponents(); track component.id) {
-					<button class="component-list-item" type="button"
+					<button class="component-list-item cursor-pointer" type="button"
 					        [class.is-selected]="selectedDesignId() === component.id"
 					        (click)="selectDesignComponent(component.id)">
 						{{ component.name }}
@@ -126,20 +126,6 @@ type Category = {
 			border-color: rgba(63, 113, 235, 0.7);
 		}
 
-		.tutorial {
-			margin-top: 5px;
-			display: flex;
-			flex-direction: row !important;
-			justify-content: center !important;
-			font-size: small;
-		}
-
-		.material-symbols-outlined {
-			font-size: medium;
-			position: relative;
-			top: 2px;
-		}
-
 		a {
 			position: absolute;
 			bottom: 7px;
@@ -151,7 +137,7 @@ type Category = {
 export class Palette {
 	private globals = inject(Globals);
 	components = signal<ElectricalComponent[]>([]);
-	designComponents = this.globals.simulation.circuitComponents;
+	designComponents = computed(() => this.globals.simulation.circuitComponents().filter((component) => !component.deleted));
 	viewMode = signal<'palette' | 'list'>('palette');
 	categories: Category[] = [];
 	defaultCategories: string[] = [];

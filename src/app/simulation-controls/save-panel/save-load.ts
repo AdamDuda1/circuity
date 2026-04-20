@@ -30,6 +30,12 @@ export class SaveLoad {
 		URL.revokeObjectURL(url);
 	}
 
+	async importJSON(file: File): Promise<boolean> {
+		const raw = await file.text();
+		const parsed: unknown = JSON.parse(raw);
+		return this.globals.data.loadJSON(parsed as Parameters<typeof this.globals.data.loadJSON>[0]);
+	}
+
 	getCurrentDesignSizeLabel(): string {
 		const json = JSON.stringify(this.globals.data.getCurrentDesignJSON());
 		const bytes = new Blob([json], {type: 'application/json'}).size;

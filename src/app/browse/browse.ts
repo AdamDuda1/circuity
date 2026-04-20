@@ -27,12 +27,24 @@ export class Browse {
 	}
 
 	projects = signal<PublicProject[]>([]);
+	isLoading = signal(true);
+	error = signal<string | null>(null);
 
 	fetchProjects(limit = 9, page = 1) {
+		this.isLoading.set(true);
+		this.error.set(null);
 		const url = `${this.globals.database}projects/get?limit=${limit}&page=${page}`;
 		this.http.get<PublicProject[]>(url).subscribe({
-			next: (res) => this.projects.set(res ?? []),
-			error: () => this.projects.set([])
+			next: (res) => {
+				this.projects.set(res ?? []);
+				this.isLoading.set(false);
+			},
+			error: (error: unknown) => {
+				this.projects.set([]);
+				const message = error instanceof Error ? error.message : 'Failed to fetch public projects.';
+				this.error.set(message);
+				this.isLoading.set(false);
+			}
 		});
 	}
 }

@@ -29,20 +29,24 @@ export class Data {
 	}
 
 	getCurrentDesignJSON() {
+		const activeComponents = this.globals.simulation.circuitComponents().filter((component) => !component.deleted);
 		let minX = 1e7, maxX = -1e7, minY = 1e7, maxY = -1e7;
-		this.globals.simulation.circuitComponents().forEach((element) => {
+		activeComponents.forEach((element) => {
 			minX = Math.min(minX, element.x);
 			maxX = Math.max(maxX, element.x);
 			minY = Math.min(minY, element.y);
 			maxY = Math.max(maxY, element.y);
 		});
 
+		const hasActiveComponents = activeComponents.length > 0;
+		const currentView = this.globals.view();
+
 		return {
-			components: this.globals.simulation.circuitComponents().map(c => this.getSparseComponentJSON(c)),
+			components: activeComponents.map(c => this.getSparseComponentJSON(c)),
 			view: {
-				x: -(minX + maxX) / 2,
-				y: (minY + maxY) / 2,
-				z: this.globals.view().z
+				x: hasActiveComponents ? -(minX + maxX) / 2 : currentView.x,
+				y: hasActiveComponents ? (minY + maxY) / 2 : currentView.y,
+				z: currentView.z
 			}
 		} as SavedState;
 	}

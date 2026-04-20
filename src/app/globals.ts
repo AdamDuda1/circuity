@@ -77,7 +77,6 @@ export class Globals {
 	public readonly blog_loaded = signal(false);
 
 	setSelected(id: number) {
-		if (this.selected === id) return;
 		this.selected = id;
 		this.selectedVersion.update(v => v + 1);
 	}

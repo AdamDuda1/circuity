@@ -22,9 +22,6 @@ export interface SerializedElectricalComponent {
 
 export abstract class ElectricalComponent {
 	protected constructor(protected readonly globals: Globals) {}
-	// constructor(data: any) {
-	//
-	// }
 
 	private snapRawX: number | null = null;
 	private snapRawY: number | null = null;
@@ -222,6 +219,7 @@ export abstract class ElectricalComponent {
 
 		this.drawSelectionIndicator(ctx, view);
 		this.drawShape(ctx, view, properties);
+		if (this.isSelected()) ctx.restore();
 
 		ctx.save();
 		for (let outIndex = 0; outIndex < this.outTo.length; outIndex++) {

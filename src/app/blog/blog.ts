@@ -51,16 +51,23 @@ export class Blog implements OnInit {
 
 	async fetchBlogPosts(): Promise<void> {
 		this.isLoading.set(true);
+		this.error.set(null);
 
 		try {
 			const response = await fetch(this.globals.database + 'blog/read', {});
 
 			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				this.error.set(`HTTP error! status: ${response.status}`);
+				this.posts.set([]);
+				return;
 			}
 
 			const posts = (await response.json()) as BlogPost[];
 			this.posts.set(posts);
+		} catch (error: unknown) {
+			const message = error instanceof Error ? error.message : 'Failed to fetch blog posts.';
+			this.error.set(message);
+			this.posts.set([]);
 		} finally {
 			this.isLoading.set(false);
 		}

@@ -370,7 +370,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	onKeyDown(event: KeyboardEvent) {
 		if (event.key == 'Delete') {
-			if (this.globals.selected === -1) return;
+			if (this.globals.selected === -1) return; // todo this is very messy
 
 			const selectedId = this.globals.selected;
 			const components = this.globals.simulation.circuitComponents();
@@ -382,6 +382,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 			selectedComponent.disconnect();
 			selectedComponent.deleted = true;
+			this.globals.simulation.circuitComponents.update((items) => [...items]);
 			this.globals.clearSelected();
 
 			this.globals.simulation.saveState();

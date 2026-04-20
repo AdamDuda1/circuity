@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Globals } from '../../globals';
 import { SaveLoad } from './save-load';
@@ -20,7 +20,9 @@ export class SavePanel {
 
 	chosenSaveMethod = signal<string>('JSON');
 	saveOrLoad = signal<'save' | 'load'>('save');
+	selectedDesignFileName = signal('');
 	saveLoad!: SaveLoad;
+	readonly designFileInput = viewChild<ElementRef<HTMLInputElement>>('designFileInput');
 	readonly cloudSaveForm = this.formBuilder.nonNullable.group({
 		author: [''],
 		name: ['', Validators.required],
@@ -53,7 +55,7 @@ export class SavePanel {
 	executeLoad() {
 		switch (this.chosenSaveMethod()) {
 			case 'load-JSON':
-				this.saveLoad.exportJSON();
+				void this.executeJsonLoad();
 				break;
 			case 'load-cloud':
 				void this.executeCloudLoad();
@@ -62,6 +64,12 @@ export class SavePanel {
 				alert('Unknown load method:' + this.chosenSaveMethod());
 				break;
 		}
+	}
+
+	onDesignFileChange() {
+		const fileInput = this.designFileInput()?.nativeElement;
+		const file = fileInput?.files?.item(0);
+		this.selectedDesignFileName.set(file?.name ?? '');
 	}
 
 	newDesign(event: Event) {
@@ -150,6 +158,30 @@ export class SavePanel {
 			_Toast.success(`Loaded cloud project: ${result.name}`);
 		} catch (error: unknown) {
 			_Toast.error(this.getErrorMessage(error, 'Failed to load project from cloud.'));
+		}
+	}
+
+	private async executeJsonLoad() {
+		const fileInput = this.designFileInput()?.nativeElement;
+		const file = fileInput?.files?.item(0);
+
+		if (!file) {
+			_Toast.warning('Select a JSON file first.');
+			return;
+		}
+
+		try {
+			const loaded = await this.saveLoad.importJSON(file);
+			if (!loaded) {
+				_Toast.error('JSON file content is invalid.');
+				return;
+			}
+
+			this.globals.clearSelected();
+			this.globals.savePanel_open.set(false);
+			_Toast.success(`Loaded JSON: ${file.name}`);
+		} catch {
+			_Toast.error('Failed to load JSON file.');
 		}
 	}
 

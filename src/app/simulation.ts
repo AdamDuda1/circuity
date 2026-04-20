@@ -10,6 +10,7 @@ export class Simulation {
 	public running = signal(false);
 	private readonly channels = new Array<boolean>(10).fill(false);
 	history = signal<string[]>([]);
+	historyActions = signal<string[]>([]);
 	currentVersion = signal<number>(0);
 
 	undo() {
@@ -33,7 +34,9 @@ export class Simulation {
 		}
 
 		this.currentVersion.set(nextVersion);
-		_Toast.success('Undid!');
+		const action = this.historyActions()[nextVersion];
+		if (action) _Toast.success(action);
+		else _Toast.success('Undid!');
 	}
 
 	redo() {
@@ -57,10 +60,12 @@ export class Simulation {
 		}
 
 		this.currentVersion.set(nextVersion);
-		_Toast.success('Redid!');
+		const action = this.historyActions()[nextVersion];
+		if (action) _Toast.success(action);
+		else _Toast.success('Redid!');
 	}
 
-	saveState() {
+	saveState(action: string = "") { // TODOO!!!
 		if (this.running()) return;
 		_Toast.success('saveState');
 
@@ -69,6 +74,11 @@ export class Simulation {
 			const branchBase = this.currentVersion() > 0 ? prev.slice(this.currentVersion()) : prev;
 			const max = Math.max(1, Math.floor(this.globals.historyMax));
 			return [snapshot, ...branchBase.slice(0, max - 1)];
+		});
+		this.historyActions.update(prev => {
+			const branchBase = this.currentVersion() > 0 ? prev.slice(this.currentVersion()) : prev;
+			const max = Math.max(1, Math.floor(this.globals.historyMax));
+			return [action, ...branchBase.slice(0, max - 1)];
 		});
 		this.currentVersion.set(0);
 	}
@@ -91,7 +101,7 @@ export class Simulation {
 			component.updatePos(-component.w / 2, -component.h / 2);
 		}
 
-		this.globals.simulation.circuitComponents().push(component);
+		this.circuitComponents.update((items) => [...items, component]);
 	}
 
 	simulate() {
