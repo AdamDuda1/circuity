@@ -1,6 +1,6 @@
 import { Globals } from './globals';
 import { _Toast } from './toasts';
-import { ElectricalComponent, SerializedElectricalComponent } from './components/component-type-interface'; // type ( .. ????
+import { ElectricalComponent, SerializedElectricalComponent } from './components/component-type-interface';
 
 interface SavedState {
 	components: SerializedElectricalComponent[];
@@ -37,10 +37,8 @@ export class Data {
 			maxY = Math.max(maxY, element.y);
 		});
 
-		console.log(minX, maxX, minY, maxY);
-
 		return {
-			components: this.globals.simulation.circuitComponents().map(c => c.getComponentJSON()),
+			components: this.globals.simulation.circuitComponents().map(c => this.getSparseComponentJSON(c)),
 			view: {
 				x: -(minX + maxX) / 2,
 				y: (minY + maxY) / 2,
@@ -84,5 +82,59 @@ export class Data {
 			localStorage.removeItem('simulationData');
 			return false;
 		}
+	}
+
+	private getSparseComponentJSON(component: ElectricalComponent): SerializedElectricalComponent {
+		const current = component.getComponentJSON();
+		const sparse: SerializedElectricalComponent = {
+			name: current.name,
+			x: current.x,
+			y: current.y
+		};
+
+		const factory = this.globals.componentRegistry.get(current.name);
+		if (!factory) {
+			return sparse;
+		}
+
+		const defaults = factory(false, current.x, current.y).getComponentJSON();
+		const ignoredKeys = new Set<keyof SerializedElectricalComponent>([
+			'name',
+			'x',
+			'y',
+			'color',
+			'description',
+			'truthTable',
+			'gif'
+		]);
+
+		for (const key of Object.keys(current) as (keyof SerializedElectricalComponent)[]) {
+			if (ignoredKeys.has(key)) continue;
+			const value = current[key];
+			if (value === undefined) continue;
+
+			if (!this.isDeepEqual(value, defaults[key])) {
+				switch (key) {
+					case 'showLabel':
+						sparse.showLabel = value as boolean;
+						break;
+					case 'inFrom':
+						sparse.inFrom = value as SerializedElectricalComponent['inFrom'];
+						break;
+					case 'outTo':
+						sparse.outTo = value as SerializedElectricalComponent['outTo'];
+						break;
+					case 'custom':
+						sparse.custom = value as SerializedElectricalComponent['custom'];
+						break;
+				}
+			}
+		}
+
+		return sparse;
+	}
+
+	private isDeepEqual(a: unknown, b: unknown): boolean {
+		return JSON.stringify(a) === JSON.stringify(b);
 	}
 }

@@ -8,15 +8,15 @@ export interface SerializedPinRef {
 
 export interface SerializedElectricalComponent {
 	name: string;
-	color: string;
+	color?: string;
 	description?: string;
 	truthTable?: string;
 	gif?: string;
 	x: number;
 	y: number;
-	showLabel: boolean;
-	inFrom: SerializedPinRef[];
-	outTo: SerializedPinRef[][];
+	showLabel?: boolean;
+	inFrom?: SerializedPinRef[];
+	outTo?: SerializedPinRef[][];
 	custom?: Record<string, unknown>;
 }
 
@@ -72,17 +72,24 @@ export abstract class ElectricalComponent {
 		this.x = data.x;
 		this.y = data.y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
-		this.showLabel = data.showLabel;
+		if (typeof data.showLabel === 'boolean') {
+			this.showLabel = data.showLabel;
+		}
 		this.description = data.description ?? this.description;
 		this.truthTable = data.truthTable ?? this.truthTable;
 		this.gif = data.gif ?? this.gif;
 
-		if (this.canSetColor()) {
+		if (this.canSetColor() && data.color !== undefined) {
 			this.color = data.color;
 		}
 
-		this.inFrom = data.inFrom.map((item) => ({...item}));
-		this.outTo = data.outTo.map((arr) => arr.map((item) => ({...item})));
+		if (data.inFrom) {
+			this.inFrom = data.inFrom.map((item) => ({...item}));
+		}
+
+		if (data.outTo) {
+			this.outTo = data.outTo.map((arr) => arr.map((item) => ({...item})));
+		}
 		this.applyCustomPropsFromJSON(data.custom);
 	}
 

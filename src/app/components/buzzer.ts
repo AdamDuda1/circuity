@@ -21,7 +21,7 @@ export class Buzzer extends ElectricalComponent {
 
 	type = '';
 
-	color = '#ff9f1a';
+	color = '#bc6d00';
 	public frequency = 440;
 	public volume = 0.2;
 
