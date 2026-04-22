@@ -57,10 +57,11 @@ export class PaletteComponent implements AfterViewInit {
 		if (event.key !== 'Enter' && event.key !== ' ') return;
 		event.preventDefault();
 		this.globals.simulation.spawnComponent(this.component().name, -this.globals.view().x, this.globals.view().y, true);
+		this.globals.simulation.saveState("adding component")
 	}
 
 	onDoubleClick(): void {
 		this.globals.simulation.spawnComponent(this.component().name, -this.globals.view().x, this.globals.view().y, true);
-		// TODO ^ why -x ??
+		this.globals.simulation.saveState("adding component")
 	}
 }

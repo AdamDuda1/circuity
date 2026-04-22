@@ -34,9 +34,8 @@ export class Simulation {
 		}
 
 		this.currentVersion.set(nextVersion);
-		const action = this.historyActions()[nextVersion];
-		if (action) _Toast.success(action);
-		else _Toast.success('Undid!');
+		const action = this.historyActions()[this.currentVersion() - 1];
+		_Toast.success('Undid ' + action + '!');
 	}
 
 	redo() {
@@ -61,13 +60,13 @@ export class Simulation {
 
 		this.currentVersion.set(nextVersion);
 		const action = this.historyActions()[nextVersion];
-		if (action) _Toast.success(action);
-		else _Toast.success('Redid!');
+		_Toast.success('Redid ' + action + '!');
 	}
 
-	saveState(action: string = "") { // TODOO!!!
+	saveState(action: string) {
 		if (this.running()) return;
-		_Toast.success('saveState');
+		// _Toast.success('saveState ' + action);
+		this.globals.data.saveLast();
 
 		const snapshot = JSON.stringify(this.globals.data.getCurrentDesignJSON());
 		this.history.update(prev => {

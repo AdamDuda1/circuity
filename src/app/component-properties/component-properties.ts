@@ -95,7 +95,6 @@ export class ComponentProperties {
 		const selected = this.selectedBuzzer();
 		if (!selected) return;
 		selected.frequency = (event.target as HTMLInputElement).valueAsNumber;
-		this.globals.simulation.saveState("buzzer_setFrequency");
 	}
 
 	buzzer_setVolume(event: Event) {
@@ -104,7 +103,6 @@ export class ComponentProperties {
 		const val = Number((event.target as HTMLInputElement).value);
 		if (Number.isNaN(val)) return;
 		selected.setVolume(val);
-		this.globals.simulation.saveState();
 	}
 
 	switch_setMode(event: Event) {
@@ -113,28 +111,24 @@ export class ComponentProperties {
 
 		const mode = (event.target as HTMLSelectElement).value;
 		if (mode === 'switch' || mode === 'button') selected.setMode(mode);
-		this.globals.simulation.saveState();
 	}
 
 	switch_setButtonReleaseDelayMs(event: Event) {
 		const selected = this.selectedSwitch();
 		if (!selected) return;
 		selected.setButtonReleaseDelayMs((event.target as HTMLInputElement).valueAsNumber);
-		this.globals.simulation.saveState();
 	}
 
 	sender_setChannel(event: Event) {
 		const selected = this.selectedSignalSender();
 		if (!selected) return;
 		selected.setChannel((event.target as HTMLInputElement).valueAsNumber);
-		this.globals.simulation.saveState();
 	}
 
 	receiver_setChannel(event: Event) {
 		const selected = this.selectedSignalReceiver();
 		if (!selected) return;
 		selected.setChannel((event.target as HTMLInputElement).valueAsNumber);
-		this.globals.simulation.saveState();
 	}
 
 	protected readonly Buzzer = Buzzer;

@@ -6,7 +6,7 @@
 	@if (selectedComponent(); as selected) {
 		<category>{{ globals.constants.translations.componentProperties.section1 }}</category>
 		<input type="text" name="componentName" id="componentName"
-			   [value]="selected.name"
+			   [value]="selected.name" (blur)="globals.simulation.saveState('name change')"
 			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
 			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
 			   (input)="change_name($event)" style="text-align: center">
@@ -16,7 +16,7 @@
 			<div class="form-check form-switch m-0">
 				<input class="form-check-input" type="checkbox" id="displayLabel"
 					   [checked]="selected.showLabel"
-					   (input)="change_showLabel($event)">
+					   (input)="change_showLabel($event); globals.simulation.saveState('label visibility change')">
 			</div>
 		</div>
 
@@ -24,7 +24,7 @@
 			<label for="color" class="nice-input-label">Color: </label>
 			<div class="nice-input">
 				<input type="color" name="color" id="color" class="form-control form-control-color"
-					   [value]="selected.color"
+					   [value]="selected.color" (blur)="globals.simulation.saveState('color change')"
 					   (input)="change_color($event)" style="position: relative; top: 0; left: -5px;">
 			</div>
 		</div>
@@ -33,15 +33,15 @@
 
 		<div class="input-group">
 			<label class="input-group-text" for="posX">x</label>
-			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posX"
-				   [value]="selected.x"
+			<input type="number" class="form-control" placeholder="coordinate" id="posX"
+				   [value]="selected.x" (blur)="globals.simulation.saveState('X position change')"
 				   (input)="change_x($event)">
 		</div>
 
 		<div class="input-group">
 			<label class="input-group-text" for="posY">y</label>
-			<input type="number" class="form-control" placeholder="coordinate" aria-label="-" id="posY"
-				   [value]="selected.y"
+			<input type="number" class="form-control" placeholder="coordinate" id="posY"
+				   [value]="selected.y" (blur)="globals.simulation.saveState('Y position change')"
 				   (input)="change_y($event)">
 		</div>
 
@@ -50,7 +50,8 @@
 		@if (selectedSwitch(); as switchComp) {
 			<div class="input-group">
 				<label class="input-group-text" for="switchMode">Mode</label>
-				<select id="switchMode" class="form-select" (change)="switch_setMode($event)">
+				<select id="switchMode" class="form-select" (change)="switch_setMode($event)"
+						(blur)="globals.simulation.saveState('button mode change')">
 					<option value="switch" [selected]="switchComp.mode === 'switch'">Switch (toggle)</option>
 					<option value="button" [selected]="switchComp.mode === 'button'">Button (hold)</option>
 				</select>
@@ -60,6 +61,7 @@
 				<div class="input-group">
 					<label class="input-group-text" for="buttonDelay">Release delay (ms)</label>
 					<input type="number" class="form-control" id="buttonDelay" min="0" step="1"
+						   (blur)="globals.simulation.saveState('button delay change')"
 						   value="{{switchComp.buttonReleaseDelayMs}}" (input)="switch_setButtonReleaseDelayMs($event)">
 				</div>
 			}
@@ -69,19 +71,21 @@
 			<div class="flex gap-2">
 				Frequency:
 				<input type="range" id="buzzerFrequencyRange" min="10" max="5000" step="5" style="width: stretch;"
+					   (blur)="globals.simulation.saveState('frequency change (slider)')"
 					   [value]="buzzer.frequency" (input)="buzzer_setFrequency($event)" aria-label="Frequency slider">
 			</div>
 
 			<div class="input-group">
 				<label class="input-group-text" for="buzzerFrequencyInput">Hz</label>
-				<input type="number" class="form-control" placeholder="frequency" aria-label="-"
+				<input type="number" class="form-control" placeholder="frequency"
 					   id="buzzerFrequencyInput" (input)="buzzer_setFrequency($event)"
-					   [value]="buzzer.frequency">
+					   [value]="buzzer.frequency" (blur)="globals.simulation.saveState('frequency change')">
 			</div>
 
 			<div class="flex gap-2">
 				Volume:
 				<input type="range" id="buzzerVolumeRange" min="0" max="1" step="0.01" style="width: stretch;"
+					   (blur)="globals.simulation.saveState('volume change (slider)')"
 					   [value]="buzzer.volume" (input)="buzzer_setVolume($event)" aria-label="Volume slider">
 			</div>
 
@@ -89,6 +93,7 @@
 				<div class="input-group">
 					<label class="input-group-text" for="buzzerVolumeInput">%</label>
 					<input type="number" class="form-control" id="buzzerVolumeInput" min="0" max="1" step="0.01"
+						   (blur)="globals.simulation.saveState('volume change')"
 						   [value]="buzzer.volume" (input)="buzzer_setVolume($event)" aria-label="Volume value">
 				</div>
 			</div>
@@ -106,6 +111,7 @@
 			<div class="input-group">
 				<label class="input-group-text" for="senderChannel">Sender channel</label>
 				<input type="number" class="form-control" id="senderChannel" min="1" max="10" step="1"
+					   (blur)="globals.simulation.saveState('channel change')"
 					   value="{{sender.channel}}" (input)="sender_setChannel($event)">
 			</div>
 		}
@@ -114,6 +120,7 @@
 			<div class="input-group">
 				<label class="input-group-text" for="receiverChannel">Receiver channel</label>
 				<input type="number" class="form-control" id="receiverChannel" min="1" max="10" step="1"
+					   (blur)="globals.simulation.saveState('channel change')"
 					   value="{{receiver.channel}}" (input)="receiver_setChannel($event)">
 			</div>
 		}

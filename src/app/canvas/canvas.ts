@@ -242,7 +242,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			selectedComponent.x = Math.round(selectedComponent.x * 100) / 100;
 			selectedComponent.y = Math.round(selectedComponent.y * 100) / 100;
 			this.globals.isDragging.set(false);
-			this.globals.simulation.saveState();
+			this.globals.simulation.saveState("position change");
 		}
 
 		(event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
@@ -285,18 +285,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
 							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
 						this.globals.simulation.circuitComponents()[from.component].outTo[from.index].push({component: to.component, pin: to.index});
 
-						this.globals.simulation.saveState();
+						this.globals.simulation.saveState("connection");
 					} else if (from.type === 'in' && to.type === 'out') {
 						this.globals.simulation.circuitComponents()[from.component].inFrom[from.index] = {component: to.component, pin: to.index};
 						if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
 							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
 						this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
 
-						this.globals.simulation.saveState();
+						this.globals.simulation.saveState("connection");
 					} else _Toast.warning('You can only connect an output pin to an input pin and vice versa.');
 					break;
 				} else if (this.startedConnectingExisting) {
-					this.globals.simulation.saveState();
+					this.globals.simulation.saveState("un-connecting");
 					this.startedConnectingExisting = false;
 				}
 			}
@@ -385,7 +385,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			this.globals.simulation.circuitComponents.update((items) => [...items]);
 			this.globals.clearSelected();
 
-			this.globals.simulation.saveState();
+			this.globals.simulation.saveState("deletion");
 		}
 
 		if (event.key == ' ') {
@@ -462,6 +462,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		const worldY = -(mouseY - this.globals.view().h / 2) / this.globals.view().z + this.globals.view().y;
 
 		this.globals.simulation.spawnComponent(componentName, worldX, worldY, true);
+		this.globals.simulation.saveState("adding component")
 	}
 
 

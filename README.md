@@ -36,8 +36,9 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 <sub>done items are removed</sub>
 
-- [ ] saveState after modifying properties
+- [ ] saveState after modifying properties ONLY IF THE VALUE WAS MODIFIED!
 - [ ] comment what was un/redid
+- [ ] hovered palette component doesnt update after f used
 - [ ] add multi-select (shift + click, ctrl + click, right click & drag??)
 - [ ] do something with the debug info at the bottom left of canvas (currently hidden bahind the palette)
 - [ ] (somehow) merge global_styles.scss and styles.css (in src/)

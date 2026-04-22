@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, computed, signal, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
 import { PaletteComponent } from './palette-component/palette-component';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
@@ -26,13 +26,11 @@ type Category = {
 					        (click)="selectDesignComponent(component.id)">
 						{{ component.name }}
 					</button>
-				}
-				@empty {
+				} @empty {
 					<div class="component-list-item is-empty">No components in design.</div>
 				}
 			</div>
-		}
-		@else {
+		} @else {
 			<div class="scroll">
 				@for (category of categories; track categories.indexOf(category)) {
 					<app-palette-category [name]="category.name()" [icon]="category.icon()"
@@ -135,12 +133,12 @@ type Category = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Palette {
-	private globals = inject(Globals);
 	components = signal<ElectricalComponent[]>([]);
-	designComponents = computed(() => this.globals.simulation.circuitComponents().filter((component) => !component.deleted));
 	viewMode = signal<'palette' | 'list'>('palette');
 	categories: Category[] = [];
 	defaultCategories: string[] = [];
+	private globals = inject(Globals);
+	designComponents = computed(() => this.globals.simulation.circuitComponents().filter((component) => !component.deleted));
 
 	constructor() {
 		this.components.set(this.globals.palette);
@@ -160,17 +158,7 @@ export class Palette {
 			category.components.push(component);
 		}
 
-		const favorites: Category = {name: signal(this.globals.constants.favoriteCategory), icon: signal('star'), defaultOpened: true, components: []};
-
-		const favoritesIDs = JSON.parse(localStorage.getItem('favorites') ?? '[]') as number[];
-		for (const id of favoritesIDs) {
-			const component = this.components().find(c => c.id == id);
-			if (component) favorites.components.push(component);
-		}
-
-		if (favoritesIDs.length > 0) {
-			this.categories.unshift(favorites);
-		}
+		this.syncFavoritesCategory(this.readFavoriteNames());
 	}
 
 	setViewMode(mode: 'palette' | 'list'): void {
@@ -186,35 +174,68 @@ export class Palette {
 		return this.globals.selected;
 	}
 
-	onDocumentKeydown(_event: KeyboardEvent) {
-		return;
-		// if (!($event.key == 'f' || $event.key == 'F' || this.globals.hoveredPaletteComponent() == null)) return;
-		// _Toast.loading('WASS?', {duration: 1000});
-		// _Toast.info(this.globals.hoveredPaletteComponent()!.name);
-		//
-		// const favoritesIDs = JSON.parse(localStorage.getItem('favorites') ?? '[]') as number[];
-		// if (favoritesIDs.includes(this.globals.hoveredPaletteComponent()!.id)) return;
-		//
-		// favoritesIDs.push(this.globals.hoveredPaletteComponent()!.id);
-		// localStorage.setItem('favorites', JSON.stringify(favoritesIDs));
-		//
-		// let favorites = this.categories.find(c => c.name() === this.globals.constants.favoriteCategory);
-		// if (!favorites) {
-		// 	_Toast.warning("aint no favorites")
-		// 	favorites = {
-		// 		name: signal(this.globals.constants.favoriteCategory),
-		// 		icon: signal('star'),
-		// 		defaultOpened: true,
-		// 		components: []
-		// 	};
-		// 	this.categories.unshift(favorites);
-		// }
-		//
-		// _Toast.info('checkpoint')
-		//
-		// if (!favorites.components.some(component => component.id === this.globals.hoveredPaletteComponent()!.id)) {
-		// 	favorites.components.push(this.globals.hoveredPaletteComponent()!);
-		// 	_Toast.info('pushed')
-		// }
+	onDocumentKeydown(event: KeyboardEvent) {
+		if (event.key !== 'f' && event.key !== 'F') return;
+
+		const hovered = this.globals.hoveredPaletteComponent();
+		if (!hovered) return;
+
+		event.preventDefault();
+
+		const favoriteNames = new Set(this.readFavoriteNames());
+		if (favoriteNames.has(hovered.name)) {
+			favoriteNames.delete(hovered.name);
+		} else {
+			favoriteNames.add(hovered.name);
+		}
+
+		const nextFavoriteNames = [...favoriteNames];
+		this.writeFavoriteNames(nextFavoriteNames);
+		this.syncFavoritesCategory(nextFavoriteNames);
+	}
+
+	private readFavoriteNames(): string[] {
+		try {
+			const raw = localStorage.getItem('favorites');
+			if (!raw) return [];
+			const parsed: unknown = JSON.parse(raw);
+			if (!Array.isArray(parsed)) return [];
+
+			return parsed.filter((value): value is string => typeof value === 'string');
+		} catch {
+			return [];
+		}
+	}
+
+	private writeFavoriteNames(names: string[]): void {
+		localStorage.setItem('favorites', JSON.stringify(names));
+	}
+
+	private syncFavoritesCategory(favoriteNames: string[]): void {
+		const favoriteCategoryName = this.globals.constants.favoriteCategory;
+		const favoriteComponents = favoriteNames
+		.map((name) => this.components().find((component) => component.name === name))
+		.filter((component): component is ElectricalComponent => Boolean(component));
+
+		const existingCategoryIndex = this.categories.findIndex((category) => category.name() === favoriteCategoryName);
+
+		if (favoriteComponents.length === 0) {
+			if (existingCategoryIndex !== -1) {
+				this.categories.splice(existingCategoryIndex, 1);
+			}
+			return;
+		}
+
+		const category = existingCategoryIndex === -1
+			? {name: signal(favoriteCategoryName), icon: signal('star'), defaultOpened: true, components: [] as ElectricalComponent[]}
+			: this.categories[existingCategoryIndex];
+
+		category.components = favoriteComponents;
+
+		if (existingCategoryIndex !== -1) {
+			this.categories.splice(existingCategoryIndex, 1);
+		}
+
+		this.categories.unshift(category);
 	}
 }
