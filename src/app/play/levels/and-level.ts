@@ -5,6 +5,7 @@ export class AndLevel extends Level {
 	descriptionHtml = 'Build an <b>AND</b> gate from NAND or NOR combinations.';
 	restrictComponentList = false;
 	allowedComponents = [];
+	usedIO = [];
 
 	verify(): boolean {
 		return true;

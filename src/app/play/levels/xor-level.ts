@@ -5,6 +5,7 @@ export class XorLevel extends Level {
 	descriptionHtml = 'Build a <b>XOR</b> gate from basic gates.';
 	restrictComponentList = false;
 	allowedComponents = [];
+	usedIO = [];
 
 	verify(): boolean {
 		return true;

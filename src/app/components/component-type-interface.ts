@@ -316,12 +316,16 @@ export abstract class ElectricalComponent {
 	}
 
 	drawLabel(ctx: CanvasRenderingContext2D) {
-		if (!this.showLabel || !this.name) return;
+		if (!this.name) return;
+
+		const normalizedName = this.name.trim().toLowerCase();
+		const isUsedIO = this.globals.playUsedIO().some((entry) => entry.trim().toLowerCase() === normalizedName);
+		if (!this.showLabel && !isUsedIO) return;
 
 		const view = this.globals.view();
 
 		ctx.save();
-		ctx.fillStyle = 'black';
+		ctx.fillStyle = isUsedIO ? '#8b5cf6' : 'black';
 		ctx.font = `${12 * view.z}px Arial`;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';

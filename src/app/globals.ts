@@ -66,9 +66,9 @@ export class Globals {
 	public enableAutoSave: boolean = false;
 	public autoSaveInterval: number = 0.25;
 	public readonly settingsVersion = signal(0);
+	public readonly playUsedIO = signal<string[]>([]);
 
 	public data = new Data(this);
-	// public toast = new Toast();
 	public tutorial = new Tutorial(this);
 	public simulation = new Simulation(this);
 	public constants = new Constants();

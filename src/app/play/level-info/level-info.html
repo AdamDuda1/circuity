@@ -1,7 +1,7 @@
 <div class="floating-panel" style="max-width: 300px;">
 	<h1 style="font-size: larger; font-weight: 600;">{{ level().name }}</h1>
-	<div [innerHTML]="level().descriptionHtml" style="font-size: smaller;"></div>
-	<button type="button" class="button select-none" (click)="verify()" style="margin-top: 8px;">
+	<div [innerHTML]="level().descriptionHtml" style="font-size: smaller; max-height: 200px; overflow: auto;"></div>
+	<button type="button" class="button select-none" (click)="verify($event)" style="margin-top: 8px;">
 		<b>
 			Verify
 			<span class="material-symbols-outlined"
@@ -14,13 +14,13 @@
 		[class.status-not-solved]="!verifyResult()"
 		aria-live="polite"
 	>
-		{{ verifyResult() ? 'Solved' : 'Not solved' }}
+		{{ getStatusBannerText() }}
 	</div>
 	<div class="level-nav" style="display: flex; justify-content: space-between;">
 		@if (previousLevelId(); as previousId) {
-			<a [routerLink]="['/play', previousId]" class="nav-link">
+			<a [routerLink]="['/play', previousId]" class="nav-link flex">
 				<span class="material-symbols-outlined"
-					  style="font-size: medium; position: relative; top: 3px; left: 0;"> arrow_back </span>
+					  style="font-size: medium; top: 2px; left: -1px;"> arrow_back </span>
 				Previous
 			</a>
 		} @else {
@@ -28,10 +28,10 @@
 		}
 		<a [routerLink]="['/play']" class="nav-link" aria-label="Back to level list">Level list</a>
 		@if (nextLevelId(); as nextId) {
-			<a [routerLink]="['/play', nextId]" class="nav-link">
+			<a [routerLink]="['/play', nextId]" class="nav-link flex" style="margin-left: 8px;">
 				Next
 				<span class="material-symbols-outlined"
-					  style="font-size: medium; position: relative; top: 3px; left: 0;"> arrow_forward </span>
+					  style="font-size: medium; top: 2px; left: -1px;"> arrow_forward </span>
 			</a>
 		} @else {
 			<div style="width: 70px">&nbsp;</div>

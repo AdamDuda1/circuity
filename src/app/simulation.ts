@@ -8,7 +8,7 @@ export class Simulation {
 
 	public circuitComponents = signal<ElectricalComponent[]>([]);
 	public running = signal(false);
-	private readonly channels = new Array<boolean>(10).fill(false);
+	readonly channels = new Array<boolean>(10).fill(false);
 	history = signal<string[]>([]);
 	historyActions = signal<string[]>([]);
 	currentVersion = signal<number>(0);
