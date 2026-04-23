@@ -72,6 +72,12 @@ type Category = {
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
+			position: absolute;
+			height: calc(100vh - 20px);
+			left: 10px;
+			top: 10px;
+			padding: 2px;
+			width: 250px;
 		}
 
 		.scroll {

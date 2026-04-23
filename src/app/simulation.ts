@@ -100,6 +100,11 @@ export class Simulation {
 			component.updatePos(-component.w / 2, -component.h / 2);
 		}
 
+		const shouldSnap = localStorage.getItem('snap') === 'true';
+		component.updatePos(0, 0, shouldSnap);
+		component.x = Math.round(component.x * 100) / 100;
+		component.y = Math.round(component.y * 100) / 100;
+
 		this.circuitComponents.update((items) => [...items, component]);
 	}
 

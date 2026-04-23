@@ -91,6 +91,7 @@ export class SavePanel {
 		this.globals.simulation.circuitComponents.set([]);
 		this.globals.savePanel_open.set(false);
 		_Toast.success('Old design cleared!');
+		this.globals.data.saveLast();
 	}
 
 	generateSecret() {

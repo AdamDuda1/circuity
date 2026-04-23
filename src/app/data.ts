@@ -21,11 +21,8 @@ export class Data {
 		return true;
 	}
 
-	saveLast(silent = false) {
+	saveLast() {
 		localStorage.setItem('save', JSON.stringify(this.getCurrentDesignJSON()));
-		if (!silent) {
-			_Toast.success("Saved last!");
-		} else _Toast.info("Saved last (but silent)!");
 	}
 
 	getCurrentDesignJSON() {
@@ -41,11 +38,17 @@ export class Data {
 		const hasActiveComponents = activeComponents.length > 0;
 		const currentView = this.globals.view();
 
+		let _x = 0, _y = 0;
+		if (activeComponents.length > 0) {
+			_x = hasActiveComponents ? -(minX + maxX) / 2 : currentView.x;
+			_y = hasActiveComponents ? (minY + maxY) / 2 : currentView.y;
+		}
+
 		return {
 			components: activeComponents.map(c => this.getSparseComponentJSON(c)),
 			view: {
-				x: hasActiveComponents ? -(minX + maxX) / 2 : currentView.x,
-				y: hasActiveComponents ? (minY + maxY) / 2 : currentView.y,
+				x: _x,
+				y: _y,
 				z: currentView.z
 			}
 		} as SavedState;

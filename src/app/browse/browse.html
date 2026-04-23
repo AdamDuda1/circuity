@@ -24,7 +24,8 @@
 							<h6 class="card-subtitle mb-2 text-muted"
 								style="margin-bottom: 2px !important; font-size: 12px">by {{ project.author }}</h6>
 							<p class="card-text"><i>{{ project.description }}</i></p>
-							<a class="card-link accent-blue-400 hover:underline" href="#" style="color: steelblue">
+							<a class="card-link accent-blue-400 hover:underline" href="#"
+							   (click)="open(project.id, $event)" style="color: steelblue">
 								Open
 								<span class="material-symbols-outlined" style="font-size: larger; top: 4px;"> arrow_forward </span>
 							</a>

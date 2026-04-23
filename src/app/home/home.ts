@@ -26,16 +26,6 @@ import { PaletteComponentDetails } from '../palette/palette-component-details/pa
 
 		<app-tutorial/>
 	`,
-	styles: [`
-		app-palette {
-			position: absolute;
-			height: calc(100vh - 20px);
-			left: 10px;
-			top: 10px;
-			padding: 2px;
-			width: 250px;
-		}
-	`],
 	imports: [SimulationControls, ComponentProperties, Palette, Canvas, Tutorial, SavePanel, Settings, PaletteComponentDetails],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {

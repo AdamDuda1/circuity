@@ -3,7 +3,7 @@ export class Constants {
 		basicLogicGates: 'Basic Logic Gates',
 		input: 'Input',
 		output: 'Output',
-		derivedLogicGates: 'Derived Logic Gates'
+		derivedLogicGates: 'Other'
 	};
 
 	public readonly favoriteCategory = 'Favorites';
@@ -34,7 +34,7 @@ export class Constants {
 				'Connect the components with wires by dragging from pin to pin with your mouse.',
 				'After connecting run the simulation by clicking the \'run\' button or by hitting space on your' +
 				' keyboard.<br><br>You can always view an updated tutorial by clicking the tutorial button in the' +
-				' bottom left corner of the app. Have fun!',
+				' settings. Have fun and check out the other tabs!',
 			],
 			next: 'Next',
 			prev: 'Previous',

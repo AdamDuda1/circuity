@@ -27,6 +27,7 @@ export class Menu {
 		const url = this.url();
 		if (url.startsWith('/browse')) return 'Browse';
 		if (url.startsWith('/blog')) return 'Blog';
+		if (url.includes('play')) return 'Play';
 		if (url.includes('admin')) return 'Admin';
 		return 'Design';
 	});

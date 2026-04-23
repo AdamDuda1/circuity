@@ -30,8 +30,6 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 ---
 
-## Contributing
-
 ## TODO:
 
 <sub>done items are removed</sub>
@@ -49,10 +47,7 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 - [ ] add a keyboard shortcut to open the save panel and make esc close all popups
 - [ ] fix savedDesign.view -- (??) calculate the zoom so all components are in the view, (??) make it avg of (x, y) of the components, not the center if one component is far away
 - [ ] unselect when confirmation canceled <-- newDesign() in save panel
-- [ ] implements isSaved to not asked user is design is saved
 - [ ] the toast for blog fetching is still glitched
-- [ ] hackatime backend badge doesnt work on github
-- [ ] components: flip-flops, multiplexers, decoders, signal emitters/receivers
 - [ ] Do something with the {-1, -1}, {-1, -1}, {.. pin initialization!
 - [ ] Make the buzzer look better
 - [ ] Add revert button (to default setting) in component properties like in davinci resolve

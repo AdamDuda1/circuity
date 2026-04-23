@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../globals';
+import { _Toast } from '../toasts';
 
 interface PublicProject {
 	id: number;
@@ -46,5 +47,23 @@ export class Browse {
 				this.isLoading.set(false);
 			}
 		});
+	}
+
+	open(id: number, event?: MouseEvent) {
+		event?.preventDefault();
+
+		const project = this.projects().find((p) => p.id === id);
+		if (!project) {
+			_Toast.error('Project not found.');
+			return;
+		}
+
+		const shouldClear = confirm(
+			`Are you sure you want to open ${project.name}? This will clear your current design saved in localStorage.`
+		);
+		if (!shouldClear) return;
+
+		localStorage.setItem('save', project.content);
+		location.href = '/';
 	}
 }

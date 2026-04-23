@@ -27,7 +27,6 @@ type PaletteComponentDetailsState = {
 })
 export class Globals {
 	// public readonly database: string = 'http://localhost:2137/v1/'; // <- for local (clone /circuity-backend)
-	// public readonly database: string = 'https://circuity-backend-production.up.railway.app/v1/';
 	public readonly database: string = 'https://circuity-api.adamd.pl.eu.org/v1/';
 
 	public readonly view = signal({

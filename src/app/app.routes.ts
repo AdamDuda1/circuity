@@ -18,6 +18,10 @@ export const routes: Routes = [
 		loadComponent: () => import('./play/play').then(m => m.Play),
 	},
 	{
+		path: 'play/:level',
+		loadComponent: () => import('./play/level/level').then(m => m.Level),
+	},
+	{
 		path: 'blog',
 		loadComponent: () => import('./blog/blog').then(m => m.Blog),
 	},

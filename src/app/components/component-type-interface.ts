@@ -172,8 +172,8 @@ export abstract class ElectricalComponent {
 			this.snapRawX += x;
 			this.snapRawY += y;
 
-			// const snapStep = Math.pow(5, Math.floor(Math.log10(500 / this.globals.view().z))) / this.globals.view().z;
-			const snapStep = this.globals.snapStep;
+			const viewScale = this.globals.view().z;
+			const snapStep = Math.pow(5, Math.floor(Math.log10(500 / viewScale)));
 
 			const centerX = this.snapRawX + this.w / 2;
 			const centerY = this.snapRawY + this.h / 2;

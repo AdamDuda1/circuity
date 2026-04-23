@@ -1,0 +1,18 @@
+<div class="floating-panel" style="max-width: 300px;">
+	<h1 style="font-size: larger; font-weight: 600;">{{ level().name }}</h1>
+	<div [innerHTML]="level().descriptionHtml" style="font-size: smaller;"></div>
+	<button type="button" class="button select-none" (click)="verify()" style="margin-top: 8px;">
+		<b>
+			Verify
+			<span class="material-symbols-outlined" style="font-size: medium; top: 2px; left: 4px;">question_exchange</span>
+		</b>
+	</button>
+	<div
+		class="status-banner"
+		[class.status-solved]="verifyResult()"
+		[class.status-not-solved]="!verifyResult()"
+		aria-live="polite"
+	>
+		{{ verifyResult() ? 'Solved' : 'Not solved' }}
+	</div>
+</div>

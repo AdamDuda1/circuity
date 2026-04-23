@@ -1,6 +1,19 @@
-<div>
-	<b>soon...</b> <br>
-	<span>like really soon, i promise</span> <br>
-	<span>like in the next ship soon soon</span> <br>
-	<span>soon ™️</span>
-</div>
+<section class="play" aria-labelledby="play-title">
+	<h1 id="play-title">Play</h1>
+
+	@for (level of levels; track level.id) {
+		<div class="level-row">
+			<a [routerLink]="['/play', level.id]" class="hover:underline" style="color: steelblue">
+				{{ level.name }}
+			</a>
+			<span
+				class="status-chip"
+				[class.status-chip-solved]="isSolved(level.id)"
+				[class.status-chip-not-solved]="!isSolved(level.id)"
+			>
+				{{ isSolved(level.id) ? 'Solved' : 'Not solved' }}
+			</span>
+		</div>
+	}
+
+</section>
