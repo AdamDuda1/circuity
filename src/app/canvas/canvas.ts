@@ -539,7 +539,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		const intervalMs = Math.round(this.globals.autoSaveInterval * 60_000);
 		this.autoSaveTimer = setInterval(() => {
 			if (!this.globals.simulation.running()) {
-				this.globals.data.saveLast(true);
+				this.globals.data.saveLast();
 			}
 		}, intervalMs);
 	}

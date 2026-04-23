@@ -1,6 +1,5 @@
-
 export abstract class Level {
-	abstract id: string;
+	id = '';
 	abstract name: string;
 	abstract descriptionHtml: string;
 	abstract restrictComponentList: boolean;

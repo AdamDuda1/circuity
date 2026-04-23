@@ -1,15 +1,26 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, computed, effect, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Level } from '../levels/level-interface';
+import { LEVELS } from '../levels';
 
 @Component({
 	selector: 'app-level-info',
-	imports: [],
+	imports: [RouterLink],
 	templateUrl: './level-info.html',
 	styleUrl: './level-info.css'
 })
 export class LevelInfo {
 	readonly level = input.required<Level>();
 	readonly verifyResult = signal<boolean | null>(null);
+	readonly currentIndex = computed(() => LEVELS.findIndex((level) => level.id === this.level().id));
+	readonly previousLevelId = computed(() => {
+		const index = this.currentIndex();
+		return index > 0 ? LEVELS[index - 1].id : null;
+	});
+	readonly nextLevelId = computed(() => {
+		const index = this.currentIndex();
+		return index >= 0 && index < LEVELS.length - 1 ? LEVELS[index + 1].id : null;
+	});
 
 	constructor() {
 		effect(() => {

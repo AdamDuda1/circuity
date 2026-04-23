@@ -4,7 +4,8 @@
 	<button type="button" class="button select-none" (click)="verify()" style="margin-top: 8px;">
 		<b>
 			Verify
-			<span class="material-symbols-outlined" style="font-size: medium; top: 2px; left: 4px;">question_exchange</span>
+			<span class="material-symbols-outlined"
+				  style="font-size: medium; top: 2px; left: 4px;">question_exchange</span>
 		</b>
 	</button>
 	<div
@@ -14,5 +15,26 @@
 		aria-live="polite"
 	>
 		{{ verifyResult() ? 'Solved' : 'Not solved' }}
+	</div>
+	<div class="level-nav" style="display: flex; justify-content: space-between;">
+		@if (previousLevelId(); as previousId) {
+			<a [routerLink]="['/play', previousId]" class="nav-link">
+				<span class="material-symbols-outlined"
+					  style="font-size: medium; position: relative; top: 3px; left: 0;"> arrow_back </span>
+				Previous
+			</a>
+		} @else {
+			<div style="width: 70px">&nbsp;</div>
+		}
+		<a [routerLink]="['/play']" class="nav-link" aria-label="Back to level list">Level list</a>
+		@if (nextLevelId(); as nextId) {
+			<a [routerLink]="['/play', nextId]" class="nav-link">
+				Next
+				<span class="material-symbols-outlined"
+					  style="font-size: medium; position: relative; top: 3px; left: 0;"> arrow_forward </span>
+			</a>
+		} @else {
+			<div style="width: 70px">&nbsp;</div>
+		}
 	</div>
 </div>

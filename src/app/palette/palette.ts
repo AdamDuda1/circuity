@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, Signal } from '@angular/core';
 import { PaletteComponent } from './palette-component/palette-component';
 import { Globals } from '../globals';
 import { ElectricalComponent } from '../components/component-type-interface';
@@ -32,13 +32,15 @@ type Category = {
 			</div>
 		} @else {
 			<div class="scroll">
-				@for (category of categories; track categories.indexOf(category)) {
-					<app-palette-category [name]="category.name()" [icon]="category.icon()"
-					                      [defaultOpened]="category.defaultOpened">
-						@for (component of category.components; track component.id) {
-							<app-palette-component [component]="component"/>
-						}
-					</app-palette-category>
+				@for (category of categories(); track category.name()) {
+					@if (true) {
+						<app-palette-category [name]="category.name()" [icon]="category.icon()"
+						                      [defaultOpened]="category.defaultOpened">
+							@for (component of category.components; track component.id) {
+								<app-palette-component [component]="component"/>
+							}
+						</app-palette-category>
+					}
 				}
 			</div>
 		}
@@ -139,12 +141,22 @@ type Category = {
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Palette {
+	restrictComponentList = input(false);
+	allowedComponents = input<string[]>([]);
 	components = signal<ElectricalComponent[]>([]);
 	viewMode = signal<'palette' | 'list'>('palette');
-	categories: Category[] = [];
+	categories = signal<Category[]>([]);
 	defaultCategories: string[] = [];
 	private globals = inject(Globals);
 	designComponents = computed(() => this.globals.simulation.circuitComponents().filter((component) => !component.deleted));
+	filteredComponents = computed(() => {
+		if (!this.restrictComponentList()) {
+			return this.components();
+		}
+
+		const allowed = new Set(this.allowedComponents());
+		return this.components().filter((component) => allowed.has(component.name));
+	});
 
 	constructor() {
 		this.components.set(this.globals.palette);
@@ -155,15 +167,30 @@ export class Palette {
 			this.globals.constants.categoryName.output
 		];
 
-		for (const component of this.components()) {
-			let category = this.categories.find(c => c.name() == component.category);
+		effect(() => {
+			this.rebuildCategories();
+		});
+	}
+
+	private rebuildCategories(): void {
+		const nextCategories: Category[] = [];
+
+		for (const component of this.filteredComponents()) {
+			let category = nextCategories.find((c) => c.name() === component.category);
 			if (!category) {
-				category = {name: signal(component.category), icon: signal(''), defaultOpened: this.defaultCategories.includes(component.category), components: []};
-				this.categories.push(category);
+				category = {
+					name: signal(component.category),
+					icon: signal(''),
+					defaultOpened: this.defaultCategories.includes(component.category),
+					components: []
+				};
+				nextCategories.push(category);
 			}
+
 			category.components.push(component);
 		}
 
+		this.categories.set(nextCategories);
 		this.syncFavoritesCategory(this.readFavoriteNames());
 	}
 
@@ -220,28 +247,31 @@ export class Palette {
 	private syncFavoritesCategory(favoriteNames: string[]): void {
 		const favoriteCategoryName = this.globals.constants.favoriteCategory;
 		const favoriteComponents = favoriteNames
-		.map((name) => this.components().find((component) => component.name === name))
+		.map((name) => this.filteredComponents().find((component) => component.name === name))
 		.filter((component): component is ElectricalComponent => Boolean(component));
+		const nextCategories = [...this.categories()];
 
-		const existingCategoryIndex = this.categories.findIndex((category) => category.name() === favoriteCategoryName);
+		const existingCategoryIndex = nextCategories.findIndex((category) => category.name() === favoriteCategoryName);
 
 		if (favoriteComponents.length === 0) {
 			if (existingCategoryIndex !== -1) {
-				this.categories.splice(existingCategoryIndex, 1);
+				nextCategories.splice(existingCategoryIndex, 1);
+				this.categories.set(nextCategories);
 			}
 			return;
 		}
 
 		const category = existingCategoryIndex === -1
 			? {name: signal(favoriteCategoryName), icon: signal('star'), defaultOpened: true, components: [] as ElectricalComponent[]}
-			: this.categories[existingCategoryIndex];
+			: nextCategories[existingCategoryIndex];
 
 		category.components = favoriteComponents;
 
 		if (existingCategoryIndex !== -1) {
-			this.categories.splice(existingCategoryIndex, 1);
+			nextCategories.splice(existingCategoryIndex, 1);
 		}
 
-		this.categories.unshift(category);
+		nextCategories.unshift(category);
+		this.categories.set(nextCategories);
 	}
 }
