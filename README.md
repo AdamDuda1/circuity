@@ -34,12 +34,9 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 <sub>done items are removed</sub>
 
-- [ ] space should not work when focused on an input field (name, pin label, etc.)
-- [ ] name field should auto select all
 - [ ] solutions for levels -- hardcoded designs with solutions to levels to open in the edsign mode
 - [ ] user created levels (user makes the design, the check is the matrix of the output pins for all combinations of the input pins?????) that would be a lotta coding
 - [ ] saveState after modifying properties ONLY IF THE VALUE WAS MODIFIED!
-- [ ] comment what was un/redid
 - [ ] hovered palette component doesnt update after f used
 - [ ] add multi-select (shift + click, ctrl + click, right click & drag??)
 - [ ] do something with the debug info at the bottom left of canvas (currently hidden bahind the palette)

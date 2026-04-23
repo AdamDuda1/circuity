@@ -64,7 +64,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		this.resizeObserver = new ResizeObserver(() => this.updateCanvasSize(canvas));
 		this.resizeObserver.observe(canvas.parentElement!);
 
-		if (!this.globals.data.loadLast()) {
+		if (!this.globals.isPlayRoute() && !this.globals.data.loadLast()) {
 			this.globals.simulation.circuitComponents().push(new LED(this.globals, true, 10, 0));
 			this.globals.simulation.circuitComponents().push(new Switch(this.globals, true, -30, 0));
 
@@ -407,6 +407,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 		if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
 			event.preventDefault();
+			if (this.globals.isPlayRoute()) return;
 			this.globals.data.saveLast();
 		}
 	}
@@ -535,10 +536,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private refreshAutoSaveSchedule() {
 		this.clearAutoSaveTimer();
-
-		if (!this.globals.enableAutoSave) {
-			return;
-		}
+		if (this.globals.isPlayRoute()) return;
+		if (!this.globals.enableAutoSave) return;
 
 		const intervalMs = Math.round(this.globals.autoSaveInterval * 60_000);
 		this.autoSaveTimer = setInterval(() => {
@@ -549,10 +548,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	private clearAutoSaveTimer() {
-		if (!this.autoSaveTimer) {
-			return;
-		}
-
+		if (!this.autoSaveTimer) return;
 		clearInterval(this.autoSaveTimer);
 		this.autoSaveTimer = undefined;
 	}

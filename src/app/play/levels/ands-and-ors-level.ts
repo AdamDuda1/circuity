@@ -4,7 +4,8 @@ import { Switch } from '../../components/switch';
 
 export class AndsAndOrsLevel extends Level {
 	name = 'ANDs and ORs';
-	descriptionHtml = 'The LED (name <b>output</b>) should light up when switches with name <b>A and B or C and D</b> are on.';
+	descriptionHtml = 'The LED (name <b>output</b>) should light up when switches with name <b>A and B or C and' +
+		' D</b> are on.';
 	restrictComponentList = true;
 	allowedComponents = ['Switch', 'LED', 'OR', 'AND'];
 	usedIO = ['a', 'b', 'c', 'd', 'output'];

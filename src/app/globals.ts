@@ -165,4 +165,8 @@ export class Globals {
 		this.fetchSettings();
 		this.setDarkMode();
 	}
+
+	isPlayRoute(): boolean {
+		return window.location.pathname.startsWith('/play');
+	}
 }

@@ -65,8 +65,7 @@ export class Simulation {
 
 	saveState(action: string) {
 		if (this.running()) return;
-		// _Toast.success('saveState ' + action);
-		this.globals.data.saveLast();
+		if (!this.globals.isPlayRoute()) this.globals.data.saveLast();
 
 		const snapshot = JSON.stringify(this.globals.data.getCurrentDesignJSON());
 		this.history.update(prev => {
