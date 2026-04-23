@@ -7,27 +7,30 @@ export abstract class Level {
 	abstract restrictComponentList: boolean;
 	abstract allowedComponents: string[];
 	abstract usedIO: string[];
+	abstract solution: string;
 
 	abstract verify(globals: Globals): boolean;
 
 	simulateSimulation(globals: Globals) {
-		const components = globals.simulation.circuitComponents();
-		globals.simulation.channels.fill(false);
+		for (let i = 0; i < globals.simulation.circuitComponents().length; ++i) {
+			const components = globals.simulation.circuitComponents();
+			globals.simulation.channels.fill(false);
 
-		for (let index = 0; index < components.length; index++) {
-			const component = components[index];
-			if (component.deleted) continue;
-			if (component.name === 'Signal Receiver') continue;
+			for (let index = 0; index < components.length; index++) {
+				const component = components[index];
+				if (component.deleted) continue;
+				if (component.name === 'Signal Receiver') continue;
 
-			component.simulate();
-		}
+				component.simulate();
+			}
 
-		for (let index = 0; index < components.length; index++) {
-			const component = components[index];
-			if (component.deleted) continue;
-			if (!(component.name === 'Signal Receiver')) continue;
+			for (let index = 0; index < components.length; index++) {
+				const component = components[index];
+				if (component.deleted) continue;
+				if (!(component.name === 'Signal Receiver')) continue;
 
-			component.simulate();
+				component.simulate();
+			}
 		}
 	}
 }

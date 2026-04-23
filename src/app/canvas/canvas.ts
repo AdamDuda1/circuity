@@ -134,11 +134,13 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			const cursor = this.globals.cursor();
 			ctx.save();
 			if (pos1.type == 'in') {
+				const targetComponent = componentsDesc.find((c) => c.id === pos1.component)
+					?? this.globals.simulation.circuitComponents().find((c) => c.id === pos1.component);
 				drawWire(ctx, view,
 					{x: cursor.x, y: cursor.y},
 					{
-						x: componentsDesc.find((c) => c.id === pos1.component)?.x ?? this.globals.simulation.circuitComponents()[pos1.component].x + this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].x,
-						y: componentsDesc.find((c) => c.id === pos1.component)?.y ?? this.globals.simulation.circuitComponents()[pos1.component].y + this.globals.simulation.circuitComponents()[pos1.component].ins[pos1.index].y
+						x: (targetComponent?.x ?? 0) + (targetComponent?.ins[pos1.index]?.x ?? 0),
+						y: (targetComponent?.y ?? 0) + (targetComponent?.ins[pos1.index]?.y ?? 0)
 					},
 					false,
 					false
@@ -369,6 +371,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	// KEYBOARD
 
 	onKeyDown(event: KeyboardEvent) {
+		if (event.key === ' ' && this.isTextEditingTarget(event.target)) return;
+
 		if (event.key == 'Delete') {
 			if (this.globals.selected === -1) return; // todo this is very messy
 
@@ -555,5 +559,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private isSnapEnabled(): boolean {
 		return localStorage.getItem('snap') === 'true';
+	}
+
+	private isTextEditingTarget(target: EventTarget | null): boolean {
+		if (!(target instanceof HTMLElement)) return false;
+		if (target.isContentEditable) return true;
+		if (target instanceof HTMLTextAreaElement) return true;
+
+		if (target instanceof HTMLInputElement) {
+			const nonTextTypes = new Set(['button', 'checkbox', 'color', 'file', 'hidden', 'image', 'radio', 'range', 'reset', 'submit']);
+			return !nonTextTypes.has(target.type);
+		}
+
+		return false;
 	}
 }

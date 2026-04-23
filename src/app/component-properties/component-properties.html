@@ -7,6 +7,7 @@
 		<category>{{ globals.constants.translations.componentProperties.section1 }}</category>
 		<input type="text" name="componentName" id="componentName"
 			   [value]="selected.name" (blur)="globals.simulation.saveState('name change')"
+			   (focus)="selectInputText($event)"
 			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
 			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
 			   (input)="change_name($event)" style="text-align: center">

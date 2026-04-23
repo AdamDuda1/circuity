@@ -6,6 +6,7 @@ export class AndLevel extends Level {
 	restrictComponentList = false;
 	allowedComponents = [];
 	usedIO = [];
+	solution = "";
 
 	verify(): boolean {
 		return true;

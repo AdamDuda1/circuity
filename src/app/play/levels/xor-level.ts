@@ -6,6 +6,7 @@ export class XorLevel extends Level {
 	restrictComponentList = false;
 	allowedComponents = [];
 	usedIO = [];
+	solution = "";
 
 	verify(): boolean {
 		return true;

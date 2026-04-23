@@ -47,6 +47,11 @@ export class ComponentProperties {
 		selected.name = (event.target as HTMLInputElement).value;
 	}
 
+	selectInputText(event: FocusEvent) {
+		const input = event.target;
+		if (input instanceof HTMLInputElement) input.select();
+	}
+
 	change_showLabel(event: Event) {
 		const selected = this.selectedComponent();
 		if (!selected) return;
