@@ -7,7 +7,8 @@ export interface SerializedPinRef {
 }
 
 export interface SerializedElectricalComponent {
-	name: string;
+	type: string;
+	label?: string;
 	color?: string;
 	description?: string;
 	truthTable?: string;
@@ -39,6 +40,7 @@ export abstract class ElectricalComponent {
 	description = '';
 	truthTable = '';
 	gif = '';
+	label = '';
 
 	showLabel: boolean = false;
 
@@ -69,6 +71,7 @@ export abstract class ElectricalComponent {
 		this.x = data.x;
 		this.y = data.y;
 		this.actualSize = {x1: this.x, y1: this.y, w: this.w, h: this.h};
+		this.label = typeof data.label === 'string' ? data.label : '';
 		if (typeof data.showLabel === 'boolean') {
 			this.showLabel = data.showLabel;
 		}
@@ -94,7 +97,8 @@ export abstract class ElectricalComponent {
 		const custom = this.getCustomPropsJSON();
 
 		return {
-			name: this.name,
+			type: this.name,
+			label: this.label,
 			color: this.color,
 			description: this.description,
 			truthTable: this.truthTable,
@@ -119,6 +123,11 @@ export abstract class ElectricalComponent {
 		if (!descriptor) return true;
 		if (descriptor.set) return true;
 		return !descriptor.get;
+	}
+
+	getDisplayLabel(): string {
+		const trimmed = this.label.trim();
+		return trimmed.length > 0 ? trimmed : this.name;
 	}
 
 	clickInSimulation() {}
@@ -316,9 +325,10 @@ export abstract class ElectricalComponent {
 	}
 
 	drawLabel(ctx: CanvasRenderingContext2D) {
-		if (!this.name) return;
+		const displayLabel = this.getDisplayLabel();
+		if (!displayLabel) return;
 
-		const normalizedName = this.name.trim().toLowerCase();
+		const normalizedName = displayLabel.trim().toLowerCase();
 		const isUsedIO = this.globals.playUsedIO().some((entry) => entry.trim().toLowerCase() === normalizedName);
 		if (!this.showLabel && !isUsedIO) return;
 
@@ -331,7 +341,7 @@ export abstract class ElectricalComponent {
 		ctx.textBaseline = 'middle';
 		const screenX = (this.x + this.w / 2 + view.x) * view.z + view.w / 2;
 		const screenY = (-(this.y - this.h / 2) + view.y) * view.z + view.h / 2;
-		ctx.fillText(this.name, screenX, screenY);
+		ctx.fillText(displayLabel, screenX, screenY);
 		ctx.restore();
 	}
 

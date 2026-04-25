@@ -63,9 +63,9 @@ export class Data {
 			const loadedComponents: ElectricalComponent[] = [];
 
 			for (const comp of state.components) {
-				const factory = this.globals.componentRegistry.get(comp.name);
+				const factory = this.globals.componentRegistry.get(comp.type);
 				if (!factory) {
-					console.error(`Unknown component type while loading: ${comp.name}`);
+					console.error(`Unknown component type while loading: ${comp.type}`);
 					return false;
 				}
 
@@ -94,19 +94,19 @@ export class Data {
 	private getSparseComponentJSON(component: ElectricalComponent): SerializedElectricalComponent {
 		const current = component.getComponentJSON();
 		const sparse: SerializedElectricalComponent = {
-			name: current.name,
+			type: current.type,
 			x: current.x,
 			y: current.y
 		};
 
-		const factory = this.globals.componentRegistry.get(current.name);
+		const factory = this.globals.componentRegistry.get(current.type);
 		if (!factory) {
 			return sparse;
 		}
 
 		const defaults = factory(false, current.x, current.y).getComponentJSON();
 		const ignoredKeys = new Set<keyof SerializedElectricalComponent>([
-			'name',
+			'type',
 			'x',
 			'y',
 			'color',
@@ -122,6 +122,9 @@ export class Data {
 
 			if (!this.isDeepEqual(value, defaults[key])) {
 				switch (key) {
+						case 'label':
+							sparse.label = value as string;
+							break;
 					case 'showLabel':
 						sparse.showLabel = value as boolean;
 						break;

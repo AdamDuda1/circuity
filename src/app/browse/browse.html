@@ -13,8 +13,7 @@
 			<p class="lead mb-0">No public projects found on this installation.</p>
 		</div>
 	} @else {
-		<div
-			style="display: grid; width: 100%; max-width: 90vw; margin: 0 auto; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); justify-content: center; align-items: start;">
+		<div style="display: grid; width: 100%; max-width: 90vw; margin: 0 auto; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); justify-content: center; align-items: start;">
 			@for (project of projects(); track project.id) {
 				<div class="col" style="margin: .5rem; width: 350px">
 					<div class="card h-100">

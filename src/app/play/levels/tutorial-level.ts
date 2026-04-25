@@ -17,8 +17,8 @@ export class TutorialLevel extends Level {
 	solution = "";
 
 	verify(globals: Globals): boolean {
-		const button = globals.simulation.circuitComponents().find((component) => !component.deleted && component.name.trim().toLowerCase() === 'input') as Switch;
-		const led = globals.simulation.circuitComponents().find((component) => !component.deleted && component.name.trim().toLowerCase() === 'output');
+		const button = globals.simulation.circuitComponents().find((component) => !component.deleted && component.getDisplayLabel().trim().toLowerCase() === 'input') as Switch;
+		const led = globals.simulation.circuitComponents().find((component) => !component.deleted && component.getDisplayLabel().trim().toLowerCase() === 'output');
 		if (!button || !led) return false;
 
 		button.isOn = false;

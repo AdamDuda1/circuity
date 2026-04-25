@@ -6,11 +6,11 @@
 	@if (selectedComponent(); as selected) {
 		<category>{{ globals.constants.translations.componentProperties.section1 }}</category>
 		<input type="text" name="componentName" id="componentName"
-			   [value]="selected.name" (blur)="globals.simulation.saveState('name change')"
+			   [value]="selected.label || selected.name" (blur)="globals.simulation.saveState('label change')"
 			   (focus)="selectInputText($event)"
 			   placeholder="{{globals.constants.translations.componentProperties.namePlaceholder}}"
 			   pattern="^[a-z0-9 _.\-]*$" inputmode="text" autocomplete="off"
-			   (input)="change_name($event)" style="text-align: center">
+			   (input)="change_label($event)" style="text-align: center">
 
 		<div class="form-check form-switch switch-full d-flex align-items-center justify-content-between p-0">
 			<label for="displayLabel" class="mb-0 form-check-label contents">Display label</label>

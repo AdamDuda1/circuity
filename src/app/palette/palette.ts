@@ -35,7 +35,7 @@ type Category = {
 				@for (category of categories(); track category.name()) {
 					@if (true) {
 						<app-palette-category [name]="category.name()" [icon]="category.icon()"
-						                      [defaultOpened]="category.defaultOpened">
+						                      [defaultOpened]="category.defaultOpened || this.globals.isPlayRoute()">
 							@for (component of category.components; track component.id) {
 								<app-palette-component [component]="component"/>
 							}
@@ -147,7 +147,7 @@ export class Palette {
 	viewMode = signal<'palette' | 'list'>('palette');
 	categories = signal<Category[]>([]);
 	defaultCategories: string[] = [];
-	private globals = inject(Globals);
+	globals = inject(Globals);
 	designComponents = computed(() => this.globals.simulation.circuitComponents().filter((component) => !component.deleted));
 	filteredComponents = computed(() => {
 		if (!this.restrictComponentList()) {

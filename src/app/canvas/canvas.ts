@@ -409,6 +409,7 @@ export class Canvas implements AfterViewInit, OnDestroy {
 			event.preventDefault();
 			if (this.globals.isPlayRoute()) return;
 			this.globals.data.saveLast();
+			_Toast.success("Saved!");
 		}
 	}
 

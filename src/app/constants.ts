@@ -34,7 +34,7 @@ export class Constants {
 				'Connect the components with wires by dragging from pin to pin with your mouse.',
 				'After connecting run the simulation by clicking the \'run\' button or by hitting space on your' +
 				' keyboard.<br><br>You can always view an updated tutorial by clicking the tutorial button in the' +
-				' settings. Have fun and check out the other tabs!',
+				' settings. Have fun and check out the other tabs as well as settings!',
 			],
 			next: 'Next',
 			prev: 'Previous',

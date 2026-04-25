@@ -41,10 +41,10 @@ export class ComponentProperties {
 		return this.globals.simulation.circuitComponents().find(c => c.id === this.globals.selected) ?? null;
 	}
 
-	change_name(event: Event) {
+	change_label(event: Event) {
 		const selected = this.selectedComponent();
 		if (!selected) return;
-		selected.name = (event.target as HTMLInputElement).value;
+		selected.label = (event.target as HTMLInputElement).value;
 	}
 
 	selectInputText(event: FocusEvent) {

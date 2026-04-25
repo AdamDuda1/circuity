@@ -13,7 +13,7 @@ export class AndsAndOrsLevel extends Level {
 
 	verify(globals: Globals): boolean {
 		const components = globals.simulation.circuitComponents();
-		const getByName = (name: string) => components.find((component) => !component.deleted && component.name.trim().toLowerCase() === name);
+		const getByName = (name: string) => components.find((component) => !component.deleted && component.getDisplayLabel().trim().toLowerCase() === name);
 
 		const a = getByName('a') as Switch | undefined;
 		const b = getByName('b') as Switch | undefined;
