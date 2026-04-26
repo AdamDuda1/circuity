@@ -20,6 +20,16 @@ interface AdminUser {
 	password: string;
 }
 
+interface ManagedProject {
+	id: number;
+	content: string;
+	author: string;
+	name: string;
+	description: string;
+	visibility: 'public' | 'private';
+	created_at: string;
+}
+
 interface LoginResponse {
 	token: string;
 }
@@ -51,6 +61,10 @@ export class Admin implements OnInit {
 	protected readonly blogPosts = signal([] as BlogPost[]);
 	protected readonly admins = signal([] as AdminUser[]);
 	protected readonly adminsError = signal<string | null>(null);
+	protected readonly loadingProjects = signal(true);
+	protected readonly projects = signal([] as ManagedProject[]);
+	protected readonly projectsError = signal<string | null>(null);
+	protected readonly editingProjectId = signal<number | null>(null);
 
 	readonly blogForm = this.formBuilder.nonNullable.group({
 		title: ['', [Validators.required, Validators.minLength(3)]],
@@ -59,6 +73,12 @@ export class Admin implements OnInit {
 		// media_link is validated conditionally (only required when media_type !== 'none')
 		media_link: [''],
 		created_at: ['']
+	});
+
+	readonly projectEditForm = this.formBuilder.nonNullable.group({
+		content: ['', Validators.required],
+		author: ['', Validators.required],
+		description: ['', Validators.required]
 	});
 
 	async onSubmit(): Promise<void> {
@@ -139,6 +159,9 @@ export class Admin implements OnInit {
 		if (this.window.location.href.includes('admins')) {
 			this.loadAdmins();
 		}
+		if (this.window.location.href.includes('projects')) {
+			this.loadProjects();
+		}
 	}
 
 	async loadAdmins(): Promise<void> {
@@ -170,6 +193,91 @@ export class Admin implements OnInit {
 			this.submitError.set(this.readErrorMessage(error, 'Couldn\'t load blog posts list.'));
 		} finally {
 			this.loadingPosts.set(false);
+		}
+	}
+
+	async loadProjects(): Promise<void> {
+		this.loadingProjects.set(true);
+		this.projectsError.set(null);
+
+		try {
+			const projects = await firstValueFrom(
+				this.http.get<ManagedProject[]>(this.globals.database + 'projects/admin/list', {
+					headers: this.createAuthHeaders()
+				})
+			);
+			this.projects.set(projects);
+		} catch (error: unknown) {
+			this.projects.set([]);
+			this.projectsError.set(this.readErrorMessage(error, 'Couldn\'t load projects list.'));
+		} finally {
+			this.loadingProjects.set(false);
+		}
+	}
+
+	startProjectEdit(project: ManagedProject): void {
+		this.editingProjectId.set(project.id);
+		this.projectEditForm.setValue({
+			content: project.content,
+			author: project.author,
+			description: project.description
+		});
+	}
+
+	cancelProjectEdit(): void {
+		this.editingProjectId.set(null);
+		this.projectEditForm.reset({
+			content: '',
+			author: '',
+			description: ''
+		});
+	}
+
+	async saveProjectEdit(projectId: number): Promise<void> {
+		if (this.projectEditForm.invalid) {
+			this.projectEditForm.markAllAsTouched();
+			return;
+		}
+
+		try {
+			await firstValueFrom(
+				this.http.patch<{status: 'success'}>(
+					this.globals.database + `projects/admin/${projectId}`,
+					this.projectEditForm.getRawValue(),
+					{headers: this.createAuthHeaders()}
+				)
+			);
+
+			alert('Project updated');
+			this.cancelProjectEdit();
+			await this.loadProjects();
+		} catch (error: unknown) {
+			alert(this.readErrorMessage(error, 'Could not update project.'));
+		}
+	}
+
+	async deleteProject(projectId: number): Promise<void> {
+		const shouldDelete = this.window.confirm('Delete this project permanently?');
+		if (!shouldDelete) {
+			return;
+		}
+
+		try {
+			await firstValueFrom(
+				this.http.delete<{status: 'success'}>(
+					this.globals.database + `projects/admin/${projectId}`,
+					{headers: this.createAuthHeaders()}
+				)
+			);
+
+			if (this.editingProjectId() === projectId) {
+				this.cancelProjectEdit();
+			}
+
+			await this.loadProjects();
+			alert('Project deleted');
+		} catch (error: unknown) {
+			alert(this.readErrorMessage(error, 'Could not delete project.'));
 		}
 	}
 
