@@ -92,6 +92,7 @@ export class SavePanel {
 		this.globals.savePanel_open.set(false);
 		_Toast.success('Old design cleared!');
 		this.globals.data.saveLast();
+		location.reload();
 	}
 
 	generateSecret() {

@@ -18,7 +18,7 @@ export class XNOR extends ElectricalComponent {
 	name = 'XNOR';
 	override description = 'Exclusive NOR. The output is active when the inputs have the same state.';
 	override truthTable = 'A | B | Q\n0 | 0 | 1\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 1';
-	override gif = '/component-previews/xor.gif';
+	override gif = '/component-previews/xnor.gif';
 
 	type = '';
 

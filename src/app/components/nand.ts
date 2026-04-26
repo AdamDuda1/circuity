@@ -16,9 +16,9 @@ export class NAND extends ElectricalComponent {
 	id;
 	category = 'derivedLogicGates';
 	name = 'NAND';
-	override description = 'The output is active unless both inputs are active.';
+	override description = 'Inverted AND.';
 	override truthTable = 'A | B | Q\n0 | 0 | 1\n0 | 1 | 1\n1 | 0 | 1\n1 | 1 | 0';
-	override gif = '/component-previews/and.gif';
+	override gif = '/component-previews/nand.gif';
 
 	type = '';
 

@@ -16,9 +16,9 @@ export class NOR extends ElectricalComponent {
 	id;
 	category = 'derivedLogicGates';
 	name = 'NOR';
-	override description = 'The output is active only when both inputs are inactive.';
+	override description = 'Inverted OR.';
 	override truthTable = 'A | B | Q\n0 | 0 | 1\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 0';
-	override gif = '/component-previews/or.gif';
+	override gif = '/component-previews/nor.gif';
 
 	type = '';
 
