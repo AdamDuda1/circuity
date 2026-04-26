@@ -16,6 +16,11 @@
 	>
 		{{ getStatusBannerText() }}
 	</div>
+    <a class="card-link accent-blue-400 hover:underline" href="#"
+       (click)="openSolution($event)" style="color: gray; font-size: x-small;">
+        See solution
+        <span class="material-symbols-outlined" style="font-size: larger; top: 3px;"> arrow_forward </span>
+    </a>
 	<div class="level-nav" style="display: flex; justify-content: space-between;">
 		@if (previousLevelId(); as previousId) {
 			<a [routerLink]="['/play', previousId]" class="nav-link flex">

@@ -44,6 +44,14 @@ export class LevelInfo {
 		} else _Toast.error('Sorry, the verification failed! Make sure you have the correct component names entered.');
 	}
 
+	openSolution(event?: MouseEvent) {
+		event?.preventDefault();
+		const shouldClear = confirm(`Are you sure you want to spoil the solution and open it in the design mode?`);
+		if (!shouldClear) return;
+		localStorage.setItem('save', this.level().solution);
+		location.href = '/';
+	}
+
 	private spawnConfetti(event?: MouseEvent): void {
 		if (typeof window === 'undefined' || typeof document === 'undefined') {
 			return;
@@ -159,4 +167,7 @@ export class LevelInfo {
 		const solvedDate = new Date(value);
 		return Number.isNaN(solvedDate.getTime()) ? null : solvedDate;
 	}
+
+	protected readonly alert = alert;
+	protected readonly event = event;
 }

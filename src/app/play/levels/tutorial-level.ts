@@ -14,7 +14,7 @@ export class TutorialLevel extends Level {
 	restrictComponentList = true;
 	allowedComponents = ['Switch', 'LED'];
 	usedIO = ['input', 'output'];
-	solution = "";
+	solution = "{\"components\":[{\"type\":\"Switch\",\"x\":-35,\"y\":-10,\"label\":\"input\",\"showLabel\":true,\"outTo\":[[{\"component\":1,\"pin\":0}],[]]},{\"type\":\"LED\",\"x\":15,\"y\":-10,\"label\":\"ouput\",\"showLabel\":true,\"inFrom\":[{\"component\":0,\"pin\":0},{\"component\":-1,\"pin\":-1}]}],\"view\":{\"x\":0,\"y\":0,\"z\":2}}";
 
 	verify(globals: Globals): boolean {
 		const button = globals.simulation.circuitComponents().find((component) => !component.deleted && component.getDisplayLabel().trim().toLowerCase() === 'input') as Switch;

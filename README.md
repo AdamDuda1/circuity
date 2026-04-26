@@ -34,6 +34,7 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 <sub>done items are removed</sub>
 
+- [ ] x people solved next to the see solutions on the right (level-info)???????
 - [ ] massive delay in turning on/off buzzer
 - [ ] category field as abstract unnecessary?
 - [ ] solutions for levels -- hardcoded designs with solutions to levels to open in the edsign mode

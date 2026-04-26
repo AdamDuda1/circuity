@@ -10,7 +10,7 @@ export class XorLevel extends Level {
 	restrictComponentList = true;
 	allowedComponents = ['Switch', 'LED', 'OR', 'AND', 'NOT'];
 	usedIO = ['a', 'b', 'output'];
-	solution = "";
+	solution = "{\"components\":[{\"type\":\"Switch\",\"x\":-60,\"y\":15,\"label\":\"A\",\"showLabel\":true,\"outTo\":[[{\"component\":2,\"pin\":1},{\"component\":4,\"pin\":1}],[]]},{\"type\":\"Switch\",\"x\":-60,\"y\":-35,\"label\":\"B\",\"showLabel\":true,\"outTo\":[[{\"component\":2,\"pin\":0},{\"component\":4,\"pin\":0}],[]]},{\"type\":\"AND\",\"x\":-10,\"y\":15,\"inFrom\":[{\"component\":1,\"pin\":0},{\"component\":0,\"pin\":0}],\"outTo\":[[{\"component\":3,\"pin\":0}],[]]},{\"type\":\"NOT\",\"x\":40,\"y\":15,\"inFrom\":[{\"component\":2,\"pin\":0},{\"component\":-1,\"pin\":-1}],\"outTo\":[[{\"component\":5,\"pin\":1}],[]]},{\"type\":\"OR\",\"x\":-10,\"y\":-35,\"inFrom\":[{\"component\":1,\"pin\":0},{\"component\":0,\"pin\":0}],\"outTo\":[[{\"component\":5,\"pin\":0}],[]]},{\"type\":\"AND\",\"x\":40,\"y\":-35,\"inFrom\":[{\"component\":4,\"pin\":0},{\"component\":3,\"pin\":0}],\"outTo\":[[{\"component\":6,\"pin\":0}],[]]},{\"type\":\"LED\",\"x\":90,\"y\":-10,\"label\":\"output\",\"showLabel\":true,\"inFrom\":[{\"component\":5,\"pin\":0},{\"component\":-1,\"pin\":-1}]}],\"view\":{\"x\":0,\"y\":0,\"z\":2}}";
 
 	verify(globals: Globals): boolean {
 		const components = globals.simulation.circuitComponents();
