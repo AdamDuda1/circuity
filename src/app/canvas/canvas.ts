@@ -146,10 +146,16 @@ export class Canvas implements AfterViewInit, OnDestroy {
 					false
 				);
 			} else {
+				const sourceComponent = this.getComponentById(pos1.component);
+				if (!sourceComponent || !sourceComponent.outs[pos1.index]) {
+					ctx.restore();
+					return;
+				}
+
 				drawWire(ctx, view,
 					{
-						x: this.globals.simulation.circuitComponents()[pos1.component].x + this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].x,
-						y: this.globals.simulation.circuitComponents()[pos1.component].y + this.globals.simulation.circuitComponents()[pos1.component].outs[pos1.index].y
+						x: sourceComponent.x + sourceComponent.outs[pos1.index].x,
+						y: sourceComponent.y + sourceComponent.outs[pos1.index].y
 					},
 					{x: cursor.x, y: cursor.y},
 					false,
@@ -217,8 +223,10 @@ export class Canvas implements AfterViewInit, OnDestroy {
 						} else { // connected -> move, but from out
 							const from = component.inFrom[ans.index];
 							this.connectingToOrFrom.set({component: from.component, type: 'out', index: from.pin});
-
-							this.globals.simulation.circuitComponents()[from.component].outTo[from.pin] = this.globals.simulation.circuitComponents()[from.component].outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+							const sourceComponent = this.getComponentById(from.component);
+							if (sourceComponent?.outTo[from.pin]) {
+								sourceComponent.outTo[from.pin] = sourceComponent.outTo[from.pin].filter(c => c.component !== component.id || c.pin !== ans.index);
+							}
 							component.inFrom[ans.index] = {component: -1, pin: -1};
 							this.startedConnectingExisting = true;
 						}
@@ -279,20 +287,33 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 					if (from.type === 'out' && to.type === 'in') {
 						if (component.inFrom[to.index].component != -1) {
-							this.globals.simulation.circuitComponents()[component.inFrom[to.index].component].outTo[component.inFrom[to.index].pin] = this.globals.simulation.circuitComponents()[component.inFrom[to.index].component].outTo[component.inFrom[to.index].pin].filter(c => c.component !== to.component || c.pin !== to.index);
+							const previousSource = this.getComponentById(component.inFrom[to.index].component);
+							if (previousSource?.outTo[component.inFrom[to.index].pin]) {
+								previousSource.outTo[component.inFrom[to.index].pin] = previousSource.outTo[component.inFrom[to.index].pin].filter(c => c.component !== to.component || c.pin !== to.index);
+							}
 							component.inFrom[to.index] = {component: -1, pin: -1};
 						}
-						this.globals.simulation.circuitComponents()[to.component].inFrom[to.index] = {component: from.component, pin: from.index};
-						if (!this.globals.simulation.circuitComponents()[from.component].outTo[from.index])
-							this.globals.simulation.circuitComponents()[from.component].outTo[from.index] = [];
-						this.globals.simulation.circuitComponents()[from.component].outTo[from.index].push({component: to.component, pin: to.index});
+						const toComponent = this.getComponentById(to.component);
+						const fromComponent = this.getComponentById(from.component);
+						if (!toComponent || !fromComponent) {
+							_Toast.error('Could not connect pins.');
+							break;
+						}
+						toComponent.inFrom[to.index] = {component: from.component, pin: from.index};
+						if (!fromComponent.outTo[from.index]) fromComponent.outTo[from.index] = [];
+						fromComponent.outTo[from.index].push({component: to.component, pin: to.index});
 
 						this.globals.simulation.saveState("connection");
 					} else if (from.type === 'in' && to.type === 'out') {
-						this.globals.simulation.circuitComponents()[from.component].inFrom[from.index] = {component: to.component, pin: to.index};
-						if (!this.globals.simulation.circuitComponents()[to.component].outTo[to.index])
-							this.globals.simulation.circuitComponents()[to.component].outTo[to.index] = [];
-						this.globals.simulation.circuitComponents()[to.component].outTo[to.index].push({component: from.component, pin: from.index});
+						const fromComponent = this.getComponentById(from.component);
+						const toComponent = this.getComponentById(to.component);
+						if (!fromComponent || !toComponent) {
+							_Toast.error('Could not connect pins.');
+							break;
+						}
+						fromComponent.inFrom[from.index] = {component: to.component, pin: to.index};
+						if (!toComponent.outTo[to.index]) toComponent.outTo[to.index] = [];
+						toComponent.outTo[to.index].push({component: from.component, pin: from.index});
 
 						this.globals.simulation.saveState("connection");
 					} else _Toast.warning('You can only connect an output pin to an input pin and vice versa.');
@@ -569,5 +590,9 @@ export class Canvas implements AfterViewInit, OnDestroy {
 		}
 
 		return false;
+	}
+
+	private getComponentById(componentId: number) {
+		return this.globals.simulation.circuitComponents().find((component) => component.id === componentId);
 	}
 }

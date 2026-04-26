@@ -14,6 +14,7 @@ import { disable as disableDarkMode, enable as enableDarkMode } from 'darkreader
 import { Buzzer } from './components/buzzer';
 import { SignalSender } from './components/signal-sender';
 import { SignalReceiver } from './components/signal-receiver';
+import { Clock } from './components/clock';
 // import * as bootstrap from 'bootstrap';
 
 type ComponentFactory = (giveID: boolean, x: number, y: number) => ElectricalComponent;
@@ -108,6 +109,7 @@ export class Globals {
 		['LED',     (id, x, y) => new LED(this, id, x, y)],
 		['Buzzer',  (id, x, y) => new Buzzer(this, id, x, y)],
 		['XOR',     (id, x, y) => new XOR(this, id, x, y)],
+		['Clock',   (id, x, y) => new Clock(this, id, x, y)],
 		['Signal Sender', (id, x, y) => new SignalSender(this, id, x, y)],
 		['Signal Receiver', (id, x, y) => new SignalReceiver(this, id, x, y)]
 	]);

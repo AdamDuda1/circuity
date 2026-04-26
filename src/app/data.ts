@@ -27,6 +27,8 @@ export class Data {
 
 	getCurrentDesignJSON() {
 		const activeComponents = this.globals.simulation.circuitComponents().filter((component) => !component.deleted);
+		const idToSavedIndex = new Map<number, number>();
+		activeComponents.forEach((component, index) => idToSavedIndex.set(component.id, index));
 		let minX = 1e7, maxX = -1e7, minY = 1e7, maxY = -1e7;
 		activeComponents.forEach((element) => {
 			minX = Math.min(minX, element.x);
@@ -45,7 +47,7 @@ export class Data {
 		}
 
 		return {
-			components: activeComponents.map(c => this.getSparseComponentJSON(c)),
+			components: activeComponents.map((component) => this.remapConnectionRefsForSave(this.getSparseComponentJSON(component), idToSavedIndex)),
 			view: {
 				x: _x,
 				y: _y,
@@ -146,5 +148,39 @@ export class Data {
 
 	private isDeepEqual(a: unknown, b: unknown): boolean {
 		return JSON.stringify(a) === JSON.stringify(b);
+	}
+
+	private remapConnectionRefsForSave(component: SerializedElectricalComponent, idToSavedIndex: Map<number, number>): SerializedElectricalComponent {
+		if (!component.inFrom && !component.outTo) {
+			return component;
+		}
+
+		const inFrom = component.inFrom?.map((connection) => {
+			const mappedComponent = idToSavedIndex.get(connection.component);
+			if (mappedComponent === undefined) {
+				return {component: -1, pin: -1};
+			}
+
+			return {component: mappedComponent, pin: connection.pin};
+		});
+
+		const outTo = component.outTo?.map((connections) =>
+			connections
+				.map((connection) => {
+					const mappedComponent = idToSavedIndex.get(connection.component);
+					if (mappedComponent === undefined) {
+						return null;
+					}
+
+					return {component: mappedComponent, pin: connection.pin};
+				})
+				.filter((connection): connection is { component: number; pin: number } => connection !== null)
+		);
+
+		return {
+			...component,
+			...(inFrom ? {inFrom} : {}),
+			...(outTo ? {outTo} : {})
+		};
 	}
 }

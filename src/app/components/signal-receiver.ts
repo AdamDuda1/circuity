@@ -16,7 +16,7 @@ export class SignalReceiver extends ElectricalComponent {
 	id;
 	category;
 	name = 'Signal Receiver';
-	override description = 'qjgsdjhgkjfash.';
+	override description = 'Outputs a signal if at least one signal sender is active on selected channel.';
 	override gif = '/component-previews/signal.gif';
 	type = '';
 
@@ -81,7 +81,8 @@ export class SignalReceiver extends ElectricalComponent {
 		ctx.stroke();
 
 		ctx.fillStyle = 'white';
-		ctx.font = `${8 * z}px Arial`;
+		const fontSize = Math.max(6, Math.round(h * 0.35));
+		ctx.font = `${fontSize}px Arial`;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillText(`RX${this.channel}`, x + w / 2, y + h / 2);

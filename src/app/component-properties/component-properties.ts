@@ -4,6 +4,7 @@ import { Buzzer } from '../components/buzzer';
 import { Switch } from '../components/switch';
 import { SignalSender } from '../components/signal-sender';
 import { SignalReceiver } from '../components/signal-receiver';
+import { Clock } from '../components/clock';
 import { ElectricalComponent } from '../components/component-type-interface';
 
 @Component({
@@ -96,6 +97,11 @@ export class ComponentProperties {
 		return selected instanceof SignalReceiver ? selected : null;
 	}
 
+	selectedClock(): Clock | null {
+		const selected = this.selectedComponent();
+		return selected instanceof Clock ? selected : null;
+	}
+
 	buzzer_setFrequency(event: Event) {
 		const selected = this.selectedBuzzer();
 		if (!selected) return;
@@ -134,6 +140,21 @@ export class ComponentProperties {
 		const selected = this.selectedSignalReceiver();
 		if (!selected) return;
 		selected.setChannel((event.target as HTMLInputElement).valueAsNumber);
+	}
+
+	clock_setFrequencyHz(event: Event) {
+		const selected = this.selectedClock();
+		if (!selected) return;
+		selected.setFrequencyHz((event.target as HTMLInputElement).valueAsNumber);
+	}
+
+	clock_setDutyCyclePercent(event: Event) {
+		const selected = this.selectedClock();
+		if (!selected) return;
+
+		const dutyPercent = (event.target as HTMLInputElement).valueAsNumber;
+		if (!Number.isFinite(dutyPercent)) return;
+		selected.setDutyCycle(dutyPercent / 100);
 	}
 
 	protected readonly Buzzer = Buzzer;

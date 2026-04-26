@@ -16,7 +16,7 @@ export class SignalSender extends ElectricalComponent {
 	id;
 	category;
 	name = 'Signal Sender';
-	override description = 'qweqweqwe.';
+	override description = 'Activates channels for signal receivers.';
 	override gif = '/component-previews/signal.gif';
 	type = '';
 
@@ -83,7 +83,8 @@ export class SignalSender extends ElectricalComponent {
 		ctx.stroke();
 
 		ctx.fillStyle = 'white';
-		ctx.font = `${8 * z}px Arial`;
+		const fontSize = Math.max(6, Math.round(Math.min(w, h) * 0.35));
+		ctx.font = `${fontSize}px Arial`;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillText(`TX${this.channel}`, x + w / 2, y + h / 2);

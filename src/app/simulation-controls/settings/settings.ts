@@ -1,9 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { Globals } from '../../globals';
+import { Footer } from '../../footer/footer';
 
 @Component({
 	selector: 'app-settings',
-	imports: [],
+	imports: [
+		Footer
+	],
 	templateUrl: './settings.html',
 	styleUrl: '../popup-panel.css'
 })

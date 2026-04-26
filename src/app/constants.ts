@@ -30,11 +30,14 @@ export class Constants {
 		},
 		tutorial: {
 			pages: [
-				'Add components to the design by dragging them with your mouse onto the canvas or by double-clicking them in the palette.',
+				'Add components to the design by dragging them with your mouse onto the canvas or by double-clicking' +
+				' them in the palette.',
 				'Connect the components with wires by dragging from pin to pin with your mouse.',
 				'After connecting run the simulation by clicking the \'run\' button or by hitting space on your' +
-				' keyboard.<br><br>You can always view an updated tutorial by clicking the tutorial button in the' +
-				' settings. Have fun and check out the other tabs as well as settings!',
+				' keyboard.',
+				'After you\'re done, check out the loading/saving tab as well as the settings <br><br>Also look in' +
+				' the play tab where there are interesting tasks to solve!<br><br>You can always view an updated' +
+				' tutorial by clicking the tutorial button in the settings. Have fun!'
 			],
 			next: 'Next',
 			prev: 'Previous',

@@ -10,7 +10,7 @@ import { Globals } from '../globals';
 export class Tutorial {
 	constructor(public globals: Globals) {}
 
-	public pages = 3;
+	public pages = 4;
 
 	open() {
 		this.globals.tutorial_page.set(0);
