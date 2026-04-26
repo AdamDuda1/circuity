@@ -1,7 +1,7 @@
 import { ElectricalComponent } from './component-type-interface';
 import { Globals } from '../globals';
 
-export class AND extends ElectricalComponent {
+export class NAND extends ElectricalComponent {
 	constructor(globals: Globals, giveID: boolean, _x: number, _y: number) {
 		super(globals);
 		this.x = _x;
@@ -10,14 +10,14 @@ export class AND extends ElectricalComponent {
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.basicLogicGates;
+		this.category = this.globals.constants.categoryName.derivedLogicGates;
 	}
 
 	id;
-	category = 'basicLogicGates';
-	name = 'AND';
-	override description = 'The output is only active when both inputs are active.';
-	override truthTable = 'A | B | Q\n0 | 0 | 0\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 1';
+	category = 'derivedLogicGates';
+	name = 'NAND';
+	override description = 'The output is active unless both inputs are active.';
+	override truthTable = 'A | B | Q\n0 | 0 | 1\n0 | 1 | 1\n1 | 0 | 1\n1 | 1 | 0';
 	override gif = '/component-previews/and.gif';
 
 	type = '';
@@ -34,10 +34,10 @@ export class AND extends ElectricalComponent {
 
 	actualSize;
 	ins = [{x: -3, y: 4}, {x: -3, y: 16}];
-	outs = [{x: 22.5, y: 10}];
+	outs = [{x: 27.5, y: 10}];
 
 	override condition() {
-		this.outStates[0] = this.inStates[0] && this.inStates[1];
+		this.outStates[0] = !(this.inStates[0] && this.inStates[1]);
 	}
 
 	drawShape(ctx: CanvasRenderingContext2D, view?: { x: number, y: number, z: number, w?: number, h?: number }) {
@@ -80,10 +80,17 @@ export class AND extends ElectricalComponent {
 		ctx.lineWidth = 1.3 * z;
 		ctx.stroke();
 
+		ctx.beginPath();
+		ctx.arc(x + w + 2.1 * z, y + h / 2, h * .1, 0, Math.PI * 2);
+		ctx.fillStyle = 'white';
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.beginPath();
 		ctx.moveTo(x + w / 2, y);
 		ctx.lineTo(x + w * .05 - .65 * z, y);
-		ctx.moveTo(x + w, y + h / 2);
-		ctx.lineTo(x + w + 4.5 * z, y + h / 2);
+		ctx.moveTo(x + w + 4.5 * z, y + h / 2);
+		ctx.lineTo(x + w + 7.5 * z, y + h / 2);
 		ctx.moveTo(x + w * .05, y + h / 5);
 		ctx.lineTo(x - 3 * z, y + h / 5);
 		ctx.moveTo(x + w * .05, y + h / 5 * 4);
@@ -93,3 +100,4 @@ export class AND extends ElectricalComponent {
 		ctx.restore();
 	}
 }
+

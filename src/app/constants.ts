@@ -1,9 +1,15 @@
+/* READ vv
+ I originally thought I will put every string in here so it will be easily translatable,
+ but now the strings are all around the project and it would be a lot of work to move them here.
+ The old ones are here (ex. categories and tutorial) and I will have to move them somewhere...
+ */
 export class Constants {
 	public readonly categoryName = {
 		basicLogicGates: 'Basic Logic Gates',
 		input: 'Input',
 		output: 'Output',
-		derivedLogicGates: 'Other'
+		derivedLogicGates: 'Derived Logic Gates',
+		other: 'Other'
 	};
 
 	public readonly favoriteCategory = 'Favorites';
@@ -15,7 +21,7 @@ export class Constants {
 			keyboardShortcut: '[ space ]',
 			savePanel: {
 				doneButtonText: [
-					'Save',
+					'Save'
 				]
 			}
 		},
@@ -26,7 +32,7 @@ export class Constants {
 			type: 'Type',
 			section1: 'basic',
 			section2: 'positioning',
-			section3: 'component-specific',
+			section3: 'component-specific'
 		},
 		tutorial: {
 			pages: [
@@ -45,9 +51,7 @@ export class Constants {
 		},
 
 		common: {
-			cancel: 'Cancel',
+			cancel: 'Cancel'
 		}
-	}
-
-	public readonly pinSelectionZone = 3;
+	};
 }

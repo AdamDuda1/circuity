@@ -186,6 +186,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	onPointerDown(event: PointerEvent) {
+		this.syncCursorFromPointerEvent(event);
+
 		if (event.button !== 0) return;
 		if (event.pointerType === 'touch' && this.globals.isPanning()) return;
 
@@ -238,6 +240,8 @@ export class Canvas implements AfterViewInit, OnDestroy {
 	}
 
 	onPointerUp(event: PointerEvent) {
+		this.syncCursorFromPointerEvent(event);
+
 		this.globals.isPanning.set(false);
 
 		if (this.globals.isDragging()) {
@@ -577,6 +581,18 @@ export class Canvas implements AfterViewInit, OnDestroy {
 
 	private isSnapEnabled(): boolean {
 		return localStorage.getItem('snap') === 'true';
+	}
+
+	private syncCursorFromPointerEvent(event: PointerEvent): void {
+		const rect = this.canvasRef().nativeElement.getBoundingClientRect();
+		const mouseX = event.clientX - rect.left;
+		const mouseY = event.clientY - rect.top;
+		const view = this.globals.view();
+
+		this.globals.cursor.set({
+			x: (mouseX - view.w / 2) / view.z - view.x,
+			y: -(mouseY - view.h / 2) / view.z + view.y
+		});
 	}
 
 	private isTextEditingTarget(target: EventTarget | null): boolean {

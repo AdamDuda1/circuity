@@ -190,8 +190,7 @@ export class Palette {
 			category.components.push(component);
 		}
 
-		this.categories.set(nextCategories);
-		this.syncFavoritesCategory(this.readFavoriteNames());
+		this.categories.set(this.withFavoritesCategory(nextCategories, this.readFavoriteNames()));
 	}
 
 	setViewMode(mode: 'palette' | 'list'): void {
@@ -209,6 +208,8 @@ export class Palette {
 
 	onDocumentKeydown(event: KeyboardEvent) {
 		if (event.key !== 'f' && event.key !== 'F') return;
+		if (event.repeat) return;
+		if (this.isTextEditingTarget(event.target)) return;
 
 		const hovered = this.globals.hoveredPaletteComponent();
 		if (!hovered) return;
@@ -224,41 +225,69 @@ export class Palette {
 
 		const nextFavoriteNames = [...favoriteNames];
 		this.writeFavoriteNames(nextFavoriteNames);
-		this.syncFavoritesCategory(nextFavoriteNames);
+		this.categories.update((currentCategories) => this.withFavoritesCategory(currentCategories, nextFavoriteNames));
 	}
 
 	private readFavoriteNames(): string[] {
 		try {
 			const raw = localStorage.getItem('favorites');
 			if (!raw) return [];
+			if (raw.length > 10_000) {
+				localStorage.removeItem('favorites');
+				return [];
+			}
 			const parsed: unknown = JSON.parse(raw);
 			if (!Array.isArray(parsed)) return [];
 
-			return parsed.filter((value): value is string => typeof value === 'string');
+			const availableNames = new Set(this.components().map((component) => component.name));
+			const names = new Set<string>();
+			for (const value of parsed) {
+				if (typeof value !== 'string') continue;
+				if (!availableNames.has(value)) continue;
+				names.add(value);
+			}
+
+			return [...names];
 		} catch {
 			return [];
 		}
 	}
 
-	private writeFavoriteNames(names: string[]): void {
-		localStorage.setItem('favorites', JSON.stringify(names));
+	private isTextEditingTarget(target: EventTarget | null): boolean {
+		if (!(target instanceof HTMLElement)) return false;
+		if (target.isContentEditable) return true;
+		if (target instanceof HTMLTextAreaElement) return true;
+
+		if (target instanceof HTMLInputElement) {
+			const nonTextTypes = new Set(['button', 'checkbox', 'color', 'file', 'hidden', 'image', 'radio', 'range', 'reset', 'submit']);
+			return !nonTextTypes.has(target.type);
+		}
+
+		return false;
 	}
 
-	private syncFavoritesCategory(favoriteNames: string[]): void {
+	private writeFavoriteNames(names: string[]): void {
+		try {
+			localStorage.setItem('favorites', JSON.stringify(names));
+		} catch {
+			// Ignore storage quota/private-mode errors to avoid breaking UX.
+		}
+	}
+
+	private withFavoritesCategory(baseCategories: Category[], favoriteNames: string[]): Category[] {
 		const favoriteCategoryName = this.globals.constants.favoriteCategory;
 		const favoriteComponents = favoriteNames
 		.map((name) => this.filteredComponents().find((component) => component.name === name))
 		.filter((component): component is ElectricalComponent => Boolean(component));
-		const nextCategories = [...this.categories()];
+		const nextCategories = [...baseCategories];
 
 		const existingCategoryIndex = nextCategories.findIndex((category) => category.name() === favoriteCategoryName);
 
 		if (favoriteComponents.length === 0) {
 			if (existingCategoryIndex !== -1) {
 				nextCategories.splice(existingCategoryIndex, 1);
-				this.categories.set(nextCategories);
 			}
-			return;
+			return nextCategories;
 		}
 
 		const category = existingCategoryIndex === -1
@@ -272,6 +301,6 @@ export class Palette {
 		}
 
 		nextCategories.unshift(category);
-		this.categories.set(nextCategories);
+		return nextCategories;
 	}
 }

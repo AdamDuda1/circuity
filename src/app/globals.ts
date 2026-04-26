@@ -8,6 +8,9 @@ import { NOT } from './components/not';
 import { Switch } from './components/switch';
 import { LED } from './components/led';
 import { XOR } from './components/xor';
+import { NAND } from './components/nand';
+import { NOR } from './components/nor';
+import { XNOR } from './components/xnor';
 import { Data } from './data';
 import { Tutorial } from './tutorial/tutorial';
 import { disable as disableDarkMode, enable as enableDarkMode } from 'darkreader';
@@ -66,6 +69,7 @@ export class Globals {
 	public historyMax: number = 10;
 	public enableAutoSave: boolean = false;
 	public autoSaveInterval: number = 0.25;
+	public pinZone: number = 3;
 	public readonly settingsVersion = signal(0);
 	public readonly playUsedIO = signal<string[]>([]);
 
@@ -109,6 +113,9 @@ export class Globals {
 		['LED',     (id, x, y) => new LED(this, id, x, y)],
 		['Buzzer',  (id, x, y) => new Buzzer(this, id, x, y)],
 		['XOR',     (id, x, y) => new XOR(this, id, x, y)],
+		['NAND',    (id, x, y) => new NAND(this, id, x, y)],
+		['NOR',     (id, x, y) => new NOR(this, id, x, y)],
+		['XNOR',    (id, x, y) => new XNOR(this, id, x, y)],
 		['Clock',   (id, x, y) => new Clock(this, id, x, y)],
 		['Signal Sender', (id, x, y) => new SignalSender(this, id, x, y)],
 		['Signal Receiver', (id, x, y) => new SignalReceiver(this, id, x, y)]
@@ -137,6 +144,7 @@ export class Globals {
 		this.historyMax = this.getNumericSetting('historyMax', 10, 1, 100);
 		this.enableAutoSave = localStorage.getItem('enableAutoSave') === 'true';
 		this.autoSaveInterval = this.getNumericSetting('autoSaveInterval', 0.25, 0.25, 100);
+		this.pinZone = this.getNumericSetting('pinZone', 3, 2, 10);
 		this.settingsVersion.update(v => v + 1);
 	}
 

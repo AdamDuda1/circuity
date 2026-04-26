@@ -10,11 +10,11 @@ export class SignalSender extends ElectricalComponent {
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.derivedLogicGates;
+		this.category = this.globals.constants.categoryName.other;
 	}
 
 	id;
-	category;
+	category = 'other';
 	name = 'Signal Sender';
 	override description = 'Activates channels for signal receivers.';
 	override gif = '/component-previews/signal.gif';

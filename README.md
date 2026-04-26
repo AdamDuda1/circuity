@@ -34,7 +34,8 @@ A ~~little~~ project I'm working on... I'm too lazy to write the readme at the m
 
 <sub>done items are removed</sub>
 
-- [ ] massive delay in turning on/off buzzer 
+- [ ] massive delay in turning on/off buzzer
+- [ ] category field as abstract unnecessary?
 - [ ] solutions for levels -- hardcoded designs with solutions to levels to open in the edsign mode
 - [ ] user created levels (user makes the design, the check is the matrix of the output pins for all combinations of the input pins?????) that would be a lotta coding
 - [ ] saveState after modifying properties ONLY IF THE VALUE WAS MODIFIED!

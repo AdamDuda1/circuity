@@ -10,11 +10,11 @@ export class SignalReceiver extends ElectricalComponent {
 		if (giveID) this.id = this.globals.getNextID();
 		else this.id = -1;
 
-		this.category = this.globals.constants.categoryName.derivedLogicGates;
+		this.category = this.globals.constants.categoryName.other;
 	}
 
 	id;
-	category;
+	category = 'other';
 	name = 'Signal Receiver';
 	override description = 'Outputs a signal if at least one signal sender is active on selected channel.';
 	override gif = '/component-previews/signal.gif';

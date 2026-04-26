@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="form-check form-switch switch-full d-flex align-items-center justify-content-between p-0">
-			<label for="snapSwitch" class="mb-0 form-check-label contents">Snap to grid (refresh to apply)</label>
+			<label for="snapSwitch" class="mb-0 form-check-label contents">Snap to grid</label>
 			<div class="form-check form-switch m-0">
 				<input class="form-check-input" type="checkbox" id="snapSwitch" #snapSwitch
 					   [checked]="localStorage.getItem('snap') === 'true'"
@@ -56,7 +56,6 @@
 			</div>
 		</div>
 
-
 		<div class="form-group switch-full d-flex align-items-center justify-content-between p-0"
 			 style="position: relative; left: 5px;">
 			<label for="autoSaveInterval" class="mb-0 form-check-label contents">Auto-save interval every</label>
@@ -67,6 +66,17 @@
 					   style="height: inherit;" step=".25">
 			</div>
 			<span style="position: relative; left: 10px;">minutes</span>
+		</div>
+
+		<div class="form-group switch-full d-flex align-items-center justify-content-between p-0"
+			 style="position: relative; left: 5px;">
+			<label for="pinZone" class="mb-0 form-check-label contents">Pin zone size: </label>
+			<div style="width: 80px; height: 24px; position: relative; left: 5px;">
+				<input type="number" id="autoSaveInterval" #pinZone class="form-control" min="2" max="10"
+					   [value]="localStorage.getItem('pinZone') ? localStorage.getItem('pinZone') : '3'"
+					   (change)="localStorage.setItem('pinZone', pinZone.value); globals.fetchSettings();"
+					   style="height: inherit;" step=".25">
+			</div>
 		</div>
 
 		<a class="text-center gray m hover:underline relative left-[5px]" href="#" (click)="this.globals.settingsPanel_open.set(false); this.globals.tutorial.open()">

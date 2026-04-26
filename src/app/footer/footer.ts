@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 	selector: 'app-footer',
 	imports: [],
 	template: `
-      <img src="/developedbyahuman.png" alt="Developed by a human, not AI.">
+      <img src="/developedbyahuman.png" alt="Developed by a human, not AI." style="height: 50px; margin: 7px;">
   `,
 	styles: `
 	`

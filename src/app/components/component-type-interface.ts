@@ -291,7 +291,7 @@ export abstract class ElectricalComponent {
 				ctx.beginPath();
 				ctx.fillStyle = '#e3fe2257';
 				ctx.lineWidth = 2 * view.z;
-				ctx.fillRect(screenX - 3 * view.z, screenY - 3 * view.z, 6 * view.z, 6 * view.z);
+				ctx.fillRect(screenX - this.globals.pinZone * view.z, screenY - this.globals.pinZone * view.z, this.globals.pinZone * 2 * view.z, this.globals.pinZone * 2 * view.z);
 				ctx.restore();
 			}
 		}
@@ -318,7 +318,7 @@ export abstract class ElectricalComponent {
 				ctx.beginPath();
 				ctx.fillStyle = '#e3fe2257';
 				ctx.lineWidth = 2 * view.z;
-				ctx.fillRect(screenX - 3 * view.z, screenY - 3 * view.z, 6 * view.z, 6 * view.z);
+				ctx.fillRect(screenX - this.globals.pinZone * view.z, screenY - this.globals.pinZone * view.z, this.globals.pinZone * 2 * view.z, this.globals.pinZone * 2 * view.z);
 				ctx.restore();
 			}
 		}
@@ -382,7 +382,7 @@ export abstract class ElectricalComponent {
 	}
 
 	mouseOverPin(): { index: number, type: 'in' | 'out' } {
-		const zone = this.globals.constants.pinSelectionZone;
+		const zone = this.globals.pinZone;
 
 		for (let i = 0; i < this.ins.length; ++i) {
 			if (this.globals.cursor().x >= this.x + this.ins[i].x - zone && this.globals.cursor().x <= this.x + this.ins[i].x + zone &&
