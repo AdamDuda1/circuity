@@ -85,6 +85,7 @@ type Category = {
 		.scroll {
 			display: flex;
 			flex-direction: column;
+            overflow: auto;
 		}
 
 		.component-list-item {
@@ -137,6 +138,20 @@ type Category = {
 			bottom: 7px;
 			left: 7px;
 		}
+		
+        @media (max-width: 600px) {
+            :host {
+                width: calc(100vw - 20px);
+                height: 20vh;
+                bottom: 20px !important;
+                top: inherit;
+            }
+
+	        .scroll {
+                max-height: 25vh;
+                overflow: auto;
+	        }
+        }
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush
 })

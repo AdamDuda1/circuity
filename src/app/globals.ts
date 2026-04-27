@@ -69,7 +69,7 @@ export class Globals {
 	public historyMax: number = 10;
 	public enableAutoSave: boolean = false;
 	public autoSaveInterval: number = 0.25;
-	public pinZone: number = 3;
+	public pinZone: number = 4;
 	public readonly settingsVersion = signal(0);
 	public readonly playUsedIO = signal<string[]>([]);
 
@@ -144,7 +144,7 @@ export class Globals {
 		this.historyMax = this.getNumericSetting('historyMax', 10, 1, 100);
 		this.enableAutoSave = localStorage.getItem('enableAutoSave') === 'true';
 		this.autoSaveInterval = this.getNumericSetting('autoSaveInterval', 0.25, 0.25, 100);
-		this.pinZone = this.getNumericSetting('pinZone', 3, 2, 10);
+		this.pinZone = this.getNumericSetting('pinZone', 4, 2, 10);
 		this.settingsVersion.update(v => v + 1);
 	}
 

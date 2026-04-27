@@ -8,20 +8,29 @@ import { Globals } from '../../globals';
 	styleUrl: './palette-component-details.css',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
-		'[style.top.px]': 'details()?.top ?? 0',
 		'[style.max-height.px]': 'maxHeight()',
+		'[style.top.px]': 'top()',
 		'[style.left.px]': '225'
 	}
 })
 export class PaletteComponentDetails {
 	private readonly globals = inject(Globals);
+	private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 	readonly details = this.globals.paletteComponentDetails;
 	private readonly previewCanvas = viewChild<ElementRef<HTMLCanvasElement>>('previewCanvas');
 	readonly maxHeight = computed(() => {
+		if (!this.details()) return 0;
+
+		return Math.max(0, globalThis.innerHeight - this.top() - 10);
+	});
+	readonly top = computed(() => {
 		const details = this.details();
 		if (!details) return 0;
 
-		return Math.max(0, globalThis.innerHeight - details.top - 10);
+		const requestedTop = details?.top ?? 0;
+		const panelHeight = this.hostElement.nativeElement.getBoundingClientRect().height;
+		const maxTop = Math.max(0, globalThis.innerHeight - panelHeight - 10);
+		return Math.min(requestedTop, maxTop);
 	});
 	readonly truthTableRows = computed(() => {
 		const table = this.details()?.component.truthTable?.trim();
